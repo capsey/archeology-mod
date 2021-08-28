@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "archeology",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "CapsLock Archeology Mod",
+  "description": "My Archeology implementation mod for Minecraft Fabric",
   "authors": [
-    "Me!"
+    "CapsLock#3438 (capsey_)"
   ],
   "contact": {
     "homepage": "https://fabricmc.net/",
@@ -19,11 +19,11 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "net.capsey.archeology.ArcheologyMod"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    
   ],
 
   "depends": {
