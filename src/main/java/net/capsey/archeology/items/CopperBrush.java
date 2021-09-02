@@ -1,9 +1,10 @@
-package net.capsey.archeology;
+package net.capsey.archeology.items;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import net.capsey.archeology.PlacedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -47,7 +48,7 @@ public class CopperBrush extends Item {
         PlacedBlock block = PlacedBlock.getBlockEntityLookingAt(user, world);
 
         if (block == null || !block.sameAs(brushingBlocks.get(user))) {
-            user.stopUsingItem();
+            unpressUseButton(world.isClient);
         }
     }
 
@@ -58,13 +59,14 @@ public class CopperBrush extends Item {
         // TODO: Change to valid behaviour!
         printInChat("Finished!", user.getUuid(), world.isClient);
         world.breakBlock(brushingBlocks.get(user).getPosition(), true);
+        unpressUseButton(world.isClient);
 
 		return stack;
 	}
 
 	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         printInChat("Stopped!", user.getUuid(), world.isClient);
-        world.breakBlock(brushingBlocks.get(user).getPosition(), false);
+        // world.breakBlock(brushingBlocks.get(user).getPosition(), false);
 	}
 
 	public int getMaxUseTime(ItemStack stack) {
@@ -75,6 +77,13 @@ public class CopperBrush extends Item {
         // TODO: Add custom UseAction
 		return UseAction.BOW;
 	}
+
+    private void unpressUseButton(boolean isClient) {
+        if (isClient) {
+            MinecraftClient client = MinecraftClient.getInstance();
+            client.options.keyUse.setPressed(false);
+        }
+    }
 
     private boolean isValidBlock(Block block) {
         // 'acceptingBlocks' contains 'block'?

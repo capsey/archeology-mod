@@ -2,5 +2,25 @@
     "parent": "item/handheld",
     "textures": {
         "layer0": "archeology:item/copper_brush"
-    }
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "damage": 0.25
+            },
+            "model": "archeology:item/exposed_copper_brush"
+        },
+        {
+            "predicate": {
+                "damage": 0.50
+            },
+            "model": "archeology:item/weathered_copper_brush"
+        },
+        {
+            "predicate": {
+                "damage": 0.75
+            },
+            "model": "archeology:item/oxidized_copper_brush"
+        }
+    ]
 }

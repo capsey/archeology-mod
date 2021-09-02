@@ -1,0 +1,6 @@
+{
+    "parent": "item/handheld",
+    "textures": {
+        "layer0": "archeology:item/oxidized_copper_brush"
+    }
+}
