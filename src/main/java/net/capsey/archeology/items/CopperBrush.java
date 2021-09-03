@@ -23,7 +23,8 @@ public class CopperBrush extends Item {
         super(settings);
     }
 
-    public ActionResult useOnBlock(ItemUsageContext context) {        
+    public ActionResult useOnBlock(ItemUsageContext context) {     
+        // Add check if block already started brushing, because two players can't both brush same block
         Block block = context.getWorld().getBlockState(context.getBlockPos()).getBlock();
         PlacedBlock placedBlock = new PlacedBlock(block, context.getBlockPos());
 
@@ -42,7 +43,10 @@ public class CopperBrush extends Item {
 
         if (block == null || !block.sameAs(brushingBlocks.get(user))) {
             unpressUseButton(world.isClient);
+            return;
         }
+
+        ((ExcavationBlock) block.getBlock()).brushingTick(world, block.getPosition(), getProgress(stack, remainingUseTicks));
     }
 
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
@@ -60,10 +64,12 @@ public class CopperBrush extends Item {
 	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         // printInChat("Stopped!", user.getUuid(), world.isClient);
         // world.breakBlock(brushingBlocks.get(user).getPosition(), false);
+        PlacedBlock block = brushingBlocks.get(user);
+        ((ExcavationBlock) block.getBlock()).stoppedBrushing(world, block.getPosition());
 	}
 
 	public int getMaxUseTime(ItemStack stack) {
-		return 2 * 20;
+		return 10 * 20;
 	}
 
 	public UseAction getUseAction(ItemStack stack) {
@@ -76,6 +82,10 @@ public class CopperBrush extends Item {
             MinecraftClient client = MinecraftClient.getInstance();
             client.options.keyUse.setPressed(false);
         }
+    }
+
+    private float getProgress(ItemStack stack, int remainingUseTicks) {
+        return (float) (getMaxUseTime(stack) - remainingUseTicks) / getMaxUseTime(stack);
     }
 
     // private void printInChat(String message, UUID sender, boolean isClient) {
