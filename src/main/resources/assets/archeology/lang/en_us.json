@@ -1,3 +1,6 @@
 {
-    "item.archeology.copper_brush": "Copper Brush"
+    "item.archeology.copper_brush": "Copper Brush",
+    
+    "block.archeology.excavation_dirt": "Excavation Dirt",
+    "block.archeology.excavation_gravel": "Excavation Gravel"
 }
