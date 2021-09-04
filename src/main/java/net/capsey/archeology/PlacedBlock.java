@@ -17,9 +17,14 @@ public class PlacedBlock {
     private Block block;
     private BlockPos position;
 
-    public boolean sameAs(PlacedBlock obj) {
-        if (obj == null) return false;
-        return block == obj.getBlock() && position.equals(obj.getPosition());
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof PlacedBlock) {
+            PlacedBlock pBlock = (PlacedBlock) obj;
+            return (block == pBlock.getBlock()) && (position.equals(pBlock.getPosition()));
+        }
+
+        return false;
     }
 
     public Block getBlock() {

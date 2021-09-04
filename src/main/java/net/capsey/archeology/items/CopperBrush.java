@@ -1,7 +1,6 @@
 package net.capsey.archeology.items;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import net.capsey.archeology.PlacedBlock;
 import net.capsey.archeology.blocks.ExcavationBlock;
@@ -17,19 +16,21 @@ import net.minecraft.world.World;
 
 public class CopperBrush extends Item {
 
-    private Map<LivingEntity, PlacedBlock> brushingBlocks = new HashMap<LivingEntity, PlacedBlock>();
+    private HashMap<LivingEntity, PlacedBlock> brushingBlocks = new HashMap<LivingEntity, PlacedBlock>();
 
     public CopperBrush(Settings settings) {
         super(settings);
     }
 
     public ActionResult useOnBlock(ItemUsageContext context) {
-        // TODO: Add check if block already started brushing, because two players can't both brush same block
-        Block block = context.getWorld().getBlockState(context.getBlockPos()).getBlock();
+        // TODO: Add multiplayer check
+        World world = context.getWorld();
+        Block block = world.getBlockState(context.getBlockPos()).getBlock();
         PlacedBlock placedBlock = new PlacedBlock(block, context.getBlockPos());
 
         if (block instanceof ExcavationBlock) {
             brushingBlocks.put(context.getPlayer(), placedBlock);
+            ((ExcavationBlock) block).startBrushing(world, context.getBlockPos(), context.getPlayer());
 
             context.getPlayer().setCurrentHand(context.getHand());
             return ActionResult.CONSUME;
@@ -41,7 +42,7 @@ public class CopperBrush extends Item {
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         PlacedBlock block = PlacedBlock.getBlockEntityLookingAt(user, world);
 
-        boolean lookedAway = block == null || !block.sameAs(brushingBlocks.get(user));
+        boolean lookedAway = block == null || !block.equals(brushingBlocks.get(user));
         boolean correctBlock = block.getBlock() instanceof ExcavationBlock;
 
         if (lookedAway || !correctBlock) {

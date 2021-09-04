@@ -1,12 +1,15 @@
 package net.capsey.archeology;
 
 import net.capsey.archeology.blocks.ExcavationBlock;
+import net.capsey.archeology.blocks.ExcavationBlockEntity;
 import net.capsey.archeology.items.CopperBrush;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -22,6 +25,8 @@ public class ArcheologyMod implements ModInitializer {
     public static final Block EXCAVATION_DIRT = new ExcavationBlock(FabricBlockSettings.copyOf(Blocks.DIRT));
     public static final Block EXCAVATION_GRAVEL = new ExcavationBlock(FabricBlockSettings.copyOf(Blocks.GRAVEL));
 
+    public static BlockEntityType<ExcavationBlockEntity> EXCAVATION_BLOCK_ENTITY;
+
     @Override
     public void onInitialize() {
         // Items
@@ -33,6 +38,8 @@ public class ArcheologyMod implements ModInitializer {
 
         Registry.register(Registry.BLOCK, new Identifier("archeology", "excavation_gravel"), EXCAVATION_GRAVEL);
         Registry.register(Registry.ITEM, new Identifier("archeology", "excavation_gravel"), new BlockItem(EXCAVATION_GRAVEL, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
+
+        EXCAVATION_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, "archeology:excavation_block_entity", FabricBlockEntityTypeBuilder.create(ExcavationBlockEntity::new, EXCAVATION_DIRT, EXCAVATION_GRAVEL).build(null));
     }
     
 }
