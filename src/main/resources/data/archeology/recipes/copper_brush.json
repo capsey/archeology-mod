@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#",
+        "c"
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:feather"
+        },
+        "c": {
+            "item": "minecraft:copper_ingot"
+        }
+    },
+    "result": {
+        "item": "archeology:copper_brush",
+        "count": 1
+    }
+}

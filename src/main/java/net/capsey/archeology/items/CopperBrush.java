@@ -10,6 +10,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
@@ -51,7 +52,7 @@ public class CopperBrush extends Item {
         }
 
         ExcavationBlock obj = (ExcavationBlock) block.getBlock();
-        obj.brushingTick(world, block.getPosition(), getProgress(stack, remainingUseTicks), remainingUseTicks);
+        obj.brushingTick(world, block.getPosition(), getProgress(stack, remainingUseTicks), remainingUseTicks, stack);
     }
 
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
@@ -75,12 +76,16 @@ public class CopperBrush extends Item {
 	}
 
 	public int getMaxUseTime(ItemStack stack) {
-		return 2 * ExcavationBlock.CHECK_TICKS * ExcavationBlock.MAX_BRUSHING_LEVELS;
+		return 2 * ExcavationBlock.getCheckTicks(stack) * ExcavationBlock.MAX_BRUSHING_LEVELS;
 	}
 
 	public UseAction getUseAction(ItemStack stack) {
         // TODO: Add custom UseAction
 		return UseAction.BOW;
+	}
+
+    public boolean canRepair(ItemStack stack, ItemStack ingredient) {
+		return ingredient.getItem() == Items.COPPER_INGOT;
 	}
 
     private void unpressUseButton(boolean isClient) {

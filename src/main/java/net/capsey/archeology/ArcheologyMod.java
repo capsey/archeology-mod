@@ -19,7 +19,7 @@ import net.minecraft.util.registry.Registry;
 public class ArcheologyMod implements ModInitializer {
 
     // Items
-    public static final Item COPPER_BRUSH = new CopperBrush(new Item.Settings().maxDamage(238).group(ItemGroup.TOOLS)); // 238
+    public static final Item COPPER_BRUSH = new CopperBrush(new Item.Settings().maxDamage(128).group(ItemGroup.TOOLS)); // 238
 
     // Blocks
     public static final Block EXCAVATION_DIRT = new ExcavationBlock(FabricBlockSettings.copyOf(Blocks.DIRT));

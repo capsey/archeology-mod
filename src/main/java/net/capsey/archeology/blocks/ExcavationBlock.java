@@ -1,5 +1,6 @@
 package net.capsey.archeology.blocks;
 
+import net.capsey.archeology.ArcheologyMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -8,6 +9,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
@@ -20,9 +22,18 @@ import net.minecraft.world.World;
 public class ExcavationBlock extends Block implements BlockEntityProvider {
 
     public static final int MAX_BRUSHING_LEVELS = 7;
-    public static final int CHECK_TICKS = 10;
-
     public static final IntProperty BRUSHING_LEVEL = IntProperty.of("brushing_level", 0, MAX_BRUSHING_LEVELS);
+    
+    private static final int[] CHECK_TICKS = { 15, 12, 10, 8 };
+
+    public static int getCheckTicks(ItemStack stack) {
+        if (stack.getItem() != ArcheologyMod.COPPER_BRUSH) {
+            return -1;
+        }
+
+        int index = (int) Math.floor(4 * stack.getDamage() / stack.getMaxDamage());
+        return CHECK_TICKS[index];
+    }
 
     public ExcavationBlock(Settings settings) {
         super(settings);
@@ -63,8 +74,8 @@ public class ExcavationBlock extends Block implements BlockEntityProvider {
         }
     }
 
-    public void brushingTick(World world, BlockPos pos, float progress, int remainingUseTicks) {
-        if (remainingUseTicks % CHECK_TICKS == 0) {
+    public void brushingTick(World world, BlockPos pos, float progress, int remainingUseTicks, ItemStack stack) {
+        if (remainingUseTicks % getCheckTicks(stack) == 0) {
             BlockState state = world.getBlockState(pos);
     
             if (state.getBlock() instanceof ExcavationBlock) {
