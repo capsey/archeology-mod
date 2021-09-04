@@ -23,8 +23,8 @@ public class CopperBrush extends Item {
         super(settings);
     }
 
-    public ActionResult useOnBlock(ItemUsageContext context) {     
-        // Add check if block already started brushing, because two players can't both brush same block
+    public ActionResult useOnBlock(ItemUsageContext context) {
+        // TODO: Add check if block already started brushing, because two players can't both brush same block
         Block block = context.getWorld().getBlockState(context.getBlockPos()).getBlock();
         PlacedBlock placedBlock = new PlacedBlock(block, context.getBlockPos());
 
@@ -41,35 +41,40 @@ public class CopperBrush extends Item {
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         PlacedBlock block = PlacedBlock.getBlockEntityLookingAt(user, world);
 
-        if (block == null || !block.sameAs(brushingBlocks.get(user))) {
+        boolean lookedAway = block == null || !block.sameAs(brushingBlocks.get(user));
+        boolean correctBlock = block.getBlock() instanceof ExcavationBlock;
+
+        if (lookedAway || !correctBlock) {
             unpressUseButton(world.isClient);
             return;
         }
 
-        ((ExcavationBlock) block.getBlock()).brushingTick(world, block.getPosition(), getProgress(stack, remainingUseTicks));
+        ExcavationBlock obj = (ExcavationBlock) block.getBlock();
+        obj.brushingTick(world, block.getPosition(), getProgress(stack, remainingUseTicks), remainingUseTicks);
     }
 
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
-        // Durability decreases if succeded
         stack.damage(1, user, (p) -> { p.sendToolBreakStatus(user.getActiveHand()); });
         
-        // TODO: Change to valid behaviour!
         // printInChat("Finished!", user.getUuid(), world.isClient);
-        world.breakBlock(brushingBlocks.get(user).getPosition(), true);
         unpressUseButton(world.isClient);
 
+        ExcavationBlock block = (ExcavationBlock) brushingBlocks.get(user).getBlock();
+        block.finishedBrushing(world, brushingBlocks.get(user).getPosition());
+        
 		return stack;
 	}
 
 	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         // printInChat("Stopped!", user.getUuid(), world.isClient);
-        // world.breakBlock(brushingBlocks.get(user).getPosition(), false);
-        PlacedBlock block = brushingBlocks.get(user);
-        ((ExcavationBlock) block.getBlock()).stoppedBrushing(world, block.getPosition());
+        stack.damage(2, user, (p) -> { p.sendToolBreakStatus(user.getActiveHand()); });
+
+        ExcavationBlock block = (ExcavationBlock) brushingBlocks.get(user).getBlock();
+        block.stoppedBrushing(world, brushingBlocks.get(user).getPosition());
 	}
 
 	public int getMaxUseTime(ItemStack stack) {
-		return 10 * 20;
+		return 2 * ExcavationBlock.CHECK_TICKS * ExcavationBlock.MAX_BRUSHING_LEVELS;
 	}
 
 	public UseAction getUseAction(ItemStack stack) {
