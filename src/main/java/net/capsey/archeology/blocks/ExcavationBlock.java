@@ -7,7 +7,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
@@ -24,7 +23,7 @@ public class ExcavationBlock extends Block implements BlockEntityProvider {
     public static final int MAX_BRUSHING_LEVELS = 7;
     public static final IntProperty BRUSHING_LEVEL = IntProperty.of("brushing_level", 0, MAX_BRUSHING_LEVELS);
     
-    private static final int[] CHECK_TICKS = { 15, 12, 10, 8 };
+    private static final int[] CHECK_TICKS = { 20, 18, 16, 14 };
 
     public static int getCheckTicks(ItemStack stack) {
         if (stack.getItem() != ArcheologyMod.COPPER_BRUSH) {
@@ -61,7 +60,7 @@ public class ExcavationBlock extends Block implements BlockEntityProvider {
 		return PistonBehavior.DESTROY;
 	}
 
-    public void startBrushing(World world, BlockPos pos, PlayerEntity player) {
+    public void startBrushing(World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
         BlockState state = world.getBlockState(pos);
 
         if (state.getBlock() instanceof ExcavationBlock) {
@@ -70,7 +69,7 @@ public class ExcavationBlock extends Block implements BlockEntityProvider {
                 return;
             }
 
-            ((ExcavationBlockEntity) world.getBlockEntity(pos)).generateLoot(player);
+            ((ExcavationBlockEntity) world.getBlockEntity(pos)).generateLoot(player, stack);
         }
     }
 
@@ -92,10 +91,7 @@ public class ExcavationBlock extends Block implements BlockEntityProvider {
 
     public void finishedBrushing(World world, BlockPos pos) {
         if (world.getBlockState(pos).getBlock() instanceof ExcavationBlock) {
-            ExcavationBlockEntity blockEntity = (ExcavationBlockEntity) world.getBlockEntity(pos);
-            ItemEntity item = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), blockEntity.getLoot());
-            world.spawnEntity(item);
-
+            ((ExcavationBlockEntity) world.getBlockEntity(pos)).spawnLootItems();
             world.breakBlock(pos, true);
         }
     }

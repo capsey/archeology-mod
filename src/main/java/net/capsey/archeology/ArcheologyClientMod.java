@@ -10,11 +10,11 @@ public class ArcheologyClientMod implements ClientModInitializer {
     
     @Override
     public void onInitializeClient() {
+        BlockEntityRendererRegistry.register(ArcheologyMod.EXCAVATION_BLOCK_ENTITY, ExcavationBlockEntityRenderer::new);
+
         FabricModelPredicateProviderRegistry.register(ArcheologyMod.COPPER_BRUSH, new Identifier("damage"), (itemStack, clientWorld, livingEntity, i) -> {
             return itemStack.getDamage() / itemStack.getMaxDamage();
         });
-
-        BlockEntityRendererRegistry.register(ArcheologyMod.EXCAVATION_BLOCK_ENTITY, ExcavationBlockEntityRenderer::new);
     }
 
 }

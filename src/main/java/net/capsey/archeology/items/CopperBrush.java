@@ -31,7 +31,7 @@ public class CopperBrush extends Item {
 
         if (block instanceof ExcavationBlock) {
             brushingBlocks.put(context.getPlayer(), placedBlock);
-            ((ExcavationBlock) block).startBrushing(world, context.getBlockPos(), context.getPlayer());
+            ((ExcavationBlock) block).startBrushing(world, context.getBlockPos(), context.getPlayer(), context.getStack());
 
             context.getPlayer().setCurrentHand(context.getHand());
             return ActionResult.CONSUME;
