@@ -1,5 +1,7 @@
 package net.capsey.archeology;
 
+import java.util.function.Consumer;
+
 import net.capsey.archeology.blocks.ExcavationBlock;
 import net.capsey.archeology.blocks.ExcavationBlockEntity;
 import net.capsey.archeology.items.CopperBrush;
@@ -13,6 +15,8 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.loot.context.LootContextParameters;
+import net.minecraft.loot.context.LootContextType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -26,6 +30,11 @@ public class ArcheologyMod implements ModInitializer {
     public static final Block EXCAVATION_GRAVEL = new ExcavationBlock(FabricBlockSettings.copyOf(Blocks.GRAVEL));
 
     public static BlockEntityType<ExcavationBlockEntity> EXCAVATION_BLOCK_ENTITY;
+
+    // Loot
+    public static final LootContextType EXCAVATION = createLootContextType((builder) -> {
+		builder.require(LootContextParameters.TOOL).allow(LootContextParameters.THIS_ENTITY).allow(LootContextParameters.BLOCK_ENTITY);
+	});
 
     @Override
     public void onInitialize() {
@@ -41,5 +50,13 @@ public class ArcheologyMod implements ModInitializer {
 
         EXCAVATION_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, "archeology:excavation_block_entity", FabricBlockEntityTypeBuilder.create(ExcavationBlockEntity::new, EXCAVATION_DIRT, EXCAVATION_GRAVEL).build(null));
     }
+
+    private static LootContextType createLootContextType(Consumer<LootContextType.Builder> type) {
+		LootContextType.Builder builder = new LootContextType.Builder();
+		type.accept(builder);
+		LootContextType lootContextType = builder.build();
+
+        return lootContextType;
+	}
     
 }

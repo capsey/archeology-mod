@@ -1,0 +1,169 @@
+{
+  "type": "archeology:excavation",
+  "pools": [{
+    "rolls": 1.0,
+    "bonus_rolls": 0.0,
+    "entries": [
+      {
+        "type": "minecraft:item",
+        "weight": 5,
+        "quality": 20,
+        "name": "minecraft:diamond",
+        "functions": [{
+          "function": "set_count",
+          "count": { "min": 1, "max": 3 }
+        }]
+      },
+      {
+        "type": "minecraft:item",
+        "weight": 10,
+        "quality": 10,
+        "name": "minecraft:emerald",
+        "functions": [{
+          "function": "set_count",
+          "count": { "min": 2, "max": 6 }
+        }]
+      },
+      {
+        "type": "minecraft:item",
+        "weight": 20,
+        "quality": 10,
+        "name": "minecraft:name_tag"
+      },
+
+
+
+
+
+
+
+      {
+        "type": "minecraft:item",
+        "weight": 5,
+        "quality": 15,
+        "name": "minecraft:golden_helmet",
+        "functions": [
+          {
+            "function": "set_damage",
+            "damage": { "min": 0.2, "max": 0.8 }
+          },
+          {
+            "function": "minecraft:enchant_randomly"
+          }
+        ]
+      },
+      {
+        "type": "minecraft:item",
+        "weight": 5,
+        "quality": 15,
+        "name": "minecraft:golden_boots",
+        "functions": [
+          {
+            "function": "set_damage",
+            "damage": { "min": 0.2, "max": 0.8 }
+          },
+          {
+            "function": "minecraft:enchant_randomly"
+          }
+        ]
+      },
+      {
+        "type": "minecraft:item",
+        "weight": 5,
+        "quality": 15,
+        "name": "minecraft:iron_shovel",
+        "functions": [
+          {
+            "function": "set_damage",
+            "damage": { "min": 0.2, "max": 0.8 }
+          },
+          {
+            "function": "minecraft:enchant_randomly"
+          }
+        ]
+      },
+      {
+        "type": "minecraft:item",
+        "weight": 5,
+        "quality": 15,
+        "name": "minecraft:iron_sword",
+        "functions": [{
+          "function": "set_damage",
+          "damage": { "min": 0.2, "max": 0.8 }
+        }]
+      },
+      {
+        "type": "minecraft:item",
+        "weight": 5,
+        "quality": 15,
+        "name": "minecraft:iron_chestplate",
+        "functions": [{
+          "function": "set_damage",
+          "damage": { "min": 0.2, "max": 0.8 }
+        }]
+      },
+      {
+        "type": "minecraft:item",
+        "weight": 5,
+        "quality": 15,
+        "name": "minecraft:chainmail_boots",
+        "functions": [
+          {
+            "function": "set_damage",
+            "damage": { "min": 0.2, "max": 0.8 }
+          },
+          {
+            "function": "minecraft:enchant_randomly"
+          }
+        ]
+      },
+
+
+
+
+
+
+
+      {
+        "type": "minecraft:item",
+        "weight": 20,
+        "quality": -1,
+        "name": "minecraft:rotten_flesh",
+        "functions": [{
+          "function": "set_count",
+          "count": { "min": 3, "max": 10 }
+        }]
+      },
+      {
+        "type": "minecraft:item",
+        "weight": 20,
+        "quality": -1,
+        "name": "minecraft:bone",
+        "functions": [{
+          "function": "set_count",
+          "count": { "min": 3, "max": 10 }
+        }]
+      },
+      {
+        "type": "minecraft:item",
+        "weight": 20,
+        "quality": -1,
+        "name": "minecraft:coal",
+        "functions": [{
+          "function": "set_count",
+          "count": { "min": 3, "max": 10 }
+        }]
+      },
+      {
+        "type": "minecraft:item",
+        "weight": 20,
+        "quality": -1,
+        "name": "minecraft:clay_ball",
+        "functions": [{
+          "function": "set_count",
+          "count": { "min": 3, "max": 10 }
+        }]
+      }
+    ]
+  }]
+}

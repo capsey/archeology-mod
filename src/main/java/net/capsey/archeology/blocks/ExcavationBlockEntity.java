@@ -9,34 +9,29 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.loot.LootTable;
-import net.minecraft.loot.LootTables;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 
 public class ExcavationBlockEntity extends BlockEntity implements BlockEntityClientSerializable  {
 
-    private static final float[] LUCK_MULTIPLIERS = { 1.0F, 2.0F, 3.0F, 4.0F };
+    private static final float[] LUCK_POINTS = { 1.0F, 2.0F, 3.0F, 4.0F };
 
-    private static float getLuckMultiplier(ItemStack stack) {
+    private static float getLuckPoints(ItemStack stack) {
         if (stack.getItem() != ArcheologyMod.COPPER_BRUSH) {
             return -1;
         }
 
         int index = (int) Math.floor(4 * stack.getDamage() / stack.getMaxDamage());
-        return LUCK_MULTIPLIERS[index];
+        return LUCK_POINTS[index];
     }
 
     private ItemStack loot = ItemStack.EMPTY;
-
-    // private Identifier lootTableId;
-	// private long lootTableSeed;
+    private Identifier lootTableId = new Identifier("archeology", "excavation/excavation_site");
 
     public ExcavationBlockEntity(BlockPos pos, BlockState state) {
         super(ArcheologyMod.EXCAVATION_BLOCK_ENTITY, pos, state);
@@ -46,10 +41,16 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
         
-        loot = ItemStack.fromNbt(tag.getCompound("Loot"));
+        if (tag.contains("Loot")){
+            loot = ItemStack.fromNbt(tag.getCompound("Loot"));
+        }
 
-        // lootTableId = new Identifier(tag.getString("LootTable"));
-        // lootTableSeed = tag.getLong("LootTableSeed");
+        // if (tag.contains("LootTable")) {
+        //     String id = tag.getString("LootTable");
+        //     if (!id.isBlank()) {
+        //         lootTableId = new Identifier(id);
+        //     }
+        // }
     }
 
     @Override
@@ -63,7 +64,6 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         }
 
         // tag.putString("LootTable", lootTableId.toString());
-        // tag.putLong("LootTableSeed", lootTableSeed);
  
         return tag;
     }
@@ -80,18 +80,22 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
 
     public void generateLoot(PlayerEntity player, ItemStack stack) {
         if (this.world.isClient) {
-            loot = new ItemStack(Items.DIAMOND_BLOCK, 1);
             return;
         }
         
-        // TODO: Change to custom Loot Table
-        Vec3d origin = new Vec3d(this.pos.getX(), this.pos.getY(), this.pos.getZ());
-        LootContext.Builder builder = (new LootContext.Builder((ServerWorld)this.world)).parameter(LootContextParameters.ORIGIN, origin).parameter(LootContextParameters.TOOL, stack).parameter(LootContextParameters.BLOCK_ENTITY, this).parameter(LootContextParameters.BLOCK_STATE, this.world.getBlockState(this.getPos())).random(this.world.getRandom()).luck(getLuckMultiplier(stack) * player.getLuck());
-        LootTable lootTable = this.world.getServer().getLootManager().getTable(LootTables.SIMPLE_DUNGEON_CHEST);
-        List<ItemStack> list = lootTable.generateLoot(builder.build(LootContextTypes.BLOCK));
+        LootContext.Builder builder = (new LootContext.Builder((ServerWorld)this.world))
+            .parameter(LootContextParameters.TOOL, stack)
+            .parameter(LootContextParameters.THIS_ENTITY, player)
+            .parameter(LootContextParameters.BLOCK_ENTITY, this)
+            .random(this.world.getRandom()).luck(player.getLuck() + getLuckPoints(stack));
         
-        loot = list.get(0);
-        this.markDirty();
+        LootTable lootTable = this.world.getServer().getLootManager().getTable(lootTableId);
+        List<ItemStack> list = lootTable.generateLoot(builder.build(ArcheologyMod.EXCAVATION));
+        
+        if (list.size() > 0) {
+            loot = list.get(0);
+            this.markDirty();
+        }
     }
     
     public boolean isLootGenerated() {
