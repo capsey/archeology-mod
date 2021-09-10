@@ -49,12 +49,12 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
             loot = ItemStack.fromNbt(tag.getCompound("Loot"));
         }
 
-        // if (tag.contains("LootTable")) {
-        //     String id = tag.getString("LootTable");
-        //     if (!id.isBlank()) {
-        //         lootTableId = new Identifier(id);
-        //     }
-        // }
+        if (tag.contains("LootTable")) {
+            String id = tag.getString("LootTable");
+            if (!id.isBlank()) {
+                lootTableId = new Identifier(id);
+            }
+        }
     }
 
     @Override
@@ -67,7 +67,7 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
             tag.put("Loot", nbtCompound);
         }
 
-        // tag.putString("LootTable", lootTableId.toString());
+        tag.putString("LootTable", lootTableId.toString());
  
         return tag;
     }
@@ -112,7 +112,7 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         if (remainingUseTicks % ExcavationBlock.getBrushTicks(stack) == 0) {
             int num = (int) Math.floor(progress * ExcavationBlock.MAX_BRUSHING_LEVELS) + 1;
 
-            if (num < 8) {
+            if (num < ExcavationBlock.MAX_BRUSHING_LEVELS + 1) {
                 world.setBlockState(pos, state.with(ExcavationBlock.BRUSHING_LEVEL, num));
             }
         }
