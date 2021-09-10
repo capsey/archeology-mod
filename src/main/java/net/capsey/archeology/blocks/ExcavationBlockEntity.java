@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
@@ -30,11 +31,14 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         return LUCK_POINTS[index];
     }
 
+    private Identifier lootTableId;
+
     private ItemStack loot = ItemStack.EMPTY;
-    private Identifier lootTableId = new Identifier("archeology", "excavation/excavation_site");
+    private LivingEntity brushingEntity;
 
     public ExcavationBlockEntity(BlockPos pos, BlockState state) {
         super(ArcheologyMod.EXCAVATION_BLOCK_ENTITY, pos, state);
+        lootTableId = new Identifier("archeology", "excavation/excavation_site");
     }
 
     @Override
@@ -78,6 +82,53 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         return writeNbt(tag);
     }
 
+    // Brushing
+    public boolean isBrushingPlayer(LivingEntity player) {
+        return brushingEntity == null || brushingEntity.equals(player);
+    }
+
+    public boolean startBrushing(PlayerEntity player, ItemStack stack) {
+        if (isBrushingPlayer(player)) {
+            BlockState state = world.getBlockState(pos);
+            brushingEntity = player;
+    
+            if (state.getBlock() instanceof ExcavationBlock) {
+                if (state.get(ExcavationBlock.BRUSHING_LEVEL) == 0) {
+                    ((ExcavationBlockEntity) world.getBlockEntity(pos)).generateLoot(player, stack);
+                    return true;
+                }
+
+                stoppedBrushing();
+            }
+        }
+
+        return false;
+    }
+
+    public void brushingTick(float progress, int remainingUseTicks, ItemStack stack) {
+        BlockState state = world.getBlockState(pos);
+        ((ExcavationBlock) state.getBlock()).visualsTick(world, pos, remainingUseTicks, stack);
+
+        if (remainingUseTicks % ExcavationBlock.getBrushTicks(stack) == 0) {
+            int num = (int) Math.floor(progress * ExcavationBlock.MAX_BRUSHING_LEVELS) + 1;
+
+            if (num < 8) {
+                world.setBlockState(pos, state.with(ExcavationBlock.BRUSHING_LEVEL, num));
+            }
+        }
+    }
+
+    public void finishedBrushing() {
+        ItemEntity item = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), loot);
+        world.spawnEntity(item);
+        world.breakBlock(pos, true);
+    }
+
+    public void stoppedBrushing() {
+        world.breakBlock(pos, false);
+    }
+
+    // Loot
     public void generateLoot(PlayerEntity player, ItemStack stack) {
         if (this.world.isClient) {
             return;
@@ -104,11 +155,6 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
 
     public ItemStack getLoot() {
         return loot;
-    }
-
-    public void spawnLootItems() {
-        ItemEntity item = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), loot);
-        world.spawnEntity(item);
     }
     
 }

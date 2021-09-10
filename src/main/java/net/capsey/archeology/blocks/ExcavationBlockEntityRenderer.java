@@ -20,8 +20,8 @@ public class ExcavationBlockEntityRenderer implements BlockEntityRenderer<Excava
         if (blockEntity.isLootGenerated()) {
             // Mandatory call before GL calls
             matrices.push();
-            matrices.translate(0.5, 0.25, 0.5);
 
+            matrices.translate(0.5, 0.25, 0.5);
             MinecraftClient.getInstance().getItemRenderer().renderItem(blockEntity.getLoot(), ModelTransformation.Mode.GROUND, light, overlay, matrices, vertexConsumers, overlay);
 
             // Mandatory call after GL calls

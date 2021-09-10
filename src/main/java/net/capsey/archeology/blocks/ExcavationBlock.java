@@ -7,8 +7,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
@@ -23,15 +23,15 @@ public class ExcavationBlock extends Block implements BlockEntityProvider {
     public static final int MAX_BRUSHING_LEVELS = 7;
     public static final IntProperty BRUSHING_LEVEL = IntProperty.of("brushing_level", 0, MAX_BRUSHING_LEVELS);
     
-    private static final int[] CHECK_TICKS = { 20, 18, 16, 14 };
+    private static final int[] BRUSH_TICKS = { 40, 36, 32, 28 };
 
-    public static int getCheckTicks(ItemStack stack) {
+    public static int getBrushTicks(ItemStack stack) {
         if (stack.getItem() != ArcheologyMod.COPPER_BRUSH) {
             return -1;
         }
 
         int index = (int) Math.floor(4 * stack.getDamage() / stack.getMaxDamage());
-        return CHECK_TICKS[index];
+        return BRUSH_TICKS[index];
     }
 
     public ExcavationBlock(Settings settings) {
@@ -60,45 +60,11 @@ public class ExcavationBlock extends Block implements BlockEntityProvider {
 		return PistonBehavior.DESTROY;
 	}
 
-    public void startBrushing(World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
-        BlockState state = world.getBlockState(pos);
-
-        if (state.getBlock() instanceof ExcavationBlock) {
-            if (state.get(BRUSHING_LEVEL) != 0) {
-                stoppedBrushing(world, pos);
-                return;
-            }
-
-            ((ExcavationBlockEntity) world.getBlockEntity(pos)).generateLoot(player, stack);
-        }
-    }
-
-    public void brushingTick(World world, BlockPos pos, float progress, int remainingUseTicks, ItemStack stack) {
-        if (remainingUseTicks % getCheckTicks(stack) == 0) {
-            BlockState state = world.getBlockState(pos);
-    
-            if (state.getBlock() instanceof ExcavationBlock) {
-                int num = (int) Math.floor(progress * MAX_BRUSHING_LEVELS) + 1;
-
-                if (num < 8) {
-                    world.setBlockState(pos, state.with(BRUSHING_LEVEL, num));
-                    world.playSound(null, pos, soundGroup.getBreakSound(), SoundCategory.BLOCKS, soundGroup.getVolume(), soundGroup.getPitch());
-                    world.addBlockBreakParticles(pos, state);
-                }
-            }
-        }
-    }
-
-    public void finishedBrushing(World world, BlockPos pos) {
-        if (world.getBlockState(pos).getBlock() instanceof ExcavationBlock) {
-            ((ExcavationBlockEntity) world.getBlockEntity(pos)).spawnLootItems();
-            world.breakBlock(pos, true);
-        }
-    }
-
-    public void stoppedBrushing(World world, BlockPos pos) {
-        if (world.getBlockState(pos).getBlock() instanceof ExcavationBlock) {
-            world.breakBlock(pos, false);
+    public void visualsTick(World world, BlockPos pos, int remainingTicks, ItemStack stack) {
+        if (remainingTicks % (getBrushTicks(stack) / 4) == 0) {
+            BlockSoundGroup soundGroup = world.getBlockState(pos).getSoundGroup();
+            world.playSound(null, pos, soundGroup.getBreakSound(), SoundCategory.BLOCKS, soundGroup.getVolume(), soundGroup.getPitch());
+            world.addBlockBreakParticles(pos, world.getBlockState(pos));
         }
     }
     
