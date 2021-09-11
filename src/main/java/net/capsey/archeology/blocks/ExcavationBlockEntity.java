@@ -36,6 +36,21 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         return LUCK_POINTS[index];
     }
 
+    private static float getBreakingDelta(ItemStack stack, double magnitude) {
+        if (stack.getItem() != ArcheologyMod.COPPER_BRUSH) {
+            return -1;
+        }
+
+        int index = (int) Math.floor(4 * stack.getDamage() / stack.getMaxDamage());
+        switch (index) {
+            case 0: return (float) ((-0.75F * Math.sqrt(magnitude)) + 0.04F);
+            case 1: return (float) ((-0.70F * Math.sqrt(magnitude)) + 0.05F);
+            case 2: return (float) ((-0.65F * Math.sqrt(magnitude)) + 0.06F);
+            case 3: return (float) ((-0.50F * Math.sqrt(magnitude)) + 0.07F);
+            default: return 1.0F;
+        }
+    }
+
     private Identifier lootTableId;
 
     private ItemStack loot = ItemStack.EMPTY;
@@ -136,9 +151,9 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
             double magnitude = Math.pow(lookPoint.getX() - prevLookPoint.getX(), 2)
                              + Math.pow(lookPoint.getY() - prevLookPoint.getY(), 2)
                              + Math.pow(lookPoint.getZ() - prevLookPoint.getZ(), 2);
-            float delta = (float) ((-0.5F * Math.sqrt(magnitude)) + 0.05F);
-    
-            updateBlockBreakingProgress(Math.max(-0.05F, Math.min(0.05F, delta)));
+            
+            float delta = getBreakingDelta(stack, magnitude);
+            updateBlockBreakingProgress(Math.max(-0.05F, delta));
         }
 
         prevLookPoint = lookPoint;
@@ -172,10 +187,12 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
 	}
 
     public void breakBlock() {
-        world.setBlockBreakingInfo(brushingPlayer.getId(), pos, -1);
-        breakingProgress = -1.0F;
-
-        world.breakBlock(pos, true);
+        if (world.getBlockState(pos).getBlock() instanceof ExcavationBlock) {
+            world.setBlockBreakingInfo(brushingPlayer.getId(), pos, -1);
+            breakingProgress = -1.0F;
+    
+            world.breakBlock(pos, true);
+        }
     }
 
     // Loot
