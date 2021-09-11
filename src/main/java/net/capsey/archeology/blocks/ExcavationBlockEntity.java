@@ -15,10 +15,15 @@ import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 public class ExcavationBlockEntity extends BlockEntity implements BlockEntityClientSerializable  {
+
+    public static final String LOOT_TABLE_KEY = "LootTable";
 
     private static final float[] LUCK_POINTS = { 1.0F, 2.0F, 3.0F, 4.0F };
 
@@ -34,7 +39,9 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
     private Identifier lootTableId;
 
     private ItemStack loot = ItemStack.EMPTY;
-    private LivingEntity brushingEntity;
+    private PlayerEntity brushingPlayer;
+    private float breakingProgress = -1.0F;
+    private Vec3d prevLookPoint;
 
     public ExcavationBlockEntity(BlockPos pos, BlockState state) {
         super(ArcheologyMod.EXCAVATION_BLOCK_ENTITY, pos, state);
@@ -84,13 +91,13 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
 
     // Brushing
     public boolean isBrushingPlayer(LivingEntity player) {
-        return brushingEntity == null || brushingEntity.equals(player);
+        return brushingPlayer == null || brushingPlayer.equals(player);
     }
 
     public boolean startBrushing(PlayerEntity player, ItemStack stack) {
         if (isBrushingPlayer(player)) {
             BlockState state = world.getBlockState(pos);
-            brushingEntity = player;
+            brushingPlayer = player;
     
             if (state.getBlock() instanceof ExcavationBlock) {
                 if (state.get(ExcavationBlock.BRUSHING_LEVEL) == 0) {
@@ -98,17 +105,24 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
                     return true;
                 }
 
-                stoppedBrushing();
+                breakBlock();
             }
         }
 
         return false;
     }
 
-    public void brushingTick(float progress, int remainingUseTicks, ItemStack stack) {
+    public void brushingTick(float progress, int remainingUseTicks, ItemStack stack, Vec3d lookPoint) {
         BlockState state = world.getBlockState(pos);
-        ((ExcavationBlock) state.getBlock()).visualsTick(world, pos, remainingUseTicks, stack);
+        
+        // Aestetics
+        if (remainingUseTicks % (ExcavationBlock.getBrushTicks(stack) / 4) == 0) {
+            BlockSoundGroup soundGroup = world.getBlockState(pos).getSoundGroup();
+            world.playSound(null, pos, soundGroup.getBreakSound(), SoundCategory.BLOCKS, soundGroup.getVolume(), soundGroup.getPitch());
+            world.addBlockBreakParticles(pos, world.getBlockState(pos));
+        }
 
+        // Brushing
         if (remainingUseTicks % ExcavationBlock.getBrushTicks(stack) == 0) {
             int num = (int) Math.floor(progress * ExcavationBlock.MAX_BRUSHING_LEVELS) + 1;
 
@@ -116,16 +130,52 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
                 world.setBlockState(pos, state.with(ExcavationBlock.BRUSHING_LEVEL, num));
             }
         }
+
+        // Breaking
+        if (prevLookPoint != null) {
+            double magnitude = Math.pow(lookPoint.getX() - prevLookPoint.getX(), 2)
+                             + Math.pow(lookPoint.getY() - prevLookPoint.getY(), 2)
+                             + Math.pow(lookPoint.getZ() - prevLookPoint.getZ(), 2);
+            float delta = (float) ((-0.5F * Math.sqrt(magnitude)) + 0.05F);
+    
+            updateBlockBreakingProgress(Math.max(-0.05F, Math.min(0.05F, delta)));
+        }
+
+        prevLookPoint = lookPoint;
     }
 
     public void finishedBrushing() {
         ItemEntity item = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), loot);
         world.spawnEntity(item);
-        world.breakBlock(pos, true);
+        breakBlock();
     }
 
-    public void stoppedBrushing() {
-        world.breakBlock(pos, false);
+    // Breaking
+    public void updateBlockBreakingProgress(float delta) {
+        BlockState blockState = world.getBlockState(pos);
+
+        if (breakingProgress < 0.0F) {
+            blockState.onBlockBreakStart(world, pos, brushingPlayer);
+            world.setBlockBreakingInfo(brushingPlayer.getId(), pos, (int) (breakingProgress * 10.0F) - 1);
+            breakingProgress = 0.0F;
+            return;
+        }
+
+        breakingProgress += delta;
+
+        if (breakingProgress >= 1.0F) {
+            breakBlock();
+            return;
+        }
+
+        world.setBlockBreakingInfo(brushingPlayer.getId(), pos, (int) (breakingProgress * 10.0F) - 1);
+	}
+
+    public void breakBlock() {
+        world.setBlockBreakingInfo(brushingPlayer.getId(), pos, -1);
+        breakingProgress = -1.0F;
+
+        world.breakBlock(pos, true);
     }
 
     // Loot

@@ -57,7 +57,7 @@ public class CopperBrush extends Item {
 
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         // TODO: Remove hardcoded player reach value
-        HitResult result = user.raycast(4.5, 1, false);
+        HitResult result = user.raycast(4.5F, 1, false);
 
         if (result.getClass() == BlockHitResult.class) {
             BlockHitResult blockHitResult = (BlockHitResult) result;
@@ -67,7 +67,7 @@ public class CopperBrush extends Item {
                 ExcavationBlockEntity excavationEntity = (ExcavationBlockEntity) blockEntity;
 
                 if (excavationEntity.isBrushingPlayer(user)) {
-                    excavationEntity.brushingTick(getProgress(stack, remainingUseTicks), remainingUseTicks, stack);
+                    excavationEntity.brushingTick(getProgress(stack, remainingUseTicks), remainingUseTicks, stack, blockHitResult.getPos());
                     return;
                 }
             }
@@ -94,10 +94,10 @@ public class CopperBrush extends Item {
         stack.damage(3, user, (p) -> { p.sendToolBreakStatus(user.getActiveHand()); });
 
         if (!world.isClient) {
-            brushingBlocks.get(user).stoppedBrushing();
+            brushingBlocks.get(user).breakBlock();
         }
         else {
-            brushingBlock.stoppedBrushing();
+            brushingBlock.breakBlock();
         }
 	}
 

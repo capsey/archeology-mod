@@ -8,15 +8,12 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.ItemStack;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
 
 public class ExcavationBlock extends Block implements BlockEntityProvider {
 
@@ -59,13 +56,5 @@ public class ExcavationBlock extends Block implements BlockEntityProvider {
 	public PistonBehavior getPistonBehavior(BlockState state) {
 		return PistonBehavior.DESTROY;
 	}
-
-    public void visualsTick(World world, BlockPos pos, int remainingTicks, ItemStack stack) {
-        if (remainingTicks % (getBrushTicks(stack) / 4) == 0) {
-            BlockSoundGroup soundGroup = world.getBlockState(pos).getSoundGroup();
-            world.playSound(null, pos, soundGroup.getBreakSound(), SoundCategory.BLOCKS, soundGroup.getVolume(), soundGroup.getPitch());
-            world.addBlockBreakParticles(pos, world.getBlockState(pos));
-        }
-    }
     
 }
