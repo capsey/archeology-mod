@@ -1,5 +1,6 @@
 package net.capsey.archeology.blocks;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.capsey.archeology.ArcheologyMod;
@@ -14,6 +15,7 @@ import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
@@ -33,6 +35,8 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         }
 
         int index = (int) Math.floor(4 * stack.getDamage() / stack.getMaxDamage());
+        if (index >= LUCK_POINTS.length || index < 0) { index = 0; }
+
         return LUCK_POINTS[index];
     }
 
@@ -42,18 +46,19 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         }
 
         int index = (int) Math.floor(4 * stack.getDamage() / stack.getMaxDamage());
+        
         switch (index) {
-            case 0: return (float) ((-0.75F * Math.sqrt(magnitude)) + 0.04F);
-            case 1: return (float) ((-0.70F * Math.sqrt(magnitude)) + 0.05F);
-            case 2: return (float) ((-0.65F * Math.sqrt(magnitude)) + 0.06F);
-            case 3: return (float) ((-0.50F * Math.sqrt(magnitude)) + 0.07F);
+            case 0: return (float) (-0.75F * Math.sqrt(magnitude)) + 0.04F;
+            case 1: return (float) (-0.72F * Math.sqrt(magnitude)) + 0.04F;
+            case 2: return (float) (-0.67F * Math.sqrt(magnitude)) + 0.05F;
+            case 3: return (float) (-0.65F * Math.sqrt(magnitude)) + 0.06F;
             default: return 1.0F;
         }
     }
 
     private Identifier lootTableId;
 
-    private ItemStack loot = ItemStack.EMPTY;
+    private ArrayList<ItemStack> loot = new ArrayList<ItemStack>();
     private PlayerEntity brushingPlayer;
     private float breakingProgress = -1.0F;
     private Vec3d prevLookPoint;
@@ -68,7 +73,13 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         super.readNbt(tag);
         
         if (tag.contains("Loot")){
-            loot = ItemStack.fromNbt(tag.getCompound("Loot"));
+            loot.clear();
+            NbtList nbtList = tag.getList("Loot", 10);
+
+            for (int i = 0; i < nbtList.size(); i++) {
+                NbtCompound nbtCompound = nbtList.getCompound(i);
+                loot.add(ItemStack.fromNbt(nbtCompound));
+            }
         }
 
         if (tag.contains("LootTable")) {
@@ -84,9 +95,15 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         super.writeNbt(tag);
 
         if (!loot.isEmpty()) {
-            NbtCompound nbtCompound = new NbtCompound();
-            loot.writeNbt(nbtCompound);
-            tag.put("Loot", nbtCompound);
+            NbtList nbtList = new NbtList();
+
+            for (ItemStack stack : loot) {
+                NbtCompound nbtCompound = new NbtCompound();
+                stack.writeNbt(nbtCompound);
+                nbtList.add(nbtCompound);
+            }
+    
+            tag.put("Loot", nbtList);
         }
 
         tag.putString("LootTable", lootTableId.toString());
@@ -160,8 +177,11 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
     }
 
     public void finishedBrushing() {
-        ItemEntity item = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), loot);
-        world.spawnEntity(item);
+        for (ItemStack stack : loot) {
+            ItemEntity item = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+            world.spawnEntity(item);
+        }
+
         breakBlock();
     }
 
@@ -187,10 +207,10 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
 	}
 
     public void breakBlock() {
+        world.setBlockBreakingInfo(brushingPlayer.getId(), pos, -1);
+        breakingProgress = -1.0F;
+
         if (world.getBlockState(pos).getBlock() instanceof ExcavationBlock) {
-            world.setBlockBreakingInfo(brushingPlayer.getId(), pos, -1);
-            breakingProgress = -1.0F;
-    
             world.breakBlock(pos, true);
         }
     }
@@ -210,18 +230,16 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         LootTable lootTable = this.world.getServer().getLootManager().getTable(lootTableId);
         List<ItemStack> list = lootTable.generateLoot(builder.build(ArcheologyMod.EXCAVATION));
         
-        if (list.size() > 0) {
-            loot = list.get(0);
-            this.markDirty();
-        }
+        loot.addAll(list);
+        this.markDirty();
     }
     
     public boolean isLootGenerated() {
         return !loot.isEmpty();
     }
 
-    public ItemStack getLoot() {
-        return loot;
+    public ItemStack getOneLootItem() {
+        return loot.get(0);
     }
     
 }

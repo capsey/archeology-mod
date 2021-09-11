@@ -28,6 +28,8 @@ public class ExcavationBlock extends Block implements BlockEntityProvider {
         }
 
         int index = (int) Math.floor(4 * stack.getDamage() / stack.getMaxDamage());
+        if (index >= BRUSH_TICKS.length || index < 0) { index = 0; }
+
         return BRUSH_TICKS[index];
     }
 
