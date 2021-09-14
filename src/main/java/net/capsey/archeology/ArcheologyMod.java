@@ -4,11 +4,13 @@ import java.util.function.Consumer;
 
 import net.capsey.archeology.blocks.ExcavationBlock;
 import net.capsey.archeology.blocks.ExcavationBlockEntity;
+import net.capsey.archeology.blocks.FallingExcavationBlock;
 import net.capsey.archeology.items.CopperBrush;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
@@ -26,8 +28,8 @@ public class ArcheologyMod implements ModInitializer {
     public static final Item COPPER_BRUSH = new CopperBrush(new Item.Settings().maxDamage(64).group(ItemGroup.TOOLS));
 
     // Blocks
-    public static final Block EXCAVATION_DIRT = new ExcavationBlock(FabricBlockSettings.copyOf(Blocks.DIRT));
-    public static final Block EXCAVATION_GRAVEL = new ExcavationBlock(FabricBlockSettings.copyOf(Blocks.GRAVEL));
+    public static final Block EXCAVATION_DIRT = new ExcavationBlock(FabricBlockSettings.copyOf(Blocks.DIRT).breakByTool(FabricToolTags.SHOVELS));
+    public static final Block EXCAVATION_GRAVEL = new FallingExcavationBlock(FabricBlockSettings.copyOf(Blocks.GRAVEL).breakByTool(FabricToolTags.SHOVELS), Blocks.GRAVEL);
 
     public static BlockEntityType<ExcavationBlockEntity> EXCAVATION_BLOCK_ENTITY;
 

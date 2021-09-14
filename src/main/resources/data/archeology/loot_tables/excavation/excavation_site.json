@@ -7,7 +7,7 @@
             {
                 "type": "minecraft:loot_table",
                 "weight": 10,
-                "quality": 10,
+                "quality": 15,
                 "name": "archeology:excavation/treasure"
             },
             {

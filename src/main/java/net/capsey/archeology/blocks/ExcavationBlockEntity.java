@@ -25,13 +25,11 @@ import net.minecraft.util.math.Vec3d;
 
 public class ExcavationBlockEntity extends BlockEntity implements BlockEntityClientSerializable  {
 
-    public static final String LOOT_TABLE_KEY = "LootTable";
-
     private static final float[] LUCK_POINTS = { 1.0F, 2.0F, 3.0F, 4.0F };
 
     private static float getLuckPoints(ItemStack stack) {
         if (stack.getItem() != ArcheologyMod.COPPER_BRUSH) {
-            return -1;
+            return 0.0F;
         }
 
         int index = (int) Math.floor(4 * stack.getDamage() / stack.getMaxDamage());
@@ -42,7 +40,7 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
 
     private static float getBreakingDelta(ItemStack stack, double magnitude) {
         if (stack.getItem() != ArcheologyMod.COPPER_BRUSH) {
-            return -1;
+            return 1.0F;
         }
 
         int index = (int) Math.floor(4 * stack.getDamage() / stack.getMaxDamage());
@@ -133,7 +131,7 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
     
             if (state.getBlock() instanceof ExcavationBlock) {
                 if (state.get(ExcavationBlock.BRUSHING_LEVEL) == 0) {
-                    ((ExcavationBlockEntity) world.getBlockEntity(pos)).generateLoot(player, stack);
+                    generateLoot(player, stack);
                     return true;
                 }
 
@@ -155,7 +153,7 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         }
 
         // Brushing
-        if (remainingUseTicks % ExcavationBlock.getBrushTicks(stack) == 0) {
+        if (world.isClient && remainingUseTicks % ExcavationBlock.getBrushTicks(stack) == 0) {
             int num = (int) Math.floor(progress * ExcavationBlock.MAX_BRUSHING_LEVELS) + 1;
 
             if (num < ExcavationBlock.MAX_BRUSHING_LEVELS + 1) {
@@ -207,8 +205,10 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
 	}
 
     public void breakBlock() {
-        world.setBlockBreakingInfo(brushingPlayer.getId(), pos, -1);
-        breakingProgress = -1.0F;
+        if (brushingPlayer != null) {
+            world.setBlockBreakingInfo(brushingPlayer.getId(), pos, -1);
+            breakingProgress = -1.0F;
+        }
 
         if (world.getBlockState(pos).getBlock() instanceof ExcavationBlock) {
             world.breakBlock(pos, true);
