@@ -153,7 +153,7 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         }
 
         // Brushing
-        if (world.isClient && remainingUseTicks % ExcavationBlock.getBrushTicks(stack) == 0) {
+        if (remainingUseTicks % ExcavationBlock.getBrushTicks(stack) == 0) {
             int num = (int) Math.floor(progress * ExcavationBlock.MAX_BRUSHING_LEVELS) + 1;
 
             if (num < ExcavationBlock.MAX_BRUSHING_LEVELS + 1) {
@@ -187,7 +187,7 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
     public void updateBlockBreakingProgress(float delta) {
         BlockState blockState = world.getBlockState(pos);
 
-        if (breakingProgress < 0.0F) {
+        if (breakingProgress < 0.0F && brushingPlayer != null) {
             blockState.onBlockBreakStart(world, pos, brushingPlayer);
             world.setBlockBreakingInfo(brushingPlayer.getId(), pos, (int) (breakingProgress * 10.0F) - 1);
             breakingProgress = 0.0F;
@@ -201,7 +201,9 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
             return;
         }
 
-        world.setBlockBreakingInfo(brushingPlayer.getId(), pos, (int) (breakingProgress * 10.0F) - 1);
+        if (brushingPlayer != null) {
+            world.setBlockBreakingInfo(brushingPlayer.getId(), pos, (int) (breakingProgress * 10.0F) - 1);
+        }
 	}
 
     public void breakBlock() {

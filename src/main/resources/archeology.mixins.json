@@ -1,0 +1,16 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "net.capsey.archeology.mixin",
+    "compatibilityLevel": "JAVA_16",
+    "mixins": [
+        "UseActionMixin"
+    ],
+    "client": [
+        "PlayerEntityRendererMixin",
+        "HeldItemRendererMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

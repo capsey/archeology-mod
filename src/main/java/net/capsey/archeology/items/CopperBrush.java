@@ -2,6 +2,7 @@ package net.capsey.archeology.items;
 
 import java.util.HashMap;
 
+import net.capsey.archeology.CustomUseAction;
 import net.capsey.archeology.blocks.ExcavationBlock;
 import net.capsey.archeology.blocks.ExcavationBlockEntity;
 import net.fabricmc.api.EnvType;
@@ -106,8 +107,7 @@ public class CopperBrush extends Item {
 	}
 
 	public UseAction getUseAction(ItemStack stack) {
-        // TODO: Add custom UseAction
-		return UseAction.BOW;
+		return CustomUseAction.BRUSH;
 	}
 
     public boolean canRepair(ItemStack stack, ItemStack ingredient) {
