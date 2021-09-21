@@ -20,7 +20,7 @@ public class ExcavationBlock extends Block implements BlockEntityProvider {
     public static final int MAX_BRUSHING_LEVELS = 5;
     public static final IntProperty BRUSHING_LEVEL = IntProperty.of("brushing_level", 0, MAX_BRUSHING_LEVELS);
     
-    private static final int[] BRUSH_TICKS = { 40, 36, 32, 28 };
+    private static final int[] BRUSH_TICKS = { 48, 42, 36, 30 };
 
     public static int getBrushTicks(ItemStack stack) {
         if (!(stack.getItem() instanceof CopperBrush)) {

@@ -146,7 +146,7 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         BlockState state = world.getBlockState(pos);
         
         // Aestetics
-        if (remainingUseTicks % (ExcavationBlock.getBrushTicks(stack) / 4) == 0) {
+        if (remainingUseTicks % (ExcavationBlock.getBrushTicks(stack) / 6) == 0) {
             BlockSoundGroup soundGroup = world.getBlockState(pos).getSoundGroup();
             world.playSound(null, pos, soundGroup.getBreakSound(), SoundCategory.BLOCKS, soundGroup.getVolume(), soundGroup.getPitch());
             world.addBlockBreakParticles(pos, world.getBlockState(pos));
