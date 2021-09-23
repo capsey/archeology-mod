@@ -28,8 +28,8 @@ public class ArcheologyMod implements ModInitializer {
     public static final Item COPPER_BRUSH = new CopperBrush(new Item.Settings().maxDamage(64).group(ItemGroup.TOOLS));
 
     // Blocks
-    public static final Block EXCAVATION_DIRT = new ExcavationBlock(FabricBlockSettings.copyOf(Blocks.DIRT).breakByTool(FabricToolTags.SHOVELS));
-    public static final Block EXCAVATION_GRAVEL = new FallingExcavationBlock(FabricBlockSettings.copyOf(Blocks.GRAVEL).breakByTool(FabricToolTags.SHOVELS), Blocks.GRAVEL);
+    public static final Block EXCAVATION_DIRT = new ExcavationBlock(FabricBlockSettings.copyOf(Blocks.DIRT).breakByTool(FabricToolTags.SHOVELS).hardness(1.0F));
+    public static final Block EXCAVATION_GRAVEL = new FallingExcavationBlock(FabricBlockSettings.copyOf(Blocks.GRAVEL).breakByTool(FabricToolTags.SHOVELS).hardness(1.2F), Blocks.GRAVEL);
 
     public static BlockEntityType<ExcavationBlockEntity> EXCAVATION_BLOCK_ENTITY;
 

@@ -20,6 +20,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
@@ -142,8 +144,26 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         return false;
     }
 
-    public void brushingTick(float progress, int remainingUseTicks, ItemStack stack, Vec3d lookPoint) {
+    public boolean brushingTick(LivingEntity user, ItemStack stack, float progress, int remainingUseTicks) {
         BlockState state = world.getBlockState(pos);
+
+        // Check
+        // TODO: Remove hardcoded player reach value
+        if (!isBrushingPlayer(user)) {
+            return false;
+        }
+
+        HitResult result = user.raycast(4.5F, 1, false);
+
+        if (!(result instanceof BlockHitResult)) {
+            return false;
+        }
+
+        BlockEntity blockEntity = world.getBlockEntity(((BlockHitResult) result).getBlockPos());
+        
+        if (!(blockEntity instanceof ExcavationBlockEntity && blockEntity.equals(this))) {
+            return false;
+        }
         
         // Aestetics
         if (remainingUseTicks % (ExcavationBlock.getBrushTicks(stack) / 6) == 0) {
@@ -163,15 +183,16 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
 
         // Breaking
         if (prevLookPoint != null) {
-            double magnitude = Math.pow(lookPoint.getX() - prevLookPoint.getX(), 2)
-                             + Math.pow(lookPoint.getY() - prevLookPoint.getY(), 2)
-                             + Math.pow(lookPoint.getZ() - prevLookPoint.getZ(), 2);
+            double magnitude = Math.pow(result.getPos().getX() - prevLookPoint.getX(), 2)
+                             + Math.pow(result.getPos().getY() - prevLookPoint.getY(), 2)
+                             + Math.pow(result.getPos().getZ() - prevLookPoint.getZ(), 2);
             
             float delta = getBreakingDelta(stack, magnitude);
             updateBlockBreakingProgress(Math.max(-0.05F, delta));
         }
 
-        prevLookPoint = lookPoint;
+        prevLookPoint = result.getPos();
+        return true;
     }
 
     public void finishedBrushing() {
