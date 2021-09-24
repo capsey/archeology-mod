@@ -148,11 +148,11 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         BlockState state = world.getBlockState(pos);
 
         // Check
-        // TODO: Remove hardcoded player reach value
         if (!isBrushingPlayer(user)) {
             return false;
         }
-
+        
+        // TODO: Remove hardcoded player reach value
         HitResult result = user.raycast(4.5F, 1, false);
 
         if (!(result instanceof BlockHitResult)) {
@@ -168,8 +168,10 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         // Aestetics
         if (remainingUseTicks % (ExcavationBlock.getBrushTicks(stack) / 6) == 0) {
             BlockSoundGroup soundGroup = world.getBlockState(pos).getSoundGroup();
-            world.playSound(null, pos, soundGroup.getBreakSound(), SoundCategory.BLOCKS, soundGroup.getVolume(), soundGroup.getPitch());
+            world.playSound(null, pos, soundGroup.getBreakSound(), SoundCategory.BLOCKS, 0.5F * soundGroup.getVolume(), soundGroup.getPitch());
             world.addBlockBreakParticles(pos, world.getBlockState(pos));
+
+            world.playSound(null, user.getBlockPos(), ArcheologyMod.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1f, 1f);
         }
 
         // Brushing

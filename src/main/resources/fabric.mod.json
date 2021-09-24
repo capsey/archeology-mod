@@ -6,12 +6,17 @@
   "name": "CapsLock Archeology Mod",
   "description": "My Archeology implementation mod for Minecraft Fabric",
   "authors": [
-    "CapsLock#3438 (capsey_)"
+    {
+      "name": "capsey_",
+      "contact": "Discord: CapsLock#3438"
+    }
   ],
-  "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
-  },
+  "contributors": [
+    {
+      "name": "13GPanska_Stanek_Vojtech",
+      "contact": "https://freesound.org/people/13GPanska_Stanek_Vojtech/sounds/371909/"
+    }
+  ],
 
   "license": "MIT",
   "icon": "assets/archeology/icon.png",

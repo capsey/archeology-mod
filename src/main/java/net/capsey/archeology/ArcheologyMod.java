@@ -19,6 +19,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextType;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -38,6 +39,10 @@ public class ArcheologyMod implements ModInitializer {
 		builder.require(LootContextParameters.TOOL).allow(LootContextParameters.THIS_ENTITY).allow(LootContextParameters.BLOCK_ENTITY);
 	});
 
+    // Sounds
+    public static final Identifier BRUSHING_SOUND_ID = new Identifier("archeology:brushing");
+    public static SoundEvent BRUSHING_SOUND_EVENT = new SoundEvent(BRUSHING_SOUND_ID);
+
     @Override
     public void onInitialize() {
         // Items
@@ -51,6 +56,9 @@ public class ArcheologyMod implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier("archeology", "excavation_gravel"), new BlockItem(EXCAVATION_GRAVEL, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
 
         EXCAVATION_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, "archeology:excavation_block_entity", FabricBlockEntityTypeBuilder.create(ExcavationBlockEntity::new, EXCAVATION_DIRT, EXCAVATION_GRAVEL).build(null));
+
+        // Sounds
+        Registry.register(Registry.SOUND_EVENT, BRUSHING_SOUND_ID, BRUSHING_SOUND_EVENT);
     }
 
     private static LootContextType createLootContextType(Consumer<LootContextType.Builder> type) {

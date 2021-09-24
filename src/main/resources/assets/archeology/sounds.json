@@ -1,0 +1,11 @@
+{
+    "brushing": {
+        "subtitle": "subtitles.archeology.brushing",
+        "sounds": [
+            "archeology:brushing1",
+            "archeology:brushing2",
+            "archeology:brushing3",
+            "archeology:brushing4"
+        ]
+    }
+}
