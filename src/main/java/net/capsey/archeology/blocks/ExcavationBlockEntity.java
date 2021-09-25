@@ -180,7 +180,7 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         }
 
         // Brushing
-        if (remainingUseTicks % ExcavationBlock.getBrushTicks(stack) == 0) {
+        if (!world.isClient && remainingUseTicks % ExcavationBlock.getBrushTicks(stack) == 0) {
             int num = (int) Math.floor(progress * ExcavationBlock.MAX_BRUSHING_LEVELS) + 1;
 
             if (num < ExcavationBlock.MAX_BRUSHING_LEVELS + 1) {
@@ -213,11 +213,15 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
 
     // Breaking
     public void updateBlockBreakingProgress(float delta) {
+        if (world.isClient) {
+            return;
+        }
+
         BlockState blockState = world.getBlockState(pos);
 
-        if (breakingProgress < 0.0F && brushingPlayer != null) {
+        if (breakingProgress < 0.0F) {
             blockState.onBlockBreakStart(world, pos, brushingPlayer);
-            world.setBlockBreakingInfo(brushingPlayer.getId(), pos, (int) (breakingProgress * 10.0F) - 1);
+            world.setBlockBreakingInfo(0, pos, (int) (breakingProgress * 10.0F) - 1);
             breakingProgress = 0.0F;
             return;
         }
@@ -229,18 +233,18 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
             return;
         }
 
-        if (brushingPlayer != null) {
-            world.setBlockBreakingInfo(brushingPlayer.getId(), pos, (int) (breakingProgress * 10.0F) - 1);
-        }
+        world.setBlockBreakingInfo(0, pos, (int) (breakingProgress * 10.0F) - 1);
 	}
 
     public void breakBlock() {
-        if (brushingPlayer != null) {
-            world.setBlockBreakingInfo(brushingPlayer.getId(), pos, -1);
-            breakingProgress = -1.0F;
+        if (world.isClient) {
+            return;
         }
 
-        if (world.getBlockState(pos).getBlock() instanceof ExcavationBlock) {
+        world.setBlockBreakingInfo(0, pos, -1);
+        breakingProgress = -1.0F;
+
+        if (!world.isClient && world.getBlockState(pos).getBlock() instanceof ExcavationBlock) {
             world.breakBlock(pos, true);
         }
     }
@@ -262,6 +266,7 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
         
         loot.addAll(list);
         this.markDirty();
+        this.sync();
     }
     
     public boolean isLootGenerated() {

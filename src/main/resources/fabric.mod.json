@@ -33,6 +33,9 @@
     ],
     "client": [
       "net.capsey.archeology.ArcheologyClientMod"
+    ],
+    "modmenu": [
+      "net.capsey.archeology.ModMenuIntegration"
     ]
   },
   "mixins": [

@@ -2,6 +2,8 @@ package net.capsey.archeology;
 
 import java.util.function.Consumer;
 
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.capsey.archeology.blocks.ExcavationBlock;
 import net.capsey.archeology.blocks.ExcavationBlockEntity;
 import net.capsey.archeology.blocks.FallingExcavationBlock;
@@ -59,6 +61,9 @@ public class ArcheologyMod implements ModInitializer {
 
         // Sounds
         Registry.register(Registry.SOUND_EVENT, BRUSHING_SOUND_ID, BRUSHING_SOUND_EVENT);
+
+        // Config
+        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
     }
 
     private static LootContextType createLootContextType(Consumer<LootContextType.Builder> type) {
