@@ -8,13 +8,18 @@
   "authors": [
     {
       "name": "capsey_",
-      "contact": "Discord: CapsLock#3438"
+      "contact": {
+        "homepage": "https://github.com/capsey/"
+      }
     }
   ],
   "contributors": [
     {
       "name": "13GPanska_Stanek_Vojtech",
-      "contact": "https://freesound.org/people/13GPanska_Stanek_Vojtech/sounds/371909/"
+      "contact": {
+        "homepage": "https://freesound.org/people/13GPanska_Stanek_Vojtech/",
+        "sources": "https://freesound.org/people/13GPanska_Stanek_Vojtech/sounds/371909/"
+      }
     }
   ],
 

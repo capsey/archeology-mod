@@ -45,6 +45,11 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
             return 1.0F;
         }
 
+        // Only for Debug purposes
+        if (stack.getNbt().contains("Debug") && stack.getNbt().getBoolean("Debug")) {
+            return 0;
+        }
+
         int index = (int) Math.floor(4 * stack.getDamage() / stack.getMaxDamage());
         
         switch (index) {

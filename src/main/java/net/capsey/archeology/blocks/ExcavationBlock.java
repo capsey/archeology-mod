@@ -27,6 +27,11 @@ public class ExcavationBlock extends Block implements BlockEntityProvider {
             return 0;
         }
 
+        // Only for Debug purposes
+        if (stack.getNbt().contains("Debug") && stack.getNbt().getBoolean("Debug")) {
+            return 6;
+        }
+
         int index = (int) Math.floor(4 * stack.getDamage() / stack.getMaxDamage());
         if (index >= BRUSH_TICKS.length || index < 0) { index = 0; }
 
