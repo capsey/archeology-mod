@@ -4,6 +4,8 @@ import java.util.function.Consumer;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import net.capsey.archeology.blocks.RawClayPot;
+import net.capsey.archeology.blocks.ClayPot;
 import net.capsey.archeology.blocks.ExcavationBlock;
 import net.capsey.archeology.blocks.ExcavationBlockEntity;
 import net.capsey.archeology.blocks.FallingExcavationBlock;
@@ -34,6 +36,9 @@ public class ArcheologyMod implements ModInitializer {
     public static final Block EXCAVATION_DIRT = new ExcavationBlock(FabricBlockSettings.copyOf(Blocks.DIRT).breakByTool(FabricToolTags.SHOVELS).hardness(1.0F));
     public static final Block EXCAVATION_GRAVEL = new FallingExcavationBlock(FabricBlockSettings.copyOf(Blocks.GRAVEL).breakByTool(FabricToolTags.SHOVELS).hardness(1.2F), Blocks.GRAVEL);
 
+    public static final Block RAW_CLAY_POT = new RawClayPot(FabricBlockSettings.copyOf(Blocks.CLAY).ticksRandomly());
+    public static final Block CLAY_POT = new ClayPot(FabricBlockSettings.copyOf(Blocks.FLOWER_POT));
+
     public static BlockEntityType<ExcavationBlockEntity> EXCAVATION_BLOCK_ENTITY;
 
     // Loot
@@ -56,6 +61,12 @@ public class ArcheologyMod implements ModInitializer {
 
         Registry.register(Registry.BLOCK, new Identifier("archeology", "excavation_gravel"), EXCAVATION_GRAVEL);
         Registry.register(Registry.ITEM, new Identifier("archeology", "excavation_gravel"), new BlockItem(EXCAVATION_GRAVEL, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
+
+        Registry.register(Registry.BLOCK, new Identifier("archeology", "raw_clay_pot"), RAW_CLAY_POT);
+        Registry.register(Registry.ITEM, new Identifier("archeology", "raw_clay_pot"), new BlockItem(RAW_CLAY_POT, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
+
+        Registry.register(Registry.BLOCK, new Identifier("archeology", "clay_pot"), CLAY_POT);
+        Registry.register(Registry.ITEM, new Identifier("archeology", "clay_pot"), new BlockItem(CLAY_POT, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
 
         EXCAVATION_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, "archeology:excavation_block_entity", FabricBlockEntityTypeBuilder.create(ExcavationBlockEntity::new, EXCAVATION_DIRT, EXCAVATION_GRAVEL).build(null));
 

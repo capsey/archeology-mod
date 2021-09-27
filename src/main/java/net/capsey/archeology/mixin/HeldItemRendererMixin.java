@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.At;
 
 import net.capsey.archeology.ArcheologyMod;
-import net.capsey.archeology.CustomUseAction;
 import net.capsey.archeology.blocks.ExcavationBlock;
+import net.capsey.archeology.items.CustomUseAction;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;

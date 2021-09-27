@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.At;
 
-import net.capsey.archeology.CustomUseAction;
+import net.capsey.archeology.items.CustomUseAction;
 import net.minecraft.util.UseAction;
 
 @Mixin(UseAction.class)

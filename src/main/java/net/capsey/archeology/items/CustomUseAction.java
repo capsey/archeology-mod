@@ -1,4 +1,4 @@
-package net.capsey.archeology;
+package net.capsey.archeology.items;
 
 import net.minecraft.util.UseAction;
 

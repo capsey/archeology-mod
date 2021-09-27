@@ -1,0 +1,47 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+      "recipes": [
+        "archeology:copper_brush"
+      ]
+    },
+    "criteria": {
+      "has_feather": {
+        "trigger": "minecraft:inventory_changed",
+        "conditions": {
+          "items": [
+            {
+              "items": [
+                "minecraft:feather"
+              ]
+            }
+          ]
+        }
+      },
+      "has_copper_ingot": {
+        "trigger": "minecraft:inventory_changed",
+        "conditions": {
+          "items": [
+            {
+              "items": [
+                "minecraft:copper_ingot"
+              ]
+            }
+          ]
+        }
+      },
+      "has_the_recipe": {
+        "trigger": "minecraft:recipe_unlocked",
+        "conditions": {
+          "recipe": "archeology:copper_brush"
+        }
+      }
+    },
+    "requirements": [
+      [
+        "has_feather",
+        "has_copper_ingot",
+        "has_the_recipe"
+      ]
+    ]
+  }

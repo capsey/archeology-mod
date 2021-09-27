@@ -1,10 +1,10 @@
 {
   "variants": {
     "brushing_level=0": { "model": "archeology:block/excavation_dirt" },
-    "brushing_level=1": { "model": "archeology:block/brushing_dirt_1" },
-    "brushing_level=2": { "model": "archeology:block/brushing_dirt_2" },
-    "brushing_level=3": { "model": "archeology:block/brushing_dirt_3" },
-    "brushing_level=4": { "model": "archeology:block/brushing_dirt_4" },
-    "brushing_level=5": { "model": "archeology:block/brushing_dirt_5" }
+    "brushing_level=1": { "model": "archeology:block/excavation_dirt_1" },
+    "brushing_level=2": { "model": "archeology:block/excavation_dirt_2" },
+    "brushing_level=3": { "model": "archeology:block/excavation_dirt_3" },
+    "brushing_level=4": { "model": "archeology:block/excavation_dirt_4" },
+    "brushing_level=5": { "model": "archeology:block/excavation_dirt_5" }
   }
 }

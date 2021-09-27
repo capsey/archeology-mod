@@ -3,7 +3,6 @@ package net.capsey.archeology.items;
 import java.util.HashMap;
 
 import me.shedaniel.autoconfig.AutoConfig;
-import net.capsey.archeology.CustomUseAction;
 import net.capsey.archeology.ModConfig;
 import net.capsey.archeology.blocks.ExcavationBlock;
 import net.capsey.archeology.blocks.ExcavationBlockEntity;
