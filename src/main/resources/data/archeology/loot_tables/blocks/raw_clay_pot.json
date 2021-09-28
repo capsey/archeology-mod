@@ -2,11 +2,11 @@
     "type": "minecraft:block",
     "pools": [
         {
-            "rolls": 1,
+            "rolls": 3,
             "entries": [
                 {
                     "type": "minecraft:item",
-                    "name": "archeology:raw_clay_pot"
+                    "name": "minecraft:clay_ball"
                 }
             ],
             "conditions": [

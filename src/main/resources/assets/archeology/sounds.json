@@ -1,11 +1,11 @@
 {
-    "brushing": {
-        "subtitle": "subtitles.archeology.brushing",
+    "item.copper_brush.brushing": {
+        "subtitle": "subtitles.archeology.item.copper_brush.brushing",
         "sounds": [
-            "archeology:brushing1",
-            "archeology:brushing2",
-            "archeology:brushing3",
-            "archeology:brushing4"
+            "archeology:item/copper_brush/brushing1",
+            "archeology:item/copper_brush/brushing2",
+            "archeology:item/copper_brush/brushing3",
+            "archeology:item/copper_brush/brushing4"
         ]
     }
 }
