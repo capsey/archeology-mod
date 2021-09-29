@@ -1,6 +1,6 @@
 package net.capsey.archeology;
 
-import net.capsey.archeology.blocks.ExcavationBlockEntityRenderer;
+import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntityRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;

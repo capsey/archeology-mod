@@ -1,4 +1,4 @@
-package net.capsey.archeology.blocks;
+package net.capsey.archeology.blocks.excavation_block;
 
 import java.util.ArrayList;
 import java.util.List;

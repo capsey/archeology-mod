@@ -4,8 +4,8 @@ import java.util.HashMap;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import net.capsey.archeology.ModConfig;
-import net.capsey.archeology.blocks.ExcavationBlock;
-import net.capsey.archeology.blocks.ExcavationBlockEntity;
+import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
+import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;

@@ -1,4 +1,4 @@
-package net.capsey.archeology.blocks;
+package net.capsey.archeology.blocks.excavation_block;
 
 import net.capsey.archeology.items.CopperBrush;
 import net.minecraft.block.Block;
