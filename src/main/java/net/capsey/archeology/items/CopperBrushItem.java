@@ -20,7 +20,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
 
-public class CopperBrush extends Item {
+public class CopperBrushItem extends Item {
 
     @Environment(EnvType.SERVER)
     private HashMap<LivingEntity, ExcavationBlockEntity> brushingBlocks = new HashMap<LivingEntity, ExcavationBlockEntity>();
@@ -28,7 +28,7 @@ public class CopperBrush extends Item {
     @Environment(EnvType.CLIENT)
     private ExcavationBlockEntity brushingBlock;
 
-    public CopperBrush(Settings settings) {
+    public CopperBrushItem(Settings settings) {
         super(settings);
     }
 

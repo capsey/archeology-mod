@@ -1,6 +1,6 @@
 package net.capsey.archeology.blocks.excavation_block;
 
-import net.capsey.archeology.items.CopperBrush;
+import net.capsey.archeology.items.CopperBrushItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -23,7 +23,7 @@ public class ExcavationBlock extends Block implements BlockEntityProvider {
     private static final int[] BRUSH_TICKS = { 48, 42, 36, 30 };
 
     public static int getBrushTicks(ItemStack stack) {
-        if (!(stack.getItem() instanceof CopperBrush)) {
+        if (!(stack.getItem() instanceof CopperBrushItem)) {
             return 0;
         }
 

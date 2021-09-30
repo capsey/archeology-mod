@@ -1,8 +1,25 @@
 {
+    "credit": "Made with Blockbench",
     "parent": "item/generated",
     "textures": {
         "layer0": "archeology:item/copper_brush"
     },
+    "display": {
+		"thirdperson_righthand": {
+			"rotation": [0, 0, 45],
+			"translation": [0, 2.5, 0.5],
+			"scale": [0.55, 0.55, 0.55]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [0, 0, -45],
+			"translation": [0, 2.5, 0.5],
+			"scale": [0.55, 0.55, 0.55]
+		},
+		"head": {
+			"rotation": [0, 180, 45],
+			"translation": [0, 7, 0]
+		}
+	},
     "overrides": [
         {
             "predicate": {

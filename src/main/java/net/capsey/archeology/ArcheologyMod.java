@@ -11,7 +11,7 @@ import net.capsey.archeology.blocks.clay_pot.RawClayPotBlockEntity;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.capsey.archeology.blocks.excavation_block.FallingExcavationBlock;
-import net.capsey.archeology.items.CopperBrush;
+import net.capsey.archeology.items.CopperBrushItem;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -31,7 +31,7 @@ import net.minecraft.util.registry.Registry;
 public class ArcheologyMod implements ModInitializer {
 
     // Items
-    public static final Item COPPER_BRUSH = new CopperBrush(new Item.Settings().maxDamage(64).group(ItemGroup.TOOLS));
+    public static final Item COPPER_BRUSH = new CopperBrushItem(new Item.Settings().maxDamage(64).group(ItemGroup.TOOLS));
 
     // Blocks
     public static final Block EXCAVATION_DIRT = new ExcavationBlock(FabricBlockSettings.copyOf(Blocks.DIRT).hardness(1.0F));
