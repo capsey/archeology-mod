@@ -14,9 +14,11 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-public class ClayPotBlockEntity extends BlockEntity implements SidedInventory {
+public class ClayPotBlockEntity extends BlockEntity implements SidedInventory, ShardsContainer {
 
     private static final int[] AVAILABLE_SLOTS = IntStream.range(0, 9).toArray();
+
+    private final DefaultedList<ItemStack> ceramicShards = DefaultedList.ofSize(8, ItemStack.EMPTY);
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(9, ItemStack.EMPTY);
 
     public ClayPotBlockEntity(BlockPos pos, BlockState state) {
@@ -26,13 +28,17 @@ public class ClayPotBlockEntity extends BlockEntity implements SidedInventory {
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
+        readShardsNbt(nbt, ceramicShards);
         Inventories.readNbt(nbt, items);
     }
  
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
+        writeShardsNbt(nbt, ceramicShards);
         Inventories.writeNbt(nbt, items);
-        return super.writeNbt(nbt);
+
+        return nbt;
     }
     
     @Override
@@ -103,6 +109,11 @@ public class ClayPotBlockEntity extends BlockEntity implements SidedInventory {
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
         return false;
+    }
+
+    @Override
+    public ItemStack[] getShards() {
+        return (ItemStack[]) ceramicShards.toArray();
     }
 
 }
