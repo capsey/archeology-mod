@@ -4,7 +4,6 @@ import java.util.stream.IntStream;
 
 import net.capsey.archeology.ArcheologyMod;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
@@ -14,11 +13,10 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-public class ClayPotBlockEntity extends BlockEntity implements SidedInventory, ShardsContainer {
+public class ClayPotBlockEntity extends ShardsContainer implements SidedInventory {
 
     private static final int[] AVAILABLE_SLOTS = IntStream.range(0, 9).toArray();
 
-    private final DefaultedList<ItemStack> ceramicShards = DefaultedList.ofSize(8, ItemStack.EMPTY);
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(9, ItemStack.EMPTY);
 
     public ClayPotBlockEntity(BlockPos pos, BlockState state) {
@@ -28,14 +26,12 @@ public class ClayPotBlockEntity extends BlockEntity implements SidedInventory, S
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        readShardsNbt(nbt, ceramicShards);
         Inventories.readNbt(nbt, items);
     }
  
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        writeShardsNbt(nbt, ceramicShards);
         Inventories.writeNbt(nbt, items);
 
         return nbt;
@@ -109,11 +105,6 @@ public class ClayPotBlockEntity extends BlockEntity implements SidedInventory, S
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
         return false;
-    }
-
-    @Override
-    public ItemStack[] getShards() {
-        return (ItemStack[]) ceramicShards.toArray();
     }
 
 }

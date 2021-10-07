@@ -11,6 +11,7 @@ import net.capsey.archeology.blocks.clay_pot.RawClayPotBlockEntity;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.capsey.archeology.blocks.excavation_block.FallingExcavationBlock;
+import net.capsey.archeology.items.CeramicShardItem;
 import net.capsey.archeology.items.CopperBrushItem;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -32,6 +33,7 @@ public class ArcheologyMod implements ModInitializer {
 
     // Items
     public static final Item COPPER_BRUSH = new CopperBrushItem(new Item.Settings().maxDamage(64).group(ItemGroup.TOOLS));
+    public static final Item CERAMIC_SHARD = new CeramicShardItem(new Item.Settings().maxCount(1).group(ItemGroup.MISC));
 
     // Blocks
     public static final Block EXCAVATION_DIRT = new ExcavationBlock(FabricBlockSettings.copyOf(Blocks.DIRT).hardness(1.0F));
@@ -57,6 +59,7 @@ public class ArcheologyMod implements ModInitializer {
     public void onInitialize() {
         // Items
         Registry.register(Registry.ITEM, new Identifier("archeology", "copper_brush"), COPPER_BRUSH);
+        Registry.register(Registry.ITEM, new Identifier("archeology", "ceramic_shard"), CERAMIC_SHARD);
 
         // Blocks
         Registry.register(Registry.BLOCK, new Identifier("archeology", "excavation_dirt"), EXCAVATION_DIRT);

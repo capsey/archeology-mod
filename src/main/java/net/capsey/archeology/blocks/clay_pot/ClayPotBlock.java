@@ -21,9 +21,9 @@ public class ClayPotBlock extends Block implements BlockEntityProvider {
     public static final BlockSoundGroup SOUND_GROUP = new BlockSoundGroup(1.0F, 1.0F, SoundEvents.BLOCK_GLASS_BREAK, SoundEvents.BLOCK_STONE_STEP, SoundEvents.BLOCK_STONE_PLACE, SoundEvents.BLOCK_STONE_HIT, SoundEvents.BLOCK_STONE_FALL);
 
     public static final VoxelShape BLOCK_SHAPE;
-	private static final VoxelShape BASE_SHAPE;
-	private static final VoxelShape NECK_SHAPE;
-    private static final VoxelShape HEAD_SHAPE;
+	public static final VoxelShape BASE_SHAPE;
+	public static final VoxelShape NECK_SHAPE;
+    public static final VoxelShape HEAD_SHAPE;
 
     public ClayPotBlock(Settings settings) {
         super(settings);
