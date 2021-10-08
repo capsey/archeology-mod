@@ -35,7 +35,7 @@ public class RawClayPotBlockEntityRenderer implements BlockEntityRenderer<RawCla
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
 
-		ModelPartBuilder builder = ModelPartBuilder.create().uv(0, 0).cuboid(-0.05F, -0.05F, -0.05F, 16.1F, 10.1F, 16.1F);
+		ModelPartBuilder builder = ModelPartBuilder.create().uv(0, 0).cuboid(0.0F, 0.0F, 0.0F, 16.0F, 10.0F, 16.0F);
 		modelPartData.addChild("base", builder, ModelTransform.NONE);
 
 		return TexturedModelData.of(modelData, 64, 26);
@@ -46,8 +46,14 @@ public class RawClayPotBlockEntityRenderer implements BlockEntityRenderer<RawCla
         if (!entity.isEmpty()) {
 			matrices.push();
 
-			// TODO: Fix upside down shards
-
+			// Z-fighting fix
+			matrices.scale(1.02F, 1.0F, 1.02F);
+			matrices.translate(-0.01F, 0.0F, -0.01F);
+			
+			// Upside down fix
+			matrices.scale(-1.0F, -1.0F, 1.0F);
+			matrices.translate(-1.0F, -(10.0F / 16), 0.0F);
+			
 			for (Side side : Side.straightValues()) {
 				ItemStack shard = entity.getShard(side);
 
@@ -55,8 +61,8 @@ public class RawClayPotBlockEntityRenderer implements BlockEntityRenderer<RawCla
 					renderShard(shard, side, matrices, vertexConsumers, light, overlay);
 				}
 
-				matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
-				matrices.translate(0.0F, 0.0F, -1.0F);
+				matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(90.0F));
+				matrices.translate(-1.0F, 0.0F, 0.0F);
 			}
 
 			matrices.pop();
