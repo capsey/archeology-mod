@@ -32,7 +32,9 @@ public class RawClayPotBlock extends BlockWithEntity {
             RawClayPotBlockEntity blockEntity = (RawClayPotBlockEntity) world.getBlockEntity(pos);
     
             if (Side.validHit(hit) && blockEntity.addShard(Side.fromHit(hit), item)) {
-                player.setStackInHand(hand, ItemStack.EMPTY);
+                if (!player.getAbilities().creativeMode) {
+                    player.setStackInHand(hand, ItemStack.EMPTY);
+                }
                 return ActionResult.SUCCESS;
             }
         }

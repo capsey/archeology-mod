@@ -9,7 +9,8 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
 public abstract class ShardsContainer extends BlockEntity {
 
@@ -32,48 +33,58 @@ public abstract class ShardsContainer extends BlockEntity {
 	}
 
 	public enum Side {
-		NorthWest,
-		North,
-		NorthEast,
-		East,
-		SouthEast,
-		South,
-		SouthWest,
-		West;
+		NorthWest(false),
+		North(true),
+		NorthEast(false),
+		East(true),
+		SouthEast(false),
+		South(true),
+		SouthWest(false),
+		West(true);
+
+		private boolean straight;
+
+		private Side(boolean straight) {
+			this.straight = straight;
+		}
+
+		public boolean isStraight() {
+			return this.straight;
+		}
 
 		public static boolean validHit(BlockHitResult hit) {
-			// TODO: Add more cases
-			return hit.getSide() != Direction.UP && hit.getSide() != Direction.DOWN;
+			Vec3d blockPos = Vec3d.ofBottomCenter(hit.getBlockPos());
+			Vec3d relativePos = blockPos.relativize(hit.getPos());
+
+			boolean correctMin = relativePos.getY() > 0;
+			boolean correctMax = relativePos.getY() < ClayPotBlock.BASE_SHAPE.getBoundingBox().getYLength();
+
+			return correctMin && correctMax;
 		}
 
 		public static Side fromHit(BlockHitResult hit) {
-			// TODO: Add more returns
-			switch(hit.getSide()) {
-                case NORTH:
-                    return North;
-                case SOUTH:
-                    return South;
-                case WEST:
-                    return West;
-                case EAST:
-                    return East;
-                default:
-					throw new InvalidParameterException();
-            }
+			if (!validHit(hit)) {
+				throw new InvalidParameterException();
+			}
+			
+			Vec3d blockPos = Vec3d.ofBottomCenter(hit.getBlockPos());
+			Vec3d relativePos = blockPos.relativize(hit.getPos());
+			
+			int compass = ((int) Math.round(MathHelper.atan2(-relativePos.getZ(), relativePos.getX()) / (2 * MathHelper.PI / 8)) + 8) % 8;
+
+			switch (compass) {
+				case 0: return East;
+				case 1: return NorthWest;
+				case 2: return North;
+				case 3: return SouthWest;
+				case 4: return West;
+				case 5: return SouthEast;
+				case 6: return South;
+				case 7: return NorthEast;
+
+				default: return North;
+			}
 		}
-
-		private static final Side[] straights = { Side.North, Side.East, Side.South, Side.West };
-
-		public static Side[] straightValues() {
-			return straights;
-		}
-
-		private static final Side[] corners = { Side.NorthWest, Side.NorthEast, Side.SouthEast, Side.SouthWest };
-
-		public static Side[] cornerValues() {
-			return corners;
-		}
-
 	}
 
 }

@@ -9,6 +9,7 @@ import net.minecraft.client.model.ModelPartData;
 import net.minecraft.client.model.ModelTransform;
 import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
@@ -24,21 +25,26 @@ public class RawClayPotBlockEntityRenderer implements BlockEntityRenderer<RawCla
 	public static final Identifier ATLAS_TEXTURE = new Identifier("textures/atlas/shards.png");
 	public static final EntityModelLayer SHARDS_MODEL_LAYER = new EntityModelLayer(new Identifier("archeology", "raw_clay_pot_block_entity"), "shards");
 
-    private final ModelPart base;
+    private final ModelPart straight;
+	private final ModelPart corner;
 
 	public RawClayPotBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
 		ModelPart modelPart = ctx.getLayerModelPart(SHARDS_MODEL_LAYER);
-		this.base = modelPart.getChild("base");
+		this.straight = modelPart.getChild("straight");
+		this.corner = modelPart.getChild("corner");
 	}
 
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
 
-		ModelPartBuilder builder = ModelPartBuilder.create().uv(0, 0).cuboid(0.0F, 0.0F, 0.0F, 16.0F, 10.0F, 16.0F);
-		modelPartData.addChild("base", builder, ModelTransform.NONE);
+		ModelPartBuilder straightBuilder = ModelPartBuilder.create().uv(0, 0).cuboid(0.0F, 0.0F, 0.0F, 16.0F, 10.0F, 16.0F);
+		modelPartData.addChild("straight", straightBuilder, ModelTransform.NONE);
 
-		return TexturedModelData.of(modelData, 64, 26);
+		ModelPartBuilder cornerBuilder = ModelPartBuilder.create().uv(8, 0).cuboid(0.0F, 0.0F, 0.0F, 16.0F, 10.0F, 16.0F);
+		modelPartData.addChild("corner", cornerBuilder, ModelTransform.NONE);
+
+		return TexturedModelData.of(modelData, 72, 26);
 	}
 
     @Override
@@ -54,15 +60,17 @@ public class RawClayPotBlockEntityRenderer implements BlockEntityRenderer<RawCla
 			matrices.scale(-1.0F, -1.0F, 1.0F);
 			matrices.translate(-1.0F, -(10.0F / 16), 0.0F);
 			
-			for (Side side : Side.straightValues()) {
+			for (Side side : Side.values()) {
 				ItemStack shard = entity.getShard(side);
 
 				if (shard != null) {
 					renderShard(shard, side, matrices, vertexConsumers, light, overlay);
 				}
 
-				matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(90.0F));
-				matrices.translate(-1.0F, 0.0F, 0.0F);
+				if (side.isStraight()) {
+					matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(90.0F));
+					matrices.translate(-1.0F, 0.0F, 0.0F);
+				}
 			}
 
 			matrices.pop();
@@ -70,22 +78,10 @@ public class RawClayPotBlockEntityRenderer implements BlockEntityRenderer<RawCla
     }
 
 	private void renderShard(ItemStack shard, Side side, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-		switch (side) {
-			case North:
-			case South:
-			case West:
-			case East:
-				renderStraightShard(shard, matrices, vertexConsumers, light, overlay);
-				break;
-		
-			default:
-				break;
-		}
-	}
-
-	private void renderStraightShard(ItemStack shard, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
 		SpriteIdentifier spriteIdentifier = new SpriteIdentifier(ATLAS_TEXTURE, new Identifier("archeology", "shard/ender_dragon"));
-		base.render(matrices, spriteIdentifier.getVertexConsumer(vertexConsumers, RenderLayer::getEntityNoOutline), light, overlay);
+		VertexConsumer spriteConsumer = spriteIdentifier.getVertexConsumer(vertexConsumers, RenderLayer::getEntityNoOutline);
+
+		(side.isStraight() ? straight : corner).render(matrices, spriteConsumer, light, overlay);
 	}
     
 }
