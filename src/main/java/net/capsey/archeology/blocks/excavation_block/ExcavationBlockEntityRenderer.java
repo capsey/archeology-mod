@@ -1,6 +1,5 @@
-package net.capsey.archeology.client;
+package net.capsey.archeology.blocks.excavation_block;
 
-import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;

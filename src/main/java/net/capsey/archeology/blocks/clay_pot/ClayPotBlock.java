@@ -39,11 +39,13 @@ public class ClayPotBlock extends Block implements BlockEntityProvider {
         return new ClayPotBlockEntity(pos, state);
     }
 
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+	@Override
+	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
 		if (!state.isOf(newState.getBlock())) {
 			BlockEntity blockEntity = world.getBlockEntity(pos);
-			if (blockEntity instanceof ClayPotBlockEntity) {
-				ItemScatterer.spawn(world, pos, (Inventory) blockEntity);
+			
+			if (blockEntity instanceof Inventory) {
+				ItemScatterer.spawn(world, pos, (Inventory)blockEntity);
 				world.updateComparators(pos, this);
 			}
 

@@ -7,7 +7,6 @@ import net.capsey.archeology.ArcheologyMod;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -20,6 +19,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -204,8 +204,7 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
 
     public void finishedBrushing() {
         for (ItemStack stack : loot) {
-            ItemEntity item = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-            world.spawnEntity(item);
+            ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), stack);
         }
 
         breakBlock();

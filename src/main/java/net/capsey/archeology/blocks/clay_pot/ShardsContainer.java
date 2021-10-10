@@ -1,6 +1,7 @@
 package net.capsey.archeology.blocks.clay_pot;
 
 import java.security.InvalidParameterException;
+import java.util.Collection;
 import java.util.EnumMap;
 
 import net.minecraft.block.BlockState;
@@ -20,12 +21,16 @@ public abstract class ShardsContainer extends BlockEntity {
 		super(type, pos, state);
 	}
 
+	public Collection<ItemStack> getShards() {
+		return ceramic_shards.values();
+	}
+
 	public ItemStack getShard(Side direction) {
 		return ceramic_shards.get(direction);
 	}
 
 	public boolean addShard(Side direction, ItemStack shard) {
-		return ceramic_shards.putIfAbsent(direction, shard) == null;
+		return ceramic_shards.putIfAbsent(direction, shard.copy()) == null;
 	}
 
     public boolean isEmpty() {
@@ -74,15 +79,15 @@ public abstract class ShardsContainer extends BlockEntity {
 
 			switch (compass) {
 				case 0: return East;
-				case 1: return NorthWest;
+				case 1: return NorthEast;
 				case 2: return North;
-				case 3: return SouthWest;
+				case 3: return NorthWest;
 				case 4: return West;
-				case 5: return SouthEast;
+				case 5: return SouthWest;
 				case 6: return South;
-				case 7: return NorthEast;
+				case 7: return SouthEast;
 
-				default: return North;
+				default: throw new IllegalStateException("WTF... How?");
 			}
 		}
 	}

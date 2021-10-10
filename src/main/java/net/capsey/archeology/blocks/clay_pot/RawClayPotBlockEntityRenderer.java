@@ -1,6 +1,5 @@
-package net.capsey.archeology.client;
+package net.capsey.archeology.blocks.clay_pot;
 
-import net.capsey.archeology.blocks.clay_pot.RawClayPotBlockEntity;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer.Side;
 import net.minecraft.client.model.ModelData;
 import net.minecraft.client.model.ModelPart;
@@ -38,10 +37,10 @@ public class RawClayPotBlockEntityRenderer implements BlockEntityRenderer<RawCla
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
 
-		ModelPartBuilder straightBuilder = ModelPartBuilder.create().uv(0, 0).cuboid(0.0F, 0.0F, 0.0F, 16.0F, 10.0F, 16.0F);
+		ModelPartBuilder straightBuilder = ModelPartBuilder.create().uv(8, 0).cuboid(0.0F, 0.0F, 0.0F, 16.0F, 10.0F, 16.0F);
 		modelPartData.addChild("straight", straightBuilder, ModelTransform.NONE);
 
-		ModelPartBuilder cornerBuilder = ModelPartBuilder.create().uv(8, 0).cuboid(0.0F, 0.0F, 0.0F, 16.0F, 10.0F, 16.0F);
+		ModelPartBuilder cornerBuilder = ModelPartBuilder.create().uv(0, 0).cuboid(0.0F, 0.0F, 0.0F, 16.0F, 10.0F, 16.0F);
 		modelPartData.addChild("corner", cornerBuilder, ModelTransform.NONE);
 
 		return TexturedModelData.of(modelData, 72, 26);
@@ -53,8 +52,8 @@ public class RawClayPotBlockEntityRenderer implements BlockEntityRenderer<RawCla
 			matrices.push();
 
 			// Z-fighting fix
-			matrices.scale(1.02F, 1.0F, 1.02F);
-			matrices.translate(-0.01F, 0.0F, -0.01F);
+			matrices.scale(1.002F, 1.0F, 1.002F);
+			matrices.translate(-0.001F, 0.0F, -0.001F);
 			
 			// Upside down fix
 			matrices.scale(-1.0F, -1.0F, 1.0F);

@@ -13,6 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
@@ -32,7 +33,7 @@ public class RawClayPotBlock extends BlockWithEntity {
             RawClayPotBlockEntity blockEntity = (RawClayPotBlockEntity) world.getBlockEntity(pos);
     
             if (Side.validHit(hit) && blockEntity.addShard(Side.fromHit(hit), item)) {
-                if (!player.getAbilities().creativeMode) {
+                if (!player.isCreative()) {
                     player.setStackInHand(hand, ItemStack.EMPTY);
                 }
                 return ActionResult.SUCCESS;
@@ -41,6 +42,23 @@ public class RawClayPotBlock extends BlockWithEntity {
 
         return ActionResult.PASS;
     }
+
+	@Override
+	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+		if (!state.isOf(newState.getBlock())) {
+			BlockEntity blockEntity = world.getBlockEntity(pos);
+			
+			if (blockEntity instanceof ShardsContainer) {
+				((ShardsContainer) blockEntity).getShards().forEach((item) -> {
+                    ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), item);
+                });
+
+				world.updateComparators(pos, this);
+			}
+
+			super.onStateReplaced(state, world, pos, newState, moved);
+		}
+	}
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
