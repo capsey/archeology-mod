@@ -77,7 +77,7 @@ public class ExcavationBlockEntity extends BlockEntity implements BlockEntityCli
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
         
-        if (tag.contains("Loot")){
+        if (tag.contains("Loot")) {
             loot.clear();
             NbtList nbtList = tag.getList("Loot", 10);
 

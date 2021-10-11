@@ -1,5 +1,7 @@
 package net.capsey.archeology.blocks.clay_pot;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer.Side;
 import net.minecraft.block.BlockRenderType;
@@ -28,15 +30,18 @@ public class RawClayPotBlock extends BlockWithEntity {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {        
-        ItemStack item = player.getStackInHand(hand);
-        if (item.isOf(ArcheologyMod.CERAMIC_SHARD)) {
-            RawClayPotBlockEntity blockEntity = (RawClayPotBlockEntity) world.getBlockEntity(pos);
+        if (!world.isClient) {
+            ItemStack item = player.getStackInHand(hand);
     
-            if (Side.validHit(hit) && blockEntity.addShard(Side.fromHit(hit), item)) {
-                if (!player.isCreative()) {
-                    player.setStackInHand(hand, ItemStack.EMPTY);
+            if (item.isOf(ArcheologyMod.CERAMIC_SHARD)) {
+                RawClayPotBlockEntity blockEntity = (RawClayPotBlockEntity) world.getBlockEntity(pos);
+        
+                if (Side.validHit(hit) && blockEntity.addShard(Side.fromHit(hit), item)) {
+                    if (!player.isCreative()) {
+                        player.setStackInHand(hand, ItemStack.EMPTY);
+                    }
+                    return ActionResult.SUCCESS;
                 }
-                return ActionResult.SUCCESS;
             }
         }
 
@@ -45,11 +50,11 @@ public class RawClayPotBlock extends BlockWithEntity {
 
 	@Override
 	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-		if (!state.isOf(newState.getBlock())) {
+		if (!world.isClient && !state.isOf(ArcheologyMod.RAW_CLAY_POT) && !state.isOf(ArcheologyMod.CLAY_POT)) {
 			BlockEntity blockEntity = world.getBlockEntity(pos);
 			
 			if (blockEntity instanceof ShardsContainer) {
-				((ShardsContainer) blockEntity).getShards().forEach((item) -> {
+				((ShardsContainer) blockEntity).getShards().values().forEach((item) -> {
                     ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), item);
                 });
 
@@ -58,6 +63,20 @@ public class RawClayPotBlock extends BlockWithEntity {
 
 			super.onStateReplaced(state, world, pos, newState, moved);
 		}
+	}
+
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+
+        if (blockEntity instanceof RawClayPotBlockEntity) {
+            RawClayPotBlockEntity rawClayPotBlockEntity = (RawClayPotBlockEntity) blockEntity;
+
+            if (!world.isClient && player.isCreative()) {
+                rawClayPotBlockEntity.clearShards();
+            }
+        }
+
+		super.onBreak(world, pos, state, player);
 	}
 
     @Override
@@ -75,9 +94,9 @@ public class RawClayPotBlock extends BlockWithEntity {
 		return BlockRenderType.MODEL;
 	}
 
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, ArcheologyMod.RAW_CLAY_POT_BLOCK_ENTITY, (world1, pos, state1, be) -> RawClayPotBlockEntity.tick(world1, pos, state1, be));
-    }
+    @Override @Nullable
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+		return world.isClient ? null : checkType(type, ArcheologyMod.RAW_CLAY_POT_BLOCK_ENTITY, RawClayPotBlockEntity::tick);
+	}
 
 }

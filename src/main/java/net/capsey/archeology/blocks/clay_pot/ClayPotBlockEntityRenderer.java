@@ -5,15 +5,15 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory.Context;
 
 @Environment(EnvType.CLIENT)
-public class RawClayPotBlockEntityRenderer extends ShardsContainerRenderer<RawClayPotBlockEntity> {
+public class ClayPotBlockEntityRenderer extends ShardsContainerRenderer<ClayPotBlockEntity> {
 
-	public RawClayPotBlockEntityRenderer(Context ctx) {
+	public ClayPotBlockEntityRenderer(Context ctx) {
 		super(ctx);
 	}
 
 	@Override
 	public Class<? extends ShardsContainer> getEntityClass() {
-		return RawClayPotBlockEntity.class;
+		return ClayPotBlockEntity.class;
 	}
     
 }

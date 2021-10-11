@@ -1,8 +1,10 @@
 package net.capsey.archeology.blocks.clay_pot;
 
 import net.capsey.archeology.ArcheologyMod;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CampfireBlock;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
@@ -15,12 +17,20 @@ public class RawClayPotBlockEntity extends ShardsContainer {
     public static void tick(World world, BlockPos pos, BlockState state, RawClayPotBlockEntity be) {
         BlockState block = world.getBlockState(pos.down());
 
-		if (block.isIn(BlockTags.FIRE) || (block.isIn(BlockTags.CAMPFIRES) && block.get(CampfireBlock.LIT))) {
-			be.hardeningProgress += world.getRandom().nextInt(2);
+        if (block.isIn(BlockTags.FIRE) || (block.isIn(BlockTags.CAMPFIRES) && block.get(CampfireBlock.LIT))) {
+            be.hardeningProgress += world.getRandom().nextInt(2);
             if (be.hardeningProgress > 64) {
-                world.setBlockState(pos, ArcheologyMod.CLAY_POT.getDefaultState());
+                BlockState newState = ArcheologyMod.CLAY_POT.getDefaultState();
+                world.setBlockState(pos, newState, Block.NOTIFY_LISTENERS);
+                world.addBlockEntity(((ClayPotBlock) ArcheologyMod.CLAY_POT).createBlockEntity(pos, newState));
+
+                BlockEntity entity = world.getBlockEntity(pos);
+
+                if (entity instanceof ClayPotBlockEntity) {
+                    ((ClayPotBlockEntity) entity).configureShards(be.getShards());
+                }
             }
-		} else {
+        } else {
             be.hardeningProgress = 0;
         }
     }

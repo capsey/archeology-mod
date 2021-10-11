@@ -1,19 +1,24 @@
 package net.capsey.archeology.blocks.clay_pot;
 
 import java.security.InvalidParameterException;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.List;
+import java.util.Map.Entry;
 
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
-public abstract class ShardsContainer extends BlockEntity {
+public abstract class ShardsContainer extends BlockEntity implements BlockEntityClientSerializable {
 
 	public EnumMap<Side, ItemStack> ceramic_shards = new EnumMap<Side, ItemStack>(Side.class);
 
@@ -21,8 +26,14 @@ public abstract class ShardsContainer extends BlockEntity {
 		super(type, pos, state);
 	}
 
-	public Collection<ItemStack> getShards() {
-		return ceramic_shards.values();
+	public void configureShards(EnumMap<Side, ItemStack> shards) {
+		ceramic_shards.putAll(shards);
+		this.markDirty();
+		// sync();
+    }
+
+	public EnumMap<Side, ItemStack> getShards() {
+		return ceramic_shards.clone();
 	}
 
 	public ItemStack getShard(Side direction) {
@@ -30,12 +41,75 @@ public abstract class ShardsContainer extends BlockEntity {
 	}
 
 	public boolean addShard(Side direction, ItemStack shard) {
-		return ceramic_shards.putIfAbsent(direction, shard.copy()) == null;
+		boolean bl = ceramic_shards.putIfAbsent(direction, shard.copy()) == null;
+		this.markDirty();
+		sync();
+		return bl;
 	}
 
-    public boolean isEmpty() {
-		return ceramic_shards.isEmpty();
+	public void clearShards() {
+		ceramic_shards.clear();
+		this.markDirty();
+		sync();
 	}
+
+    public boolean hasShards() {
+		return !ceramic_shards.isEmpty();
+	}
+
+	@Override
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
+        
+        if (tag.contains("Shards")) {
+            ceramic_shards.clear();
+            NbtList nbtList = tag.getList("Shards", 10);
+
+			if (nbtList.size() <= Side.values().length) {
+				for (int i = 0; i < nbtList.size(); i++) {
+					NbtCompound nbtCompound = nbtList.getCompound(i);
+					int j = nbtCompound.getByte("Side");
+
+					if (j < Side.values().length) {
+						ceramic_shards.put(Side.values()[j], ItemStack.fromNbt(nbtCompound));
+					}
+				}
+			}
+        }
+    }
+
+    @Override
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
+
+        if (hasShards()) {
+			List<Side> values = Arrays.asList(Side.values());
+            NbtList nbtList = new NbtList();
+
+            for (Entry<Side, ItemStack> entry : ceramic_shards.entrySet()) {
+                NbtCompound nbtCompound = new NbtCompound();
+
+				nbtCompound.putByte("Side", (byte) values.indexOf(entry.getKey()));
+                entry.getValue().writeNbt(nbtCompound);
+
+                nbtList.add(nbtCompound);
+            }
+    
+            tag.put("Shards", nbtList);
+        }
+ 
+        return tag;
+    }
+
+    @Override
+    public void fromClientTag(NbtCompound tag) {
+        readNbt(tag);
+    }
+
+    @Override
+    public NbtCompound toClientTag(NbtCompound tag) {
+        return writeNbt(tag);
+    }
 
 	public enum Side {
 		NorthWest(false),
