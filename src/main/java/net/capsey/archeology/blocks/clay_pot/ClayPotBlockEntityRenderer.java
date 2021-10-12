@@ -8,12 +8,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory.Conte
 public class ClayPotBlockEntityRenderer extends ShardsContainerRenderer<ClayPotBlockEntity> {
 
 	public ClayPotBlockEntityRenderer(Context ctx) {
-		super(ctx);
-	}
-
-	@Override
-	public Class<? extends ShardsContainer> getEntityClass() {
-		return ClayPotBlockEntity.class;
+		super(ctx, ClayPotBlockEntity.class);
 	}
     
 }

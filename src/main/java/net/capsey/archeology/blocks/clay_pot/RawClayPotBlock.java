@@ -4,6 +4,8 @@ import org.jetbrains.annotations.Nullable;
 
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer.Side;
+import net.capsey.archeology.items.CeramicShard;
+import net.capsey.archeology.items.CeramicShardRegistry;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -33,10 +35,11 @@ public class RawClayPotBlock extends BlockWithEntity {
         if (!world.isClient) {
             ItemStack item = player.getStackInHand(hand);
     
-            if (item.isOf(ArcheologyMod.CERAMIC_SHARD)) {
+            if (CeramicShardRegistry.isItemShard(item)) {
                 RawClayPotBlockEntity blockEntity = (RawClayPotBlockEntity) world.getBlockEntity(pos);
+                CeramicShard shard = CeramicShardRegistry.getShard(item);
         
-                if (Side.validHit(hit) && blockEntity.addShard(Side.fromHit(hit), item)) {
+                if (Side.validHit(hit) && blockEntity.addShard(Side.fromHit(hit), shard)) {
                     if (!player.isCreative()) {
                         player.setStackInHand(hand, ItemStack.EMPTY);
                     }
@@ -55,7 +58,7 @@ public class RawClayPotBlock extends BlockWithEntity {
 			
 			if (blockEntity instanceof ShardsContainer) {
 				((ShardsContainer) blockEntity).getShards().values().forEach((item) -> {
-                    ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), item);
+                    ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), item.getStack());
                 });
 
 				world.updateComparators(pos, this);

@@ -6,11 +6,11 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.capsey.archeology.items.CeramicShard;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.hit.BlockHitResult;
@@ -20,28 +20,28 @@ import net.minecraft.util.math.Vec3d;
 
 public abstract class ShardsContainer extends BlockEntity implements BlockEntityClientSerializable {
 
-	public EnumMap<Side, ItemStack> ceramic_shards = new EnumMap<Side, ItemStack>(Side.class);
+	public EnumMap<Side, CeramicShard> ceramic_shards = new EnumMap<Side, CeramicShard>(Side.class);
 
 	public ShardsContainer(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
 
-	public void configureShards(EnumMap<Side, ItemStack> shards) {
+	public void configureShards(EnumMap<Side, CeramicShard> shards) {
 		ceramic_shards.putAll(shards);
 		this.markDirty();
 		// sync();
     }
 
-	public EnumMap<Side, ItemStack> getShards() {
+	public EnumMap<Side, CeramicShard> getShards() {
 		return ceramic_shards.clone();
 	}
 
-	public ItemStack getShard(Side direction) {
+	public CeramicShard getShard(Side direction) {
 		return ceramic_shards.get(direction);
 	}
 
-	public boolean addShard(Side direction, ItemStack shard) {
-		boolean bl = ceramic_shards.putIfAbsent(direction, shard.copy()) == null;
+	public boolean addShard(Side direction, CeramicShard shard) {
+		boolean bl = ceramic_shards.putIfAbsent(direction, shard) == null;
 		this.markDirty();
 		sync();
 		return bl;
@@ -71,7 +71,7 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 					int j = nbtCompound.getByte("Side");
 
 					if (j < Side.values().length) {
-						ceramic_shards.put(Side.values()[j], ItemStack.fromNbt(nbtCompound));
+						ceramic_shards.put(Side.values()[j], CeramicShard.fromNbt(nbtCompound));
 					}
 				}
 			}
@@ -86,7 +86,11 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 			List<Side> values = Arrays.asList(Side.values());
             NbtList nbtList = new NbtList();
 
-            for (Entry<Side, ItemStack> entry : ceramic_shards.entrySet()) {
+            for (Entry<Side, CeramicShard> entry : ceramic_shards.entrySet()) {
+				if (entry.getValue() == null) {
+					continue;
+				}
+
                 NbtCompound nbtCompound = new NbtCompound();
 
 				nbtCompound.putByte("Side", (byte) values.indexOf(entry.getKey()));

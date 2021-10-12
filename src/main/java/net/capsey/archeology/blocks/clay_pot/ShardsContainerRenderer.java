@@ -2,6 +2,7 @@ package net.capsey.archeology.blocks.clay_pot;
 
 import net.capsey.archeology.ArcheologyClientMod;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer.Side;
+import net.capsey.archeology.items.CeramicShard;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelData;
@@ -17,7 +18,6 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 
@@ -29,11 +29,8 @@ public abstract class ShardsContainerRenderer<T extends ShardsContainer> impleme
     private final ModelPart straight;
 	private final ModelPart corner;
 
-	// Should return class of T!
-	public abstract Class<? extends ShardsContainer> getEntityClass();
-
-	public ShardsContainerRenderer(BlockEntityRendererFactory.Context ctx) {
-		ModelPart modelPart = ctx.getLayerModelPart(ArcheologyClientMod.getModelLayer(getEntityClass()));
+	public ShardsContainerRenderer(BlockEntityRendererFactory.Context ctx, Class<T> entityClass) {
+		ModelPart modelPart = ctx.getLayerModelPart(ArcheologyClientMod.getModelLayer(entityClass));
 		this.straight = modelPart.getChild("straight");
 		this.corner = modelPart.getChild("corner");
 	}
@@ -65,7 +62,7 @@ public abstract class ShardsContainerRenderer<T extends ShardsContainer> impleme
 			matrices.translate(-1.0F, -(10.0F / 16), 0.0F);
 			
 			for (Side side : Side.values()) {
-				ItemStack shard = entity.getShard(side);
+				CeramicShard shard = entity.getShard(side);
 
 				if (shard != null) {
 					renderShard(shard, side, matrices, vertexConsumers, light, overlay);
@@ -81,8 +78,8 @@ public abstract class ShardsContainerRenderer<T extends ShardsContainer> impleme
 		}
     }
 
-	private void renderShard(ItemStack shard, Side side, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-		SpriteIdentifier spriteIdentifier = new SpriteIdentifier(ATLAS_TEXTURE, new Identifier("archeology", "shard/ender_dragon"));
+	private void renderShard(CeramicShard shard, Side side, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+		SpriteIdentifier spriteIdentifier = shard.getSpriteId();
 		VertexConsumer spriteConsumer = spriteIdentifier.getVertexConsumer(vertexConsumers, RenderLayer::getEntityNoOutline);
 
 		(side.isStraight() ? straight : corner).render(matrices, spriteConsumer, light, overlay);

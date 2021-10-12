@@ -1,6 +1,10 @@
 {
     "item.archeology.copper_brush": "Copper Brush",
-    "item.archeology.ceramic_shard": "Ceramic Shard",
+
+    "item.archeology.ender_dragon_shard": "Ceramic Shard",
+    "item.archeology.ender_dragon_shard.desc": "Ender Dragon",
+
+    "itemGroup.archeology.shards": "Ceramic Shards",
     
     "block.archeology.excavation_dirt": "Excavation Dirt",
     "block.archeology.excavation_gravel": "Excavation Gravel",
@@ -12,6 +16,6 @@
 
     "text.autoconfig.archeology.title": "Archeology Mod Config",
     "text.autoconfig.archeology.option.stopUsingAfterBrushing": "Stop using after brushing",
-    "text.autoconfig.archeology.option.stopUsingAfterBrushing.@Tooltip[0]": "If enabled, will unpress use key when stopped brushing",
-    "text.autoconfig.archeology.option.stopUsingAfterBrushing.@Tooltip[1]": "For example, if block breaks or finished brushing"
+    "text.autoconfig.archeology.option.stopUsingAfterBrushing.@Tooltip[0]": "If enabled, will unpress use key when stopped brushing.",
+    "text.autoconfig.archeology.option.stopUsingAfterBrushing.@Tooltip[1]": "For example, if block breaks or finished brushing."
 }
