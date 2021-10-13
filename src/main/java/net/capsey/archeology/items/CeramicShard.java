@@ -1,6 +1,8 @@
 package net.capsey.archeology.items;
 
-import net.capsey.archeology.blocks.clay_pot.ShardsContainerRenderer;
+import net.capsey.archeology.blocks.clay_pot.ClayPotBlockEntity;
+import net.capsey.archeology.blocks.clay_pot.RawClayPotBlockEntity;
+import net.capsey.archeology.blocks.clay_pot.ShardsContainer;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -9,18 +11,37 @@ import net.minecraft.util.Identifier;
 
 public class CeramicShard {
     
+    public static final Identifier RAW_SHARDS_ATLAS_TEXTURE = new Identifier("textures/atlas/raw_shards.png");
+    public static final Identifier SHARDS_ATLAS_TEXTURE = new Identifier("textures/atlas/shards.png");
+
     private final Item item;
     private final Identifier itemId;
+    private final SpriteIdentifier rawSpriteId;
     private final SpriteIdentifier spriteId;
 
-    public CeramicShard(Item item, Identifier itemId, Identifier shardId) {
+    public CeramicShard(Item item, Identifier itemId, Identifier rawShardId, Identifier shardId) {
         this.item = item;
         this.itemId = itemId;
-        this.spriteId = new SpriteIdentifier(ShardsContainerRenderer.ATLAS_TEXTURE, shardId);
+        this.rawSpriteId = new SpriteIdentifier(RAW_SHARDS_ATLAS_TEXTURE, rawShardId);
+        this.spriteId = new SpriteIdentifier(SHARDS_ATLAS_TEXTURE, shardId);
+    }
+
+    public SpriteIdentifier getSpriteId(Class<? extends ShardsContainer> containerClass) {
+        if (containerClass.isAssignableFrom(ClayPotBlockEntity.class)) {
+            return spriteId;
+        } else if (containerClass.isAssignableFrom(RawClayPotBlockEntity.class)) {
+            return rawSpriteId;
+        }
+
+        throw new UnsupportedOperationException();
     }
 
     public SpriteIdentifier getSpriteId() {
         return spriteId;
+    }
+
+    public SpriteIdentifier getRawSpriteId() {
+        return rawSpriteId;
     }
 
     public ItemStack getStack() {

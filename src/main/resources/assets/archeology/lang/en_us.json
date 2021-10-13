@@ -4,6 +4,15 @@
     "item.archeology.ender_dragon_shard": "Ceramic Shard",
     "item.archeology.ender_dragon_shard.desc": "Ender Dragon",
 
+    "item.archeology.overworld_shard": "Ceramic Shard",
+    "item.archeology.overworld_shard.desc": "Birch under the Sun",
+
+    "item.archeology.diamond_shard": "Ceramic Shard",
+    "item.archeology.diamond_shard.desc": "Diamond",
+
+    "item.archeology.emerald_shard": "Ceramic Shard",
+    "item.archeology.emerald_shard.desc": "Emerald",
+
     "itemGroup.archeology.shards": "Ceramic Shards",
     
     "block.archeology.excavation_dirt": "Excavation Dirt",

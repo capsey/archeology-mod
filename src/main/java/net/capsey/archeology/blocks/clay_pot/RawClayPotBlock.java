@@ -1,5 +1,7 @@
 package net.capsey.archeology.blocks.clay_pot;
 
+import java.util.Optional;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.capsey.archeology.ArcheologyMod;
@@ -34,15 +36,16 @@ public class RawClayPotBlock extends BlockWithEntity {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {        
         if (!world.isClient) {
             ItemStack item = player.getStackInHand(hand);
+            Optional<CeramicShard> shard = CeramicShardRegistry.getShard(item);
     
-            if (CeramicShardRegistry.isItemShard(item)) {
+            if (shard.isPresent()) {
                 RawClayPotBlockEntity blockEntity = (RawClayPotBlockEntity) world.getBlockEntity(pos);
-                CeramicShard shard = CeramicShardRegistry.getShard(item);
         
-                if (Side.validHit(hit) && blockEntity.addShard(Side.fromHit(hit), shard)) {
+                if (Side.validHit(hit) && blockEntity.addShard(Side.fromHit(hit), shard.get())) {
                     if (!player.isCreative()) {
-                        player.setStackInHand(hand, ItemStack.EMPTY);
+                        item.decrement(1);
                     }
+
                     return ActionResult.SUCCESS;
                 }
             }

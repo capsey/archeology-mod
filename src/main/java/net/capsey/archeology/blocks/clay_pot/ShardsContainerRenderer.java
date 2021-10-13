@@ -18,19 +18,20 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 
 @Environment(EnvType.CLIENT)
 public abstract class ShardsContainerRenderer<T extends ShardsContainer> implements BlockEntityRenderer<T> {
-    
-    public static final Identifier ATLAS_TEXTURE = new Identifier("textures/atlas/shards.png");
+
+	private final Class<T> entityClass;
 
     private final ModelPart straight;
 	private final ModelPart corner;
 
 	public ShardsContainerRenderer(BlockEntityRendererFactory.Context ctx, Class<T> entityClass) {
-		ModelPart modelPart = ctx.getLayerModelPart(ArcheologyClientMod.getModelLayer(entityClass));
+		this.entityClass = entityClass;
+
+		ModelPart modelPart = ctx.getLayerModelPart(ArcheologyClientMod.getModelLayer(this.entityClass));
 		this.straight = modelPart.getChild("straight");
 		this.corner = modelPart.getChild("corner");
 	}
@@ -79,7 +80,7 @@ public abstract class ShardsContainerRenderer<T extends ShardsContainer> impleme
     }
 
 	private void renderShard(CeramicShard shard, Side side, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-		SpriteIdentifier spriteIdentifier = shard.getSpriteId();
+		SpriteIdentifier spriteIdentifier = shard.getSpriteId(entityClass);
 		VertexConsumer spriteConsumer = spriteIdentifier.getVertexConsumer(vertexConsumers, RenderLayer::getEntityNoOutline);
 
 		(side.isStraight() ? straight : corner).render(matrices, spriteConsumer, light, overlay);
