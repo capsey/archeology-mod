@@ -33,7 +33,7 @@ public abstract class HeldItemRendererMixin {
                     boolean bl = arm == Arm.RIGHT;
 
                     int side = bl ? 1 : -1;
-                    float progress = (float) player.getItemUseTime() / item.getMaxUseTime();
+                    float progress = (float) player.getItemUseTime() / (ExcavationBlock.getBrushTicks(item) * ExcavationBlock.MAX_BRUSHING_LEVELS);
                     float angle_coef = MathHelper.cos(3 * ExcavationBlock.MAX_BRUSHING_LEVELS * progress * 6.2831855F);
 
                     applyEquipOffsetMixin(matrices, arm, equipProgress);

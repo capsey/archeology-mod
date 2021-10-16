@@ -1,11 +1,17 @@
 package net.capsey.archeology.blocks.excavation_block;
 
+import org.jetbrains.annotations.Nullable;
+
+import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.items.CopperBrushItem;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -14,8 +20,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 
-public class ExcavationBlock extends Block implements BlockEntityProvider {
+public class ExcavationBlock extends BlockWithEntity {
 
     public static final int MAX_BRUSHING_LEVELS = 5;
     public static final IntProperty BRUSHING_LEVEL = IntProperty.of("brushing_level", 0, MAX_BRUSHING_LEVELS);
@@ -43,6 +50,11 @@ public class ExcavationBlock extends Block implements BlockEntityProvider {
         setDefaultState(getStateManager().getDefaultState().with(BRUSHING_LEVEL, 0));
     }
 
+    @Override @Nullable
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+		return world.isClient ? null : checkType(type, ArcheologyMod.EXCAVATION_BLOCK_ENTITY, ExcavationBlockEntity::serverTick);
+	}
+
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(BRUSHING_LEVEL);
@@ -52,6 +64,10 @@ public class ExcavationBlock extends Block implements BlockEntityProvider {
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new ExcavationBlockEntity(pos, state);
     }
+
+    public BlockRenderType getRenderType(BlockState state) {
+		return BlockRenderType.MODEL;
+	}
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
