@@ -4,11 +4,13 @@ import java.util.Optional;
 
 import net.capsey.archeology.ArcheologyMod;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -48,7 +50,7 @@ public class ExcavationBlockEntity extends FossilContainer {
     }
 
     public boolean startBrushing(PlayerEntity player, ItemStack stack) {
-        if (brushingPlayer == null) {
+        if (brushingPlayer == null && stack.isOf(ArcheologyMod.COPPER_BRUSH)) {
             BlockState state = getCachedState();
 
             if (state.getBlock() instanceof ExcavationBlock) {
@@ -66,10 +68,10 @@ public class ExcavationBlockEntity extends FossilContainer {
     public static void serverTick(World world, BlockPos pos, BlockState state, ExcavationBlockEntity be) {
         if (be.isAlreadyBrushing()) {
             Optional<BlockHitResult> raycast = getRaycast(be.brushingPlayer);
+            ItemStack stack = be.brushingPlayer.getActiveItem();
     
-            if (be.brushingCheck(raycast)) {
+            if (be.brushingCheck(raycast, stack)) {
                 int time = be.brushingPlayer.getItemUseTime();
-                ItemStack stack = be.brushingPlayer.getActiveItem();
     
                 be.aesteticTick(time, stack);
                 be.brushingTick(time, stack);
@@ -86,14 +88,10 @@ public class ExcavationBlockEntity extends FossilContainer {
         return Optional.of(result instanceof BlockHitResult ? (BlockHitResult) result : null);
     }
 
-    private boolean brushingCheck(Optional<BlockHitResult> raycast) {
+    private boolean brushingCheck(Optional<BlockHitResult> raycast, ItemStack stack) {
         if (raycast.isPresent() && pos.equals(raycast.get().getBlockPos())) {
-            if (brushingPlayer.isUsingItem()) {
-                ItemStack stack = brushingPlayer.getActiveItem();
-
-                if (stack.isOf(ArcheologyMod.COPPER_BRUSH)) {
-                    return true;
-                }
+            if (brushingPlayer.isUsingItem() && stack.isOf(ArcheologyMod.COPPER_BRUSH)) {
+                return true;
             }
         }
 
@@ -113,6 +111,10 @@ public class ExcavationBlockEntity extends FossilContainer {
 
     public void brushingTick(int useTime, ItemStack stack) {
         if (!world.isClient && useTime % ExcavationBlock.getBrushTicks(stack) == 0) {
+            int damage = world.getRandom().nextInt(1);
+            EquipmentSlot slot = brushingPlayer.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+            stack.damage(damage, brushingPlayer, p -> p.sendEquipmentBreakStatus(slot));
+
             int newState = getCachedState().get(ExcavationBlock.BRUSHING_LEVEL) + 1;
 
             if (newState <= ExcavationBlock.MAX_BRUSHING_LEVELS) {

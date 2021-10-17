@@ -38,7 +38,7 @@ public class ArcheologyMod implements ModInitializer {
     public static final Block EXCAVATION_DIRT = new ExcavationBlock(FabricBlockSettings.copyOf(Blocks.DIRT).hardness(1.0F));
     public static final Block EXCAVATION_GRAVEL = new FallingExcavationBlock(FabricBlockSettings.copyOf(Blocks.GRAVEL).hardness(1.2F), Blocks.GRAVEL);
 
-    public static final Block RAW_CLAY_POT = new RawClayPotBlock(FabricBlockSettings.copyOf(Blocks.CLAY)); // .hardness(1.4F)
+    public static final Block RAW_CLAY_POT = new RawClayPotBlock(FabricBlockSettings.copyOf(Blocks.CLAY).ticksRandomly()); // .hardness(1.4F)
     public static final Block CLAY_POT = new ClayPotBlock(FabricBlockSettings.copyOf(Blocks.TERRACOTTA).sounds(ClayPotBlock.SOUND_GROUP));
 
     public static BlockEntityType<ExcavationBlockEntity> EXCAVATION_BLOCK_ENTITY;
