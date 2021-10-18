@@ -4,12 +4,23 @@
     "package": "net.capsey.archeology.mixin",
     "compatibilityLevel": "JAVA_16",
     "mixins": [
+        "AzaleaBlockMixin",
+        "BigDripleafBlockMixin",
+        "BigDripleafStemBlockMixin",
+        "DeadBushBlockMixin",
+        "FlowerBlockMixin",
+        "FungusBlockMixin",
+        "MushroomPlantBlockMixin",
+        "SaplingBlockMixin",
+        "SmallDripleafBlockMixin",
+        "SweetBerryBushBlockMixin",
+        "TallFlowerBlockMixin",
         "UseActionMixin"
     ],
     "client": [
-        "TexturedRenderLayersMixin",
+        "HeldItemRendererMixin",
         "PlayerEntityRendererMixin",
-        "HeldItemRendererMixin"
+        "TexturedRenderLayersMixin"
     ],
     "injectors": {
         "defaultRequire": 1
