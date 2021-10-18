@@ -6,17 +6,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.capsey.archeology.ArcheologyMod;
-import net.minecraft.block.BigDripleafBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.PlantBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 
-@Mixin(BigDripleafBlock.class)
-public class BigDripleafBlockMixin {
+@Mixin(PlantBlock.class)
+public class PlantBlockMixin {
     
     @Inject(method = "canPlaceAt(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;)Z", at = @At("RETURN"), cancellable = true)
     private void canPlaceAt(BlockState state, WorldView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(cir.getReturnValue() || world.getBlockState(pos.down()).isIn(ArcheologyMod.CLAY_POTS_TAG));
+        BlockState floor = world.getBlockState(pos.down());
+        boolean isOnClayPot = floor.isIn(ArcheologyMod.CLAY_POTS_TAG) && state.isIn(ArcheologyMod.CLAY_POT_PLANTABLE_TAG);
+
+        cir.setReturnValue(cir.getReturnValue() || isOnClayPot);
 	}
 
 }

@@ -25,7 +25,7 @@ public class BigDripleafStemBlockMixin {
 		BlockState blockState = world.getBlockState(blockPos);
 		BlockState blockState2 = world.getBlockState(pos.up());
 		
-        boolean bl = blockState.isOf(block) || blockState.isOf(ArcheologyMod.CLAY_POT) || blockState.isSideSolidFullSquare(world, blockPos, Direction.UP);
+        boolean bl = blockState.isOf(block) || blockState.isIn(ArcheologyMod.CLAY_POTS_TAG) || blockState.isSideSolidFullSquare(world, blockPos, Direction.UP);
         boolean bl2 = blockState2.isOf(block) || blockState2.isOf(Blocks.BIG_DRIPLEAF);
 
         cir.setReturnValue(bl && bl2);

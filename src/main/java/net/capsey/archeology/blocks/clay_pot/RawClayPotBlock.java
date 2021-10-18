@@ -126,7 +126,7 @@ public class RawClayPotBlock extends BlockWithEntity {
 
 	@Override
 	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-		if (!world.isClient && !state.isOf(ArcheologyMod.RAW_CLAY_POT) && !state.isOf(ArcheologyMod.CLAY_POT)) {
+		if (!world.isClient && !state.isOf(ArcheologyMod.RAW_CLAY_POT) && !state.isIn(ArcheologyMod.CLAY_POTS_TAG)) {
 			BlockEntity blockEntity = world.getBlockEntity(pos);
 			
 			if (blockEntity instanceof ShardsContainer) {

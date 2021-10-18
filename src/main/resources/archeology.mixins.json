@@ -4,17 +4,12 @@
     "package": "net.capsey.archeology.mixin",
     "compatibilityLevel": "JAVA_16",
     "mixins": [
-        "AzaleaBlockMixin",
         "BigDripleafBlockMixin",
         "BigDripleafStemBlockMixin",
-        "DeadBushBlockMixin",
-        "FlowerBlockMixin",
-        "FungusBlockMixin",
+        "BoneMealItemMixin",
         "MushroomPlantBlockMixin",
+        "PlantBlockMixin",
         "SaplingBlockMixin",
-        "SmallDripleafBlockMixin",
-        "SweetBerryBushBlockMixin",
-        "TallFlowerBlockMixin",
         "UseActionMixin"
     ],
     "client": [
