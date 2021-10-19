@@ -9,11 +9,9 @@ import net.capsey.archeology.blocks.clay_pot.ShardsContainer.Side;
 import net.capsey.archeology.items.CeramicShard;
 import net.capsey.archeology.items.CeramicShardRegistry;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.CampfireBlock;
-import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -27,18 +25,16 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-public class RawClayPotBlock extends BlockWithEntity {
+public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntityProvider {
 
     public static final IntProperty HARDENING_PROGRESS = IntProperty.of("hardening_progress", 0, 5);
 
     public RawClayPotBlock(Settings settings) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(HARDENING_PROGRESS, 0));
+        setDefaultState(getDefaultState().with(HARDENING_PROGRESS, 0));
     }
 
     @Override
@@ -63,25 +59,29 @@ public class RawClayPotBlock extends BlockWithEntity {
         return ActionResult.PASS;
     }
 
-    public boolean canHarden(BlockState state) {
-        return state.isIn(BlockTags.FIRE) || (state.isIn(BlockTags.CAMPFIRES) && state.get(CampfireBlock.LIT));
+    public boolean canHarden(BlockState state, BlockState floor) {
+        boolean dry = !state.get(AbstractClayPotBlock.WATERLOGGED);
+        boolean fire = floor.isIn(BlockTags.FIRE) || (floor.isIn(BlockTags.CAMPFIRES) && floor.get(CampfireBlock.LIT));
+
+        return dry && fire;
     }
 
+    @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {        
-        if (canHarden(world.getBlockState(pos.down()))) {
+        if (canHarden(state, world.getBlockState(pos.down()))) {
             world.getBlockTickScheduler().schedule(pos, this, 10);
         } else {
-            int i = state.get(HARDENING_PROGRESS) - 1;
+            int i = state.get(HARDENING_PROGRESS);
 
-            if (i >= 0) {
-                world.setBlockState(pos, state.with(HARDENING_PROGRESS, i), Block.NOTIFY_LISTENERS);
+            if (i > 0) {
+                world.setBlockState(pos, state.with(HARDENING_PROGRESS, i  - 1), Block.NOTIFY_LISTENERS);
             }
         }
 	}
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {                
-        if (direction == Direction.DOWN && canHarden(neighborState)) {
+        if (direction == Direction.DOWN && canHarden(state, neighborState)) {
 			if (!world.isClient() && !world.getBlockTickScheduler().isScheduled(pos, this)) {
                 world.getBlockTickScheduler().schedule(pos, this, 10);
             }
@@ -90,8 +90,9 @@ public class RawClayPotBlock extends BlockWithEntity {
 		return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
 	}
 
+    @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-		if (canHarden(world.getBlockState(pos.down()))) {
+		if (canHarden(state, world.getBlockState(pos.down()))) {
             if (random.nextInt(2) == 0) {
                 int i = state.get(HARDENING_PROGRESS) + 1;
 
@@ -141,6 +142,7 @@ public class RawClayPotBlock extends BlockWithEntity {
 		}
 	}
 
+    @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
@@ -156,23 +158,14 @@ public class RawClayPotBlock extends BlockWithEntity {
 	}
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        return ClayPotBlock.BLOCK_SHAPE;
-    }
-
-    @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new RawClayPotBlockEntity(pos, state);
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
+        super.appendProperties(stateManager);
         stateManager.add(HARDENING_PROGRESS);
     }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-		return BlockRenderType.MODEL;
-	}
 
 }
