@@ -38,13 +38,13 @@ public class ArcheologyMod implements ModInitializer {
     public static final Tag<Block> CLAY_POT_PLANTABLE_TAG = TagFactory.BLOCK.create(new Identifier("archeology", "clay_pot_plantable"));
 
     // Items
-    public static final Item COPPER_BRUSH = new CopperBrushItem(new Item.Settings().maxDamage(64).group(ItemGroup.TOOLS));
+    public static final Item COPPER_BRUSH = new CopperBrushItem(new Item.Settings().maxDamage(64).group(ItemGroup.TOOLS), -3.0F);
 
     // Blocks
     public static final Block EXCAVATION_DIRT = new ExcavationBlock(FabricBlockSettings.copyOf(Blocks.DIRT).hardness(1.0F));
     public static final Block EXCAVATION_GRAVEL = new FallingExcavationBlock(FabricBlockSettings.copyOf(Blocks.GRAVEL).hardness(1.2F), Blocks.GRAVEL);
 
-    public static final Block RAW_CLAY_POT = new RawClayPotBlock(FabricBlockSettings.copyOf(Blocks.CLAY).ticksRandomly());
+    public static final Block RAW_CLAY_POT = new RawClayPotBlock(FabricBlockSettings.copyOf(Blocks.CLAY));
     public static final Block CLAY_POT = new ClayPotBlock(FabricBlockSettings.copyOf(Blocks.TERRACOTTA).sounds(ClayPotBlock.SOUND_GROUP));
 
     public static BlockEntityType<ExcavationBlockEntity> EXCAVATION_BLOCK_ENTITY;
@@ -59,6 +59,9 @@ public class ArcheologyMod implements ModInitializer {
     // Sounds
     public static final Identifier BRUSHING_SOUND_ID = new Identifier("archeology:item.copper_brush.brushing");
     public static SoundEvent BRUSHING_SOUND_EVENT = new SoundEvent(BRUSHING_SOUND_ID);
+
+    // Network
+    public static final Identifier STOPPED_BRUSHING_PACKET_ID = new Identifier("archeology:stopped_brushing");
 
     @Override
     public void onInitialize() {

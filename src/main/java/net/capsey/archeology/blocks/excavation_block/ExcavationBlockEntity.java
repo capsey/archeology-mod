@@ -3,11 +3,13 @@ package net.capsey.archeology.blocks.excavation_block;
 import java.util.Optional;
 
 import net.capsey.archeology.ArcheologyMod;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Hand;
@@ -41,7 +43,7 @@ public class ExcavationBlockEntity extends FossilContainer {
         }
     }
 
-    private PlayerEntity brushingPlayer;
+    private ServerPlayerEntity brushingPlayer;
     private float breakingProgress = -1.0F;
     private Vec3d prevLookPoint;
 
@@ -49,7 +51,7 @@ public class ExcavationBlockEntity extends FossilContainer {
         super(pos, state);
     }
 
-    public boolean startBrushing(PlayerEntity player, ItemStack stack) {
+    public boolean startBrushing(ServerPlayerEntity player, ItemStack stack) {
         if (brushingPlayer == null && stack.isOf(ArcheologyMod.COPPER_BRUSH)) {
             BlockState state = getCachedState();
 
@@ -77,15 +79,13 @@ public class ExcavationBlockEntity extends FossilContainer {
                 be.brushingTick(time, stack);
                 be.breakingTick(time, stack, raycast.get());
             }
-        } else if (be.getCachedState().get(ExcavationBlock.BRUSHING_LEVEL) != 0) {
-            be.breakBlock();
         }
     }
 
     public static Optional<BlockHitResult> getRaycast(LivingEntity user) {
         // TODO: Remove hardcoded player reach value
         HitResult result = user.raycast(4.5F, 1, false);
-        return Optional.of(result instanceof BlockHitResult ? (BlockHitResult) result : null);
+        return Optional.ofNullable(result instanceof BlockHitResult ? (BlockHitResult) result : null);
     }
 
     private boolean brushingCheck(Optional<BlockHitResult> raycast, ItemStack stack) {
@@ -164,8 +164,10 @@ public class ExcavationBlockEntity extends FossilContainer {
 
     public void breakBlock() {
         if (brushingPlayer != null) {
-            brushingPlayer.stopUsingItem();
             brushingPlayer.resetLastAttackedTicks();
+            brushingPlayer.stopUsingItem();
+
+            ServerPlayNetworking.send(brushingPlayer, ArcheologyMod.STOPPED_BRUSHING_PACKET_ID, PacketByteBufs.empty());
         }
 
         if (!world.isClient) {
@@ -179,7 +181,7 @@ public class ExcavationBlockEntity extends FossilContainer {
     }
 
     public boolean isAlreadyBrushing() {
-        return brushingPlayer != null;
+        return this.isLootGenerated();
     }
     
 }

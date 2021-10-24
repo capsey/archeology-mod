@@ -67,6 +67,11 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
     }
 
     @Override
+    public boolean hasRandomTicks(BlockState state) {
+		return state.get(HARDENING_PROGRESS) != 0;
+	}
+
+    @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {        
         if (canHarden(state, world.getBlockState(pos.down()))) {
             world.getBlockTickScheduler().schedule(pos, this, 10);

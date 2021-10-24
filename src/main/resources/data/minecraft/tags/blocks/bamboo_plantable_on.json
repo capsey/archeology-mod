@@ -1,6 +1,6 @@
 {
     "replace": false,
     "values": [
-        "archeology:clay_pot"
+        "#archeology:clay_pots"
     ]
 }
