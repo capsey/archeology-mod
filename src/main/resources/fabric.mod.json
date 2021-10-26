@@ -1,52 +1,52 @@
 {
-  "schemaVersion": 1,
-  "id": "archeology",
-  "version": "${version}",
+	"schemaVersion": 1,
+	"id": "archeology",
+	"version": "${version}",
 
-  "name": "CapsLock Archeology Mod",
-  "description": "My Archeology implementation mod for Minecraft Fabric",
-  "authors": [
-    {
-      "name": "capsey_",
-      "contact": {
-        "homepage": "https://github.com/capsey/"
-      }
-    }
-  ],
-  "contributors": [
-    {
-      "name": "13GPanska_Stanek_Vojtech",
-      "contact": {
-        "homepage": "https://freesound.org/people/13GPanska_Stanek_Vojtech/",
-        "sources": "https://freesound.org/people/13GPanska_Stanek_Vojtech/sounds/371909/"
-      }
-    }
-  ],
+	"name": "CapsLock Archeology Mod",
+	"description": "My Archeology implementation mod for Minecraft Fabric",
+	"authors": [
+		{
+			"name": "capsey_",
+			"contact": {
+				"homepage": "https://github.com/capsey/"
+			}
+		}
+	],
+	"contributors": [
+		{
+			"name": "13GPanska_Stanek_Vojtech",
+			"contact": {
+				"homepage": "https://freesound.org/people/13GPanska_Stanek_Vojtech/",
+				"sources": "https://freesound.org/people/13GPanska_Stanek_Vojtech/sounds/371909/"
+			}
+		}
+	],
 
-  "license": "MIT",
-  "icon": "assets/archeology/icon.png",
+	"license": "MIT",
+	"icon": "assets/archeology/icon.png",
 
-  "environment": "*",
-  "entrypoints": {
-    "main": [
-      "net.capsey.archeology.ArcheologyMod"
-    ],
-    "client": [
-      "net.capsey.archeology.ArcheologyClientMod"
-    ],
-    "modmenu": [
-      "net.capsey.archeology.ModMenuIntegration"
-    ]
-  },
-  "mixins": [
-    "archeology.mixins.json"
-  ],
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.capsey.archeology.ArcheologyMod"
+		],
+		"client": [
+			"net.capsey.archeology.ArcheologyClientMod"
+		],
+		"modmenu": [
+			"net.capsey.archeology.ModMenuIntegration"
+		]
+	},
+	"mixins": [
+		"archeology.mixins.json"
+	],
 
-  "depends": {
-    "fabricloader": ">=0.11.3",
-    "fabric": "*",
-    "fabric-key-binding-api-v1": "*",
-    "minecraft": "1.17.x",
-    "java": ">=16"
-  }
+	"depends": {
+		"fabricloader": ">=0.11.3",
+		"fabric": "*",
+		"fabric-key-binding-api-v1": "*",
+		"minecraft": "1.17.x",
+		"java": ">=16"
+	}
 }
