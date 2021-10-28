@@ -23,11 +23,11 @@ public class ArcheologyClientMod implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        BlockEntityRendererRegistry.register(ArcheologyMod.EXCAVATION_BLOCK_ENTITY, ExcavationBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.register(ArcheologyMod.RAW_CLAY_POT_BLOCK_ENTITY, RawClayPotBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.register(ArcheologyMod.CLAY_POT_BLOCK_ENTITY, ClayPotBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.register(ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY, ExcavationBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.register(ArcheologyMod.BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY, RawClayPotBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.register(ArcheologyMod.BlockEntities.CLAY_POT_BLOCK_ENTITY, ClayPotBlockEntityRenderer::new);
 
-        FabricModelPredicateProviderRegistry.register(ArcheologyMod.COPPER_BRUSH, new Identifier("damage"), (itemStack, clientWorld, livingEntity, i) -> {
+        FabricModelPredicateProviderRegistry.register(ArcheologyMod.Items.COPPER_BRUSH, new Identifier("damage"), (itemStack, clientWorld, livingEntity, i) -> {
             return itemStack.getDamage() / itemStack.getMaxDamage();
         });
 

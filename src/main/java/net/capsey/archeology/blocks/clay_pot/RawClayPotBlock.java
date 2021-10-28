@@ -118,21 +118,15 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
         if (entity instanceof RawClayPotBlockEntity) {
             EnumMap<Side, CeramicShard> shards = ((RawClayPotBlockEntity) entity).getShards();
 
-            BlockState newState = ArcheologyMod.CLAY_POT.getDefaultState();
+            BlockState newState = ArcheologyMod.Blocks.CLAY_POT.getDefaultState();
             world.setBlockState(pos, newState, Block.NOTIFY_LISTENERS);
-            world.addBlockEntity(((ClayPotBlock) ArcheologyMod.CLAY_POT).createBlockEntity(pos, newState));
-
-            BlockEntity newEntity = world.getBlockEntity(pos);
-
-            if (newEntity instanceof ClayPotBlockEntity) {
-                ((ClayPotBlockEntity) newEntity).configureShards(shards);
-            }
+            world.addBlockEntity(new ClayPotBlockEntity(pos, newState, shards));
         }
     }
 
 	@Override
 	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-		if (!world.isClient && !state.isOf(ArcheologyMod.RAW_CLAY_POT) && !state.isIn(ArcheologyMod.CLAY_POTS_TAG)) {
+		if (!world.isClient && !state.isOf(ArcheologyMod.Blocks.RAW_CLAY_POT) && !state.isIn(ArcheologyMod.CLAY_POTS_TAG)) {
 			BlockEntity blockEntity = world.getBlockEntity(pos);
 			
 			if (blockEntity instanceof ShardsContainer) {

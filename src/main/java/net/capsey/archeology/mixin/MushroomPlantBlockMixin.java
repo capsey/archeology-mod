@@ -27,7 +27,7 @@ public abstract class MushroomPlantBlockMixin {
 
 	@Inject(method = "canPlaceAt(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;)Z", at = @At("RETURN"), cancellable = true)
     private void canPlaceAt(BlockState state, WorldView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(cir.getReturnValue() || world.getBlockState(pos.down()).isOf(ArcheologyMod.CLAY_POT));
+        cir.setReturnValue(cir.getReturnValue() || world.getBlockState(pos.down()).isIn(ArcheologyMod.CLAY_POTS_TAG));
 	}
 
 }

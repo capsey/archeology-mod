@@ -52,7 +52,7 @@ public class ExcavationBlock extends BlockWithEntity {
 
     @Override @Nullable
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-		return world.isClient ? null : checkType(type, ArcheologyMod.EXCAVATION_BLOCK_ENTITY, ExcavationBlockEntity::serverTick);
+		return world.isClient ? null : checkType(type, ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY, ExcavationBlockEntity::serverTick);
 	}
 
     @Override

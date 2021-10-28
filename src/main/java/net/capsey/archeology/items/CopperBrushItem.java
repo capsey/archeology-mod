@@ -51,7 +51,7 @@ public class CopperBrushItem extends Item {
 			if (cooldown >= 1) {
 				ItemStack stack = player.getStackInHand(context.getHand());
 				
-				if (stack.isOf(ArcheologyMod.COPPER_BRUSH)) {
+				if (stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
 					BlockEntity be = world.getBlockEntity(context.getBlockPos());
 		
 					if (be instanceof ExcavationBlockEntity) {

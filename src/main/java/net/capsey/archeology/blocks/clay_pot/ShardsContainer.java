@@ -26,10 +26,11 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 		super(type, pos, state);
 	}
 
-	public void configureShards(EnumMap<Side, CeramicShard> shards) {
+	protected void replaceShards(EnumMap<Side, CeramicShard> shards) {
+		ceramic_shards.clear();
 		ceramic_shards.putAll(shards);
 		this.markDirty();
-		// sync();
+		this.sync();
     }
 
 	public EnumMap<Side, CeramicShard> getShards() {
@@ -43,14 +44,14 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 	public boolean addShard(Side direction, CeramicShard shard) {
 		boolean bl = ceramic_shards.putIfAbsent(direction, shard) == null;
 		this.markDirty();
-		sync();
+		this.sync();
 		return bl;
 	}
 
 	public void clearShards() {
 		ceramic_shards.clear();
 		this.markDirty();
-		sync();
+		this.sync();
 	}
 
     public boolean hasShards() {

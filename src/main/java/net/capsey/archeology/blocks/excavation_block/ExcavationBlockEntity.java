@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 public class ExcavationBlockEntity extends FossilContainer {
 
     private static float getBreakingDelta(ItemStack stack, double magnitude) {
-        if (!stack.isOf(ArcheologyMod.COPPER_BRUSH)) {
+        if (!stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
             return 1.0F;
         }
 
@@ -52,7 +52,7 @@ public class ExcavationBlockEntity extends FossilContainer {
     }
 
     public boolean startBrushing(ServerPlayerEntity player, ItemStack stack) {
-        if (brushingPlayer == null && stack.isOf(ArcheologyMod.COPPER_BRUSH)) {
+        if (brushingPlayer == null && stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
             BlockState state = getCachedState();
 
             if (state.getBlock() instanceof ExcavationBlock) {
@@ -90,7 +90,7 @@ public class ExcavationBlockEntity extends FossilContainer {
 
     private boolean brushingCheck(Optional<BlockHitResult> raycast, ItemStack stack) {
         if (raycast.isPresent() && pos.equals(raycast.get().getBlockPos())) {
-            if (brushingPlayer.isUsingItem() && stack.isOf(ArcheologyMod.COPPER_BRUSH)) {
+            if (brushingPlayer.isUsingItem() && stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
                 return true;
             }
         }

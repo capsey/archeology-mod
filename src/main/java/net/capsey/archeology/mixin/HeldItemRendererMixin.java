@@ -25,7 +25,7 @@ public abstract class HeldItemRendererMixin {
 
     @Inject(at = @At("HEAD"), cancellable = true, method = "renderFirstPersonItem(Lnet/minecraft/client/network/AbstractClientPlayerEntity;FFLnet/minecraft/util/Hand;FLnet/minecraft/item/ItemStack;FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V")
     private void renderFirstPersonItem(AbstractClientPlayerEntity player, float tickDelta, float pitch, Hand hand, float swingProgress, ItemStack item, float equipProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo info) {
-        if (!player.isUsingSpyglass() && !item.isEmpty() && item.isOf(ArcheologyMod.COPPER_BRUSH)) {
+        if (!player.isUsingSpyglass() && !item.isEmpty() && item.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
             if (player.isUsingItem() && player.getItemUseTimeLeft() > 0 && player.getActiveHand() == hand) {
                 if (item.getUseAction() == CustomUseAction.BRUSH) {
                     matrices.push();

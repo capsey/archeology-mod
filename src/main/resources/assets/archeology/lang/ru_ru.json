@@ -1,0 +1,29 @@
+{
+    "item.archeology.copper_brush": "Медная Кисть",
+
+    "item.archeology.ender_dragon_shard": "Керамический осколок",
+    "item.archeology.ender_dragon_shard.desc": "Дракон Края",
+
+    "item.archeology.overworld_shard": "Керамический осколок",
+    "item.archeology.overworld_shard.desc": "Берёза под Солнцем",
+
+    "item.archeology.diamond_shard": "Керамический осколок",
+    "item.archeology.diamond_shard.desc": "Алмаз",
+
+    "item.archeology.emerald_shard": "Керамический осколок",
+    "item.archeology.emerald_shard.desc": "Изумруд",
+
+    "itemGroup.archeology.shards": "Керамические осколки",
+    
+    "block.archeology.excavation_dirt": "Раскопки Земли",
+    "block.archeology.excavation_gravel": "Раскопки Гравия",
+    "block.archeology.raw_clay_pot": "Сырой Глиняный Горшок",
+    "block.archeology.clay_pot": "Глиняный Горшок",
+
+    "subtitles.archeology.item.copper_brush.brushing": "Чистка блока",
+
+    "text.autoconfig.archeology.title": "Archeology Mod Config",
+    "text.autoconfig.archeology.option.stopUsingAfterBrushing": "Перестать использовать после чистки",
+    "text.autoconfig.archeology.option.stopUsingAfterBrushing.@Tooltip[0]": "Если включен, при остановке чистки будет отпущена клавиша использования.",
+    "text.autoconfig.archeology.option.stopUsingAfterBrushing.@Tooltip[1]": "Например, если блок сломался или чистка завершилась."
+}

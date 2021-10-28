@@ -1,8 +1,10 @@
 package net.capsey.archeology.blocks.clay_pot;
 
+import java.util.EnumMap;
 import java.util.stream.IntStream;
 
 import net.capsey.archeology.ArcheologyMod;
+import net.capsey.archeology.items.CeramicShard;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
@@ -19,8 +21,13 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
 
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(9, ItemStack.EMPTY);
 
+    public ClayPotBlockEntity(BlockPos pos, BlockState state, EnumMap<Side, CeramicShard> shards) {
+        super(ArcheologyMod.BlockEntities.CLAY_POT_BLOCK_ENTITY, pos, state);
+        replaceShards(shards);
+    }
+
     public ClayPotBlockEntity(BlockPos pos, BlockState state) {
-        super(ArcheologyMod.CLAY_POT_BLOCK_ENTITY, pos, state);
+        super(ArcheologyMod.BlockEntities.CLAY_POT_BLOCK_ENTITY, pos, state);
     }
 
     @Override
@@ -45,8 +52,7 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
     @Override
     public boolean isEmpty() {
         for (int i = 0; i < size(); i++) {
-            ItemStack stack = getStack(i);
-            if (!stack.isEmpty()) {
+            if (!getStack(i).isEmpty()) {
                 return false;
             }
         }

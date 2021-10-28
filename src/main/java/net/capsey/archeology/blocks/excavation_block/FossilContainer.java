@@ -23,7 +23,7 @@ public class FossilContainer extends BlockEntity implements BlockEntityClientSer
     private static final float[] LUCK_POINTS = { 1.0F, 2.0F, 3.0F, 4.0F };
 
     private static float getLuckPoints(ItemStack stack) {
-        if (!stack.isOf(ArcheologyMod.COPPER_BRUSH)) {
+        if (!stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
             return 0.0F;
         }
 
@@ -37,7 +37,7 @@ public class FossilContainer extends BlockEntity implements BlockEntityClientSer
     protected ArrayList<ItemStack> loot = new ArrayList<ItemStack>();
 
     public FossilContainer(BlockPos pos, BlockState state) {
-        super(ArcheologyMod.EXCAVATION_BLOCK_ENTITY, pos, state);
+        super(ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY, pos, state);
         lootTableId = new Identifier("archeology", "excavation/excavation_site");
     }
 
@@ -104,7 +104,7 @@ public class FossilContainer extends BlockEntity implements BlockEntityClientSer
                 .random(this.world.getRandom()).luck(player.getLuck() + getLuckPoints(stack));
             
             LootTable lootTable = this.world.getServer().getLootManager().getTable(lootTableId);
-            List<ItemStack> list = lootTable.generateLoot(builder.build(ArcheologyMod.EXCAVATION));
+            List<ItemStack> list = lootTable.generateLoot(builder.build(ArcheologyMod.EXCAVATION_LOOT_CONTEXT_TYPE));
             
             loot.addAll(list);
             this.markDirty();
