@@ -3,6 +3,12 @@
     "pools": [{
         "rolls": 1.0,
         "bonus_rolls": 0.0,
+        "conditions": [
+            {
+                "condition": "random_chance",
+                "chance": 0.75
+            }
+        ],
         "entries": [
             {
                 "type": "minecraft:loot_table",
@@ -18,9 +24,21 @@
             },
             {
                 "type": "minecraft:loot_table",
-                "weight": 20,
+                "weight": 25,
                 "quality": -2,
                 "name": "archeology:excavation/junk"
+            },
+            {
+                "type": "minecraft:item",
+                "weight": 5,
+                "quality": -2,
+                "name": "archeology:overworld_shard"
+            },
+            {
+                "type": "minecraft:item",
+                "weight": 5,
+                "quality": -2,
+                "name": "archeology:emerald_shard"
             }
         ]
     }]

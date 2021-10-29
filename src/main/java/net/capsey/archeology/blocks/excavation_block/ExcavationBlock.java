@@ -9,11 +9,13 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.Oxidizable.OxidizationLevel;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.hit.BlockHitResult;
@@ -30,20 +32,14 @@ public class ExcavationBlock extends BlockWithEntity {
     
     private static final int[] BRUSH_TICKS = { 48, 42, 36, 30 };
 
-    public static int getBrushTicks(ItemStack stack) {
-        if (!stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
-            return 0;
+    public static int getBrushTicks(OxidizationLevel level) {
+        switch (level) {
+            case UNAFFECTED: return BRUSH_TICKS[0];
+            case EXPOSED: return BRUSH_TICKS[0];
+            case WEATHERED: return BRUSH_TICKS[0];
+            case OXIDIZED: return BRUSH_TICKS[0];
+            default: throw new IllegalStateException("Invalid Oxidization Level");
         }
-
-        // Only for Debug purposes
-        if (stack.getNbt().contains("Debug") && stack.getNbt().getBoolean("Debug")) {
-            return 6;
-        }
-
-        int index = (int) Math.floor(4 * stack.getDamage() / stack.getMaxDamage());
-        if (index >= BRUSH_TICKS.length || index < 0) { index = 0; }
-
-        return BRUSH_TICKS[index];
     }
 
     public ExcavationBlock(Settings settings) {
@@ -51,19 +47,22 @@ public class ExcavationBlock extends BlockWithEntity {
         setDefaultState(getStateManager().getDefaultState().with(BRUSHING_LEVEL, 0));
     }
 
-    public boolean startBrushing(World world, BlockPos pos, ServerPlayerEntity player, ItemStack stack) {
-        BlockState state = world.getBlockState(pos);
-
-        if (state.isOf(this) && state.get(BRUSHING_LEVEL) == 0) {
-            Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY);
+    public boolean startBrushing(World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+        if (stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
+            BlockState state = world.getBlockState(pos);
     
-            if (entity.isPresent() && !world.getBlockTickScheduler().isScheduled(pos, this)) {
-                entity.get().startBrushing(player, stack);
-
-                world.setBlockState(pos, state.with(BRUSHING_LEVEL, 1));
-                world.getBlockTickScheduler().schedule(pos, this, 1); // getBrushTicks(stack)
-
-                return true;
+            if (state.isOf(this) && state.get(BRUSHING_LEVEL) == 0) {
+                Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY);
+        
+                if (entity.isPresent() && !world.getBlockTickScheduler().isScheduled(pos, this)) {
+                    entity.get().startBrushing(player, stack);
+                    
+                    world.setBlockState(pos, state.with(BRUSHING_LEVEL, 1));
+                    world.getBlockTickScheduler().schedule(pos, this, 1);
+                    
+                    player.incrementStat(Stats.MINED.getOrCreateStat(this));
+                    return true;
+                }
             }
         }
         
@@ -89,9 +88,10 @@ public class ExcavationBlock extends BlockWithEntity {
                         }
 
                         entity.get().breakingTick(raycast.get());
-                        world.getBlockTickScheduler().schedule(pos, this, 1); // getBrushTicks(entity.get().getStack())
+                        world.getBlockTickScheduler().schedule(pos, this, 1);
                         return;
                     } else {
+                        entity.get().successfullyBrushed();
                         entity.get().dropLoot();
                     }
                 }

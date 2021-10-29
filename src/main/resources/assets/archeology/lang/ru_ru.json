@@ -1,5 +1,5 @@
 {
-    "item.archeology.copper_brush": "Медная Кисть",
+    "item.archeology.copper_brush": "Медная кисть",
 
     "item.archeology.ender_dragon_shard": "Керамический осколок",
     "item.archeology.ender_dragon_shard.desc": "Дракон Края",
@@ -15,15 +15,17 @@
 
     "itemGroup.archeology.shards": "Керамические осколки",
     
-    "block.archeology.excavation_dirt": "Раскопки Земли",
-    "block.archeology.excavation_gravel": "Раскопки Гравия",
-    "block.archeology.raw_clay_pot": "Сырой Глиняный Горшок",
-    "block.archeology.clay_pot": "Глиняный Горшок",
+    "block.archeology.excavation_dirt": "Раскопки земли",
+    "block.archeology.excavation_gravel": "Раскопки гравия",
+    "block.archeology.raw_clay_pot": "Сырой глиняный горшок",
+    "block.archeology.clay_pot": "Глиняный горшок",
 
-    "subtitles.archeology.item.copper_brush.brushing": "Чистка блока",
+    "subtitles.archeology.item.copper_brush.brushing": "Блок раскапывается",
 
     "text.autoconfig.archeology.title": "Archeology Mod Config",
-    "text.autoconfig.archeology.option.stopUsingAfterBrushing": "Перестать использовать после чистки",
-    "text.autoconfig.archeology.option.stopUsingAfterBrushing.@Tooltip[0]": "Если включен, при остановке чистки будет отпущена клавиша использования.",
-    "text.autoconfig.archeology.option.stopUsingAfterBrushing.@Tooltip[1]": "Например, если блок сломался или чистка завершилась."
+    "text.autoconfig.archeology.option.stopUsingAfterBrushing": "Перестать использовать после раскопки кистью",
+    "text.autoconfig.archeology.option.stopUsingAfterBrushing.@Tooltip[0]": "Если включен, при остановке раскопки будет отпущена клавиша использования.",
+    "text.autoconfig.archeology.option.stopUsingAfterBrushing.@Tooltip[1]": "Например, если блок раскопки был разрушен или раскопка успешно завершилась.",
+
+    "stat.archeology.excavated": "Успешно очищенных блоков"
 }

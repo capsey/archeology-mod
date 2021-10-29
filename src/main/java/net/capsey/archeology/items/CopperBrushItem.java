@@ -1,24 +1,17 @@
 package net.capsey.archeology.items;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.ImmutableMultimap.Builder;
-
 import net.capsey.archeology.ArcheologyMod;
+import net.capsey.archeology.PlayerEntityMixinInterface;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.block.Oxidizable.OxidizationLevel;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
@@ -31,14 +24,21 @@ import net.minecraft.world.World;
 
 public class CopperBrushItem extends Item {
 
-	private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
+	public static OxidizationLevel getOxidizationLevel(ItemStack item) {
+		int index = (int) Math.floor(4 * item.getDamage() / item.getMaxDamage());
+        
+        switch (index) {
+            case 0: return OxidizationLevel.UNAFFECTED;
+            case 1: return OxidizationLevel.EXPOSED;
+            case 2: return OxidizationLevel.WEATHERED;
+            case 3: return OxidizationLevel.OXIDIZED;
+        }
 
-    public CopperBrushItem(Settings settings, double cooldownSpeed) {
+		return OxidizationLevel.OXIDIZED;
+	}
+
+    public CopperBrushItem(Settings settings) {
         super(settings);
-		
-		Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Tool modifier", cooldownSpeed, EntityAttributeModifier.Operation.ADDITION));
-		attributeModifiers = builder.build();
     }
 
 	@Override
@@ -51,12 +51,12 @@ public class CopperBrushItem extends Item {
 
 			if (block instanceof ExcavationBlock) {
 				PlayerEntity player = context.getPlayer();
-				float cooldown = player.getAttackCooldownProgress(1.0F);
+				float cooldown = ((PlayerEntityMixinInterface) player).getBrushCooldownProgress();
 	
-				if (cooldown >= 1 && player instanceof ServerPlayerEntity) {
+				if (cooldown >= 1) {
 					ItemStack stack = context.getStack();
 
-					if (((ExcavationBlock) block).startBrushing(world, pos, (ServerPlayerEntity) player, stack)) {
+					if (((ExcavationBlock) block).startBrushing(world, pos, player, stack)) {
 						player.setCurrentHand(context.getHand());
 						return ActionResult.CONSUME;
 					}
@@ -74,8 +74,9 @@ public class CopperBrushItem extends Item {
 
 		if (raycast instanceof BlockHitResult) {
 			BlockPos pos = ((BlockHitResult) raycast).getBlockPos();
+			OxidizationLevel level = getOxidizationLevel(user.getActiveItem());
 
-			if (user.getItemUseTime() % (ExcavationBlock.getBrushTicks(user.getActiveItem()) / 6) == 0) {
+			if (user.getItemUseTime() % (ExcavationBlock.getBrushTicks(level) / 6) == 0) {
 				BlockState state = world.getBlockState(pos);
 
 				if (!world.isClient) {
@@ -87,10 +88,6 @@ public class CopperBrushItem extends Item {
 				world.addBlockBreakParticles(pos, state);
 			}
 		}
-	}
-
-	public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
-		return slot == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getAttributeModifiers(slot);
 	}
 
 	@Override

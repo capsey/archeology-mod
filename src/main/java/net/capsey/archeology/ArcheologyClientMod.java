@@ -1,6 +1,5 @@
 package net.capsey.archeology;
 
-import me.shedaniel.autoconfig.AutoConfig;
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlockEntity;
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlockEntityRenderer;
 import net.capsey.archeology.blocks.clay_pot.RawClayPotBlockEntity;
@@ -9,7 +8,6 @@ import net.capsey.archeology.blocks.clay_pot.ShardsContainer;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainerRenderer;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntityRenderer;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
@@ -33,19 +31,6 @@ public class ArcheologyClientMod implements ClientModInitializer {
 
         EntityModelLayerRegistry.registerModelLayer(CLAY_POT_SHARDS_MODEL_LAYER, ShardsContainerRenderer::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(RAW_CLAY_POT_SHARDS_MODEL_LAYER, ShardsContainerRenderer::getTexturedModelData);
-
-        ClientPlayNetworking.registerGlobalReceiver(ArcheologyMod.STOPPED_BRUSHING_PACKET_ID, (client, handler, buf, responseSender) -> {
-            client.execute(() -> {
-                client.player.resetLastAttackedTicks();
-                client.player.stopUsingItem();
-	
-                ModConfig config = AutoConfig.getConfigHolder(ModConfig.class).get();
-    
-                if (config.stopUsingAfterBrushing) {
-                    client.options.keyUse.setPressed(false);
-                }
-            });
-        });
     }
 
     public static EntityModelLayer getModelLayer(Class<? extends ShardsContainer> c) {

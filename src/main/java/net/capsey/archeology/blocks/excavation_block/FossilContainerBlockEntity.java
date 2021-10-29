@@ -19,7 +19,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 
-public class FossilContainerBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
+public abstract class FossilContainerBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
     
     private static final float[] LUCK_POINTS = { 1.0F, 2.0F, 3.0F, 4.0F };
 
@@ -37,9 +37,9 @@ public class FossilContainerBlockEntity extends BlockEntity implements BlockEnti
     protected Identifier lootTableId;
     protected ArrayList<ItemStack> loot = new ArrayList<ItemStack>();
 
-    public FossilContainerBlockEntity(BlockPos pos, BlockState state) {
+    public FossilContainerBlockEntity(BlockPos pos, BlockState state, Identifier lootTable) {
         super(ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY, pos, state);
-        lootTableId = new Identifier("archeology", "excavation/excavation_site");
+        lootTableId = lootTable;
     }
 
     @Override

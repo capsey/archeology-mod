@@ -27,6 +27,8 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextType;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.stat.StatFormatter;
+import net.minecraft.stat.Stats;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -35,7 +37,7 @@ public class ArcheologyMod implements ModInitializer {
 
     public static class Items {
 
-        public static final Item COPPER_BRUSH = new CopperBrushItem(new Item.Settings().maxDamage(64).group(ItemGroup.TOOLS), -3.0F);
+        public static final Item COPPER_BRUSH = new CopperBrushItem(new Item.Settings().maxDamage(64).group(ItemGroup.TOOLS));
 
         public static final Item EXCAVATION_DIRT = new BlockItem(Blocks.EXCAVATION_DIRT, new FabricItemSettings().group(ItemGroup.DECORATIONS));
         public static final Item EXCAVATION_GRAVEL = new BlockItem(Blocks.EXCAVATION_GRAVEL, new FabricItemSettings().group(ItemGroup.DECORATIONS));
@@ -99,7 +101,7 @@ public class ArcheologyMod implements ModInitializer {
     public static final Identifier BRUSHING_SOUND_ID = new Identifier("archeology:item.copper_brush.brushing");
     public static SoundEvent BRUSHING_SOUND_EVENT = new SoundEvent(BRUSHING_SOUND_ID);
 
-    public static final Identifier STOPPED_BRUSHING_PACKET_ID = new Identifier("archeology:stopped_brushing");
+    public static final Identifier EXCAVATED = new Identifier("archeology", "excavated");
 
     @Override
     public void onInitialize() {
@@ -110,6 +112,9 @@ public class ArcheologyMod implements ModInitializer {
         
         Registry.register(Registry.SOUND_EVENT, BRUSHING_SOUND_ID, BRUSHING_SOUND_EVENT);
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
+
+        Registry.register(Registry.CUSTOM_STAT, "excavated", EXCAVATED);
+        Stats.CUSTOM.getOrCreateStat(EXCAVATED, StatFormatter.DEFAULT);
     }
 
     private static LootContextType createLootContextType(Consumer<LootContextType.Builder> type) {

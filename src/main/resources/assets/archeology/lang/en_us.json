@@ -25,5 +25,7 @@
     "text.autoconfig.archeology.title": "Archeology Mod Config",
     "text.autoconfig.archeology.option.stopUsingAfterBrushing": "Stop using after brushing",
     "text.autoconfig.archeology.option.stopUsingAfterBrushing.@Tooltip[0]": "If enabled, will unpress use key when stopped brushing.",
-    "text.autoconfig.archeology.option.stopUsingAfterBrushing.@Tooltip[1]": "For example, if block breaks or finished brushing."
+    "text.autoconfig.archeology.option.stopUsingAfterBrushing.@Tooltip[1]": "For example, if block breaks or finished brushing.",
+
+    "stat.archeology.excavated": "Succesfully Excavated Blocks"
 }
