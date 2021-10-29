@@ -16,9 +16,10 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 
-public class FossilContainer extends BlockEntity implements BlockEntityClientSerializable {
+public class FossilContainerBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
     
     private static final float[] LUCK_POINTS = { 1.0F, 2.0F, 3.0F, 4.0F };
 
@@ -36,7 +37,7 @@ public class FossilContainer extends BlockEntity implements BlockEntityClientSer
     protected Identifier lootTableId;
     protected ArrayList<ItemStack> loot = new ArrayList<ItemStack>();
 
-    public FossilContainer(BlockPos pos, BlockState state) {
+    public FossilContainerBlockEntity(BlockPos pos, BlockState state) {
         super(ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY, pos, state);
         lootTableId = new Identifier("archeology", "excavation/excavation_site");
     }
@@ -94,7 +95,6 @@ public class FossilContainer extends BlockEntity implements BlockEntityClientSer
         return writeNbt(tag);
     }
 
-    // Loot
     public void generateLoot(PlayerEntity player, ItemStack stack) {
         if (!world.isClient) {
             LootContext.Builder builder = (new LootContext.Builder((ServerWorld)this.world))
@@ -109,6 +109,12 @@ public class FossilContainer extends BlockEntity implements BlockEntityClientSer
             loot.addAll(list);
             this.markDirty();
             this.sync();
+        }
+    }
+
+    public void dropLoot() {
+        for (ItemStack stack : loot) {
+            ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), stack);
         }
     }
     

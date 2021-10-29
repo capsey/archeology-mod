@@ -1,15 +1,13 @@
 package net.capsey.archeology.items;
 
-import java.util.Optional;
-
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
-import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
-import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -21,10 +19,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -45,21 +46,19 @@ public class CopperBrushItem extends Item {
 		World world = context.getWorld();
 
 		if (!world.isClient && context.getHand() == Hand.MAIN_HAND) {
-			PlayerEntity player = context.getPlayer();
-			float cooldown = player.getAttackCooldownProgress(1.0F);
+			BlockPos pos = context.getBlockPos();
+			Block block = world.getBlockState(pos).getBlock();
 
-			if (cooldown >= 1) {
-				ItemStack stack = player.getStackInHand(context.getHand());
-				
-				if (stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
-					BlockEntity be = world.getBlockEntity(context.getBlockPos());
-		
-					if (be instanceof ExcavationBlockEntity) {
-						ExcavationBlockEntity entity = (ExcavationBlockEntity) be;
-						if (player instanceof ServerPlayerEntity && entity.startBrushing((ServerPlayerEntity) player, stack)) {
-							player.setCurrentHand(context.getHand());
-							return ActionResult.CONSUME;
-						}
+			if (block instanceof ExcavationBlock) {
+				PlayerEntity player = context.getPlayer();
+				float cooldown = player.getAttackCooldownProgress(1.0F);
+	
+				if (cooldown >= 1 && player instanceof ServerPlayerEntity) {
+					ItemStack stack = context.getStack();
+
+					if (((ExcavationBlock) block).startBrushing(world, pos, (ServerPlayerEntity) player, stack)) {
+						player.setCurrentHand(context.getHand());
+						return ActionResult.CONSUME;
 					}
 				}
 			}
@@ -70,13 +69,22 @@ public class CopperBrushItem extends Item {
 
 	@Override
 	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-		Optional<BlockHitResult> raycast = ExcavationBlockEntity.getRaycast(user);
+		// TODO: Remove hardcoded player reach value
+		HitResult raycast = user.raycast(4.5F, 1, false);
 
-		if (raycast.isPresent()) {
-			BlockPos pos = raycast.get().getBlockPos();
+		if (raycast instanceof BlockHitResult) {
+			BlockPos pos = ((BlockHitResult) raycast).getBlockPos();
 
 			if (user.getItemUseTime() % (ExcavationBlock.getBrushTicks(user.getActiveItem()) / 6) == 0) {
-				world.addBlockBreakParticles(pos, world.getBlockState(pos));
+				BlockState state = world.getBlockState(pos);
+
+				if (!world.isClient) {
+					BlockSoundGroup soundGroup = state.getSoundGroup();
+					world.playSound(null, pos, soundGroup.getBreakSound(), SoundCategory.BLOCKS, 0.3F * soundGroup.getVolume(), soundGroup.getPitch());
+					world.playSound(null, user.getBlockPos(), ArcheologyMod.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1f, 1f);
+				}
+
+				world.addBlockBreakParticles(pos, state);
 			}
 		}
 	}

@@ -29,8 +29,6 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 	protected void replaceShards(EnumMap<Side, CeramicShard> shards) {
 		ceramic_shards.clear();
 		ceramic_shards.putAll(shards);
-		this.markDirty();
-		this.sync();
     }
 
 	public EnumMap<Side, CeramicShard> getShards() {

@@ -7,20 +7,15 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
-public class ExcavationBlockEntity extends FossilContainer {
+public class ExcavationBlockEntity extends FossilContainerBlockEntity {
 
     private static float getBreakingDelta(ItemStack stack, double magnitude) {
         if (!stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
@@ -44,6 +39,7 @@ public class ExcavationBlockEntity extends FossilContainer {
     }
 
     private ServerPlayerEntity brushingPlayer;
+    private ItemStack stack;
     private float breakingProgress = -1.0F;
     private Vec3d prevLookPoint;
 
@@ -51,81 +47,54 @@ public class ExcavationBlockEntity extends FossilContainer {
         super(pos, state);
     }
 
-    public boolean startBrushing(ServerPlayerEntity player, ItemStack stack) {
-        if (brushingPlayer == null && stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
-            BlockState state = getCachedState();
-
-            if (state.getBlock() instanceof ExcavationBlock) {
-                if (state.get(ExcavationBlock.BRUSHING_LEVEL) == 0) {
-                    brushingPlayer = player;
-                    generateLoot(player, stack);
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public static void serverTick(World world, BlockPos pos, BlockState state, ExcavationBlockEntity be) {
-        if (be.isAlreadyBrushing()) {
-            Optional<BlockHitResult> raycast = getRaycast(be.brushingPlayer);
-            ItemStack stack = be.brushingPlayer.getActiveItem();
-    
-            if (be.brushingCheck(raycast, stack)) {
-                int time = be.brushingPlayer.getItemUseTime();
-    
-                be.aesteticTick(time, stack);
-                be.brushingTick(time, stack);
-                be.breakingTick(time, stack, raycast.get());
-            }
+    public void startBrushing(ServerPlayerEntity player, ItemStack stack) {
+        if (stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
+            this.brushingPlayer = player;
+            this.stack = stack;
+            generateLoot(player, stack);
         }
     }
 
-    public static Optional<BlockHitResult> getRaycast(LivingEntity user) {
-        // TODO: Remove hardcoded player reach value
-        HitResult result = user.raycast(4.5F, 1, false);
-        return Optional.ofNullable(result instanceof BlockHitResult ? (BlockHitResult) result : null);
+    public Optional<BlockHitResult> getRaycast() {
+        if (brushingPlayer != null) {
+            // TODO: Remove hardcoded player reach value
+            HitResult result = brushingPlayer.raycast(4.5F, 1, false);
+
+            if (result instanceof BlockHitResult) {
+                return Optional.of((BlockHitResult) result);
+            }
+        }
+
+        return Optional.empty();
     }
 
-    private boolean brushingCheck(Optional<BlockHitResult> raycast, ItemStack stack) {
-        if (raycast.isPresent() && pos.equals(raycast.get().getBlockPos())) {
-            if (brushingPlayer.isUsingItem() && stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
+    public ItemStack getStack() {
+        return stack;
+    }
+
+    public boolean isTime() {
+        return brushingPlayer.getItemUseTime() % ExcavationBlock.getBrushTicks(stack) == 1;
+    }
+
+    public boolean brushingCheck() {
+        if (brushingPlayer != null && brushingPlayer.isUsingItem()) {
+            ItemStack activeStack = brushingPlayer.getActiveItem();
+            
+            if (activeStack == stack) {
                 return true;
             }
         }
-
-        breakBlock();
+            
         return false;
     }
 
-    private void aesteticTick(int useTime, ItemStack stack) {
-        if (useTime % (ExcavationBlock.getBrushTicks(stack) / 6) == 0) {
-            BlockSoundGroup soundGroup = getCachedState().getSoundGroup();
-            world.playSound(null, pos, soundGroup.getBreakSound(), SoundCategory.BLOCKS, 0.3F * soundGroup.getVolume(), soundGroup.getPitch());
-            world.addBlockBreakParticles(pos, getCachedState());
-
-            world.playSound(null, brushingPlayer.getBlockPos(), ArcheologyMod.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1f, 1f);
-        }
+    public void brushingTick() {
+        int damage = world.getRandom().nextInt(1);
+        EquipmentSlot slot = brushingPlayer.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+        stack.damage(damage, brushingPlayer, p -> p.sendEquipmentBreakStatus(slot));
     }
 
-    public void brushingTick(int useTime, ItemStack stack) {
-        if (!world.isClient && useTime % ExcavationBlock.getBrushTicks(stack) == 0) {
-            int damage = world.getRandom().nextInt(1);
-            EquipmentSlot slot = brushingPlayer.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
-            stack.damage(damage, brushingPlayer, p -> p.sendEquipmentBreakStatus(slot));
-
-            int newState = getCachedState().get(ExcavationBlock.BRUSHING_LEVEL) + 1;
-
-            if (newState <= ExcavationBlock.MAX_BRUSHING_LEVELS) {
-                world.setBlockState(pos, getCachedState().with(ExcavationBlock.BRUSHING_LEVEL, newState));
-            } else {
-                finishedBrushing();
-            }
-        }
-    }
-
-    public void breakingTick(int useTime, ItemStack stack, BlockHitResult hitResult) {
+    public void breakingTick(BlockHitResult hitResult) {
         if (prevLookPoint != null) {
             double magnitude = prevLookPoint.distanceTo(hitResult.getPos());
             
@@ -136,7 +105,7 @@ public class ExcavationBlockEntity extends FossilContainer {
         prevLookPoint = hitResult.getPos();
     }
 
-    public void updateBlockBreakingProgress(float delta) {
+    private void updateBlockBreakingProgress(float delta) {
         if (breakingProgress < 0.0F) {
             getCachedState().onBlockBreakStart(world, pos, brushingPlayer);
             world.setBlockBreakingInfo(0, pos, (int) (breakingProgress * 10.0F) - 1);
@@ -147,22 +116,14 @@ public class ExcavationBlockEntity extends FossilContainer {
         breakingProgress += delta;
 
         if (breakingProgress >= 1.0F) {
-            breakBlock();
+            world.breakBlock(pos, true);
             return;
         }
 
         world.setBlockBreakingInfo(0, pos, (int) (breakingProgress * 10.0F) - 1);
     }
 
-    public void finishedBrushing() {
-        for (ItemStack stack : loot) {
-            ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-        }
-
-        breakBlock();
-    }
-
-    public void breakBlock() {
+    public void onBlockBreak() {
         if (brushingPlayer != null) {
             brushingPlayer.resetLastAttackedTicks();
             brushingPlayer.stopUsingItem();
@@ -170,18 +131,7 @@ public class ExcavationBlockEntity extends FossilContainer {
             ServerPlayNetworking.send(brushingPlayer, ArcheologyMod.STOPPED_BRUSHING_PACKET_ID, PacketByteBufs.empty());
         }
 
-        if (!world.isClient) {
-            world.setBlockBreakingInfo(0, pos, -1);
-            breakingProgress = -1.0F;
-    
-            if (getCachedState().getBlock() instanceof ExcavationBlock) {
-                world.breakBlock(pos, true);
-            }
-        }
+        world.setBlockBreakingInfo(0, pos, -1);
     }
 
-    public boolean isAlreadyBrushing() {
-        return this.isLootGenerated();
-    }
-    
 }

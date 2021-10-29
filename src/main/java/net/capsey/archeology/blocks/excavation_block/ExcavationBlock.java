@@ -1,21 +1,22 @@
 package net.capsey.archeology.blocks.excavation_block;
 
-import org.jetbrains.annotations.Nullable;
+import java.util.Optional;
+import java.util.Random;
 
 import net.capsey.archeology.ArcheologyMod;
-import net.capsey.archeology.items.CopperBrushItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -30,7 +31,7 @@ public class ExcavationBlock extends BlockWithEntity {
     private static final int[] BRUSH_TICKS = { 48, 42, 36, 30 };
 
     public static int getBrushTicks(ItemStack stack) {
-        if (!(stack.getItem() instanceof CopperBrushItem)) {
+        if (!stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
             return 0;
         }
 
@@ -50,9 +51,69 @@ public class ExcavationBlock extends BlockWithEntity {
         setDefaultState(getStateManager().getDefaultState().with(BRUSHING_LEVEL, 0));
     }
 
-    @Override @Nullable
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-		return world.isClient ? null : checkType(type, ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY, ExcavationBlockEntity::serverTick);
+    public boolean startBrushing(World world, BlockPos pos, ServerPlayerEntity player, ItemStack stack) {
+        BlockState state = world.getBlockState(pos);
+
+        if (state.isOf(this) && state.get(BRUSHING_LEVEL) == 0) {
+            Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY);
+    
+            if (entity.isPresent() && !world.getBlockTickScheduler().isScheduled(pos, this)) {
+                entity.get().startBrushing(player, stack);
+
+                world.setBlockState(pos, state.with(BRUSHING_LEVEL, 1));
+                world.getBlockTickScheduler().schedule(pos, this, 1); // getBrushTicks(stack)
+
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    @Override
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        int i = state.get(BRUSHING_LEVEL);
+
+        if (i != 0) {
+            Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY);
+    
+            if (entity.isPresent() && entity.get().brushingCheck()) {
+                Optional<BlockHitResult> raycast = entity.get().getRaycast();
+    
+                if (raycast.isPresent() && pos.equals(raycast.get().getBlockPos())) {
+        
+                    if (i < MAX_BRUSHING_LEVELS) {
+                        if (entity.get().isTime()) {
+                            world.setBlockState(pos, state.with(ExcavationBlock.BRUSHING_LEVEL, i + 1), NOTIFY_LISTENERS);
+                            entity.get().brushingTick();
+                        }
+
+                        entity.get().breakingTick(raycast.get());
+                        world.getBlockTickScheduler().schedule(pos, this, 1); // getBrushTicks(entity.get().getStack())
+                        return;
+                    } else {
+                        entity.get().dropLoot();
+                    }
+                }
+            }
+    
+            world.breakBlock(pos, true);
+        }
+	}
+
+    @Override
+	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+		if (!state.isOf(newState.getBlock())) {
+            if (!world.isClient) {
+                Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY);
+
+                if (entity.isPresent()) {
+                    entity.get().onBlockBreak();
+                }
+            }
+
+            super.onStateReplaced(state, world, pos, newState, moved);
+		}
 	}
 
     @Override
