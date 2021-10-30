@@ -36,7 +36,6 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
     }
 
     private PlayerEntity brushingPlayer;
-    // private ItemStack stack;
     private OxidizationLevel oxidizationLevel;
     private float breakingProgress = -1.0F;
     private Vec3d prevLookPoint;
@@ -48,7 +47,6 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
     public void startBrushing(PlayerEntity player, ItemStack stack) {
         if (stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
             this.brushingPlayer = player;
-            // this.stack = stack;
             this.oxidizationLevel = CopperBrushItem.getOxidizationLevel(stack);
             generateLoot(player, stack);
         }
@@ -75,7 +73,7 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
         if (brushingPlayer != null && brushingPlayer.isUsingItem() && brushingPlayer.getItemUseTimeLeft() > 0) {
             ItemStack activeStack = brushingPlayer.getActiveItem();
             
-            if (!activeStack.isEmpty()) { // activeStack == stack
+            if (!activeStack.isEmpty()) {
                 return true;
             }
         }

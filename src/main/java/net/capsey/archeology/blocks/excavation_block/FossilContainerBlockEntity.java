@@ -45,16 +45,6 @@ public abstract class FossilContainerBlockEntity extends BlockEntity implements 
     @Override
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
-        
-        if (tag.contains("Loot")) {
-            loot.clear();
-            NbtList nbtList = tag.getList("Loot", 10);
-
-            for (int i = 0; i < nbtList.size(); i++) {
-                NbtCompound nbtCompound = nbtList.getCompound(i);
-                loot.add(ItemStack.fromNbt(nbtCompound));
-            }
-        }
 
         if (tag.contains("LootTable")) {
             String id = tag.getString("LootTable");
@@ -67,19 +57,6 @@ public abstract class FossilContainerBlockEntity extends BlockEntity implements 
     @Override
     public NbtCompound writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
-
-        if (!loot.isEmpty()) {
-            NbtList nbtList = new NbtList();
-
-            for (ItemStack stack : loot) {
-                NbtCompound nbtCompound = new NbtCompound();
-                stack.writeNbt(nbtCompound);
-                nbtList.add(nbtCompound);
-            }
-    
-            tag.put("Loot", nbtList);
-        }
-
         tag.putString("LootTable", lootTableId.toString());
  
         return tag;
@@ -88,10 +65,32 @@ public abstract class FossilContainerBlockEntity extends BlockEntity implements 
     @Override
     public void fromClientTag(NbtCompound tag) {
         readNbt(tag);
+
+        if (tag.contains("Loot")) {
+            loot.clear();
+            NbtList nbtList = tag.getList("Loot", 10);
+
+            for (int i = 0; i < nbtList.size(); i++) {
+                NbtCompound nbtCompound = nbtList.getCompound(i);
+                loot.add(ItemStack.fromNbt(nbtCompound));
+            }
+        }
     }
 
     @Override
     public NbtCompound toClientTag(NbtCompound tag) {
+        if (!loot.isEmpty()) {
+            NbtList nbtList = new NbtList();
+            
+            for (ItemStack stack : loot) {
+                NbtCompound nbtCompound = new NbtCompound();
+                stack.writeNbt(nbtCompound);
+                nbtList.add(nbtCompound);
+            }
+            
+            tag.put("Loot", nbtList);
+        }
+
         return writeNbt(tag);
     }
 
