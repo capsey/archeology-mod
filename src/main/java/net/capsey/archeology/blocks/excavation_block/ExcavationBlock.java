@@ -9,7 +9,6 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.block.Oxidizable.OxidizationLevel;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,6 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 
 public class ExcavationBlock extends BlockWithEntity {
@@ -30,15 +30,14 @@ public class ExcavationBlock extends BlockWithEntity {
     public static final int MAX_BRUSHING_LEVELS = 5;
     public static final IntProperty BRUSHING_LEVEL = IntProperty.of("brushing_level", 0, MAX_BRUSHING_LEVELS);
     
-    private static final int[] BRUSH_TICKS = { 48, 42, 36, 30 };
+    private static final int[] BRUSH_TICKS_PER_LAYER = { 4, 4, 6, 6 };
 
-    public static int getBrushTicks(OxidizationLevel level) {
-        switch (level) {
-            case UNAFFECTED: return BRUSH_TICKS[0];
-            case EXPOSED: return BRUSH_TICKS[0];
-            case WEATHERED: return BRUSH_TICKS[0];
-            case OXIDIZED: return BRUSH_TICKS[0];
-            default: throw new IllegalStateException("Invalid Oxidization Level");
+    public static int getBrushTicksPerLayer(Difficulty difficulty) {
+        switch (difficulty) {
+            case PEACEFUL: return BRUSH_TICKS_PER_LAYER[0];
+            case EASY: return BRUSH_TICKS_PER_LAYER[1];
+            default: return BRUSH_TICKS_PER_LAYER[2];
+            case HARD: return BRUSH_TICKS_PER_LAYER[3];
         }
     }
 
@@ -82,9 +81,8 @@ public class ExcavationBlock extends BlockWithEntity {
                 if (raycast.isPresent() && pos.equals(raycast.get().getBlockPos())) {
         
                     if (i < MAX_BRUSHING_LEVELS) {
-                        if (entity.get().isTime()) {
+                        if (entity.get().isTime(world.getDifficulty())) {
                             world.setBlockState(pos, state.with(ExcavationBlock.BRUSHING_LEVEL, i + 1), NOTIFY_LISTENERS);
-                            entity.get().brushingTick();
                         }
 
                         entity.get().breakingTick(raycast.get());

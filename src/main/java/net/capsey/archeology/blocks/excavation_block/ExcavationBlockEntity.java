@@ -7,7 +7,6 @@ import net.capsey.archeology.items.CopperBrushItem;
 import net.capsey.archeology.PlayerEntityMixinInterface;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Oxidizable.OxidizationLevel;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -15,10 +14,18 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.Difficulty;
 
 public class ExcavationBlockEntity extends FossilContainerBlockEntity {
 
-    private float getBreakingDelta(double magnitude) {        
+    private float getBreakingDelta(double magnitude) {
+        switch (world.getDifficulty()) {
+            case PEACEFUL: magnitude *= 1.2F; break;
+            case EASY: magnitude *= 1.2F; break;
+            case NORMAL: magnitude *= 1.0F; break;
+            case HARD: magnitude *= 0.8F; break;
+        }
+
         switch (oxidizationLevel) {
             case UNAFFECTED: return (float) (-0.75F * magnitude) + 0.04F;
             case EXPOSED: return (float) (-0.72F * magnitude) + 0.04F;
@@ -29,7 +36,7 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
     }
 
     private PlayerEntity brushingPlayer;
-    private ItemStack stack;
+    // private ItemStack stack;
     private OxidizationLevel oxidizationLevel;
     private float breakingProgress = -1.0F;
     private Vec3d prevLookPoint;
@@ -41,7 +48,7 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
     public void startBrushing(PlayerEntity player, ItemStack stack) {
         if (stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
             this.brushingPlayer = player;
-            this.stack = stack;
+            // this.stack = stack;
             this.oxidizationLevel = CopperBrushItem.getOxidizationLevel(stack);
             generateLoot(player, stack);
         }
@@ -60,25 +67,20 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
         return Optional.empty();
     }
 
-    public boolean isTime() {
-        return (brushingPlayer.getItemUseTime() + 1) % ExcavationBlock.getBrushTicks(oxidizationLevel) == 0;
+    public boolean isTime(Difficulty difficulty) {
+        return (brushingPlayer.getItemUseTime() + 1) % (CopperBrushItem.getBrushTicks(oxidizationLevel) * ExcavationBlock.getBrushTicksPerLayer(difficulty)) == 0;
     }
 
     public boolean brushingCheck() {
-        if (brushingPlayer != null && brushingPlayer.isUsingItem()) {
+        if (brushingPlayer != null && brushingPlayer.isUsingItem() && brushingPlayer.getItemUseTimeLeft() > 0) {
             ItemStack activeStack = brushingPlayer.getActiveItem();
             
-            if (activeStack == stack) {
+            if (!activeStack.isEmpty()) { // activeStack == stack
                 return true;
             }
         }
             
         return false;
-    }
-
-    public void brushingTick() {
-        int damage = world.getRandom().nextInt(2);
-        stack.damage(damage, brushingPlayer, p -> p.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
     }
 
     public void breakingTick(BlockHitResult hitResult) {

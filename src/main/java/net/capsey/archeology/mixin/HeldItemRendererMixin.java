@@ -1,7 +1,6 @@
 package net.capsey.archeology.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,6 +23,16 @@ import net.minecraft.util.math.Vec3f;
 @Mixin(HeldItemRenderer.class)
 public abstract class HeldItemRendererMixin {
 
+    // @Inject(at = @At("HEAD"), cancellable = true, method = "getUsingItemHandRenderType(Lnet/minecraft/client/network/ClientPlayerEntity;)Lnet/minecraft/client/render/item/HeldItemRenderer/HandRenderType;")
+    // private static void getUsingItemHandRenderType(ClientPlayerEntity player, CallbackInfoReturnable<HeldItemRenderer.HandRenderType> info) {
+    //     ItemStack itemStack = player.getActiveItem();
+    //     Hand hand = player.getActiveHand();
+
+    //     if (itemStack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
+    //         info.setReturnValue(hand == Hand.MAIN_HAND ? HeldItemRenderer.HandRenderType.RENDER_MAIN_HAND_ONLY : HeldItemRenderer.HandRenderType.RENDER_OFF_HAND_ONLY);
+    //     }
+	// }
+
     @Inject(at = @At("HEAD"), cancellable = true, method = "renderFirstPersonItem(Lnet/minecraft/client/network/AbstractClientPlayerEntity;FFLnet/minecraft/util/Hand;FLnet/minecraft/item/ItemStack;FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V")
     private void renderFirstPersonItem(AbstractClientPlayerEntity player, float tickDelta, float pitch, Hand hand, float swingProgress, ItemStack item, float equipProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo info) {
         if (!player.isUsingSpyglass() && !item.isEmpty() && item.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
@@ -34,32 +43,23 @@ public abstract class HeldItemRendererMixin {
                     boolean bl = arm == Arm.RIGHT;
 
                     int side = bl ? 1 : -1;
-                    float progress = (float) player.getItemUseTime() / (ExcavationBlock.getBrushTicks(CopperBrushItem.getOxidizationLevel(item)) * ExcavationBlock.MAX_BRUSHING_LEVELS);
-                    float angle_coef = MathHelper.cos(3 * ExcavationBlock.MAX_BRUSHING_LEVELS * progress * 6.2831855F);
+                    float max = CopperBrushItem.getBrushTicks(CopperBrushItem.getOxidizationLevel(item)) * ExcavationBlock.MAX_BRUSHING_LEVELS;
+                    float progress = (float) player.getItemUseTime() / max;
+                    float angle_coef = MathHelper.sin(ExcavationBlock.MAX_BRUSHING_LEVELS * progress * 3.1415927F);
 
-                    applyEquipOffsetMixin(matrices, arm, equipProgress);
-                    applySwingOffsetMixin(matrices, arm, swingProgress);
+                    matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-60.0F));
+                    matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(-45.0F));
 
-                    matrices.translate(side * -0.3D, 0.0D, 0.0D);
-                    matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(side * 90.0F));
-                    matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(side * 5.0F));
-                    matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-110.0F));
-                    matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(side * -20.0F));
+                    matrices.translate(-0.3D, 0.3D, -1.0D);
+                    matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(side * 40.0F * angle_coef));
+                    matrices.translate(-0.2D, 0.2D, 0.0D);
 
-                    matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(side * 40.0F * angle_coef));
-
-                    ((HeldItemRenderer)(Object) this).renderItem(player, item, bl ? ModelTransformation.Mode.FIRST_PERSON_RIGHT_HAND : ModelTransformation.Mode.FIRST_PERSON_LEFT_HAND, !bl, matrices, vertexConsumers, light);
+                    ((HeldItemRenderer)(Object) this).renderItem(player, item, ModelTransformation.Mode.FIXED, !bl, matrices, vertexConsumers, light);
                     matrices.pop();
                     info.cancel();
                 }
             }
 		}
     }
-
-    @Invoker("applyEquipOffset")
-    protected abstract void applyEquipOffsetMixin(MatrixStack matrices, Arm arm, float equipProgress);
-
-    @Invoker("applySwingOffset")
-    protected abstract void applySwingOffsetMixin(MatrixStack matrices, Arm arm, float equipProgress);
 
 }
