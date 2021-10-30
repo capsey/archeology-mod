@@ -89,11 +89,11 @@ public class CopperBrushItem extends Item {
 			BlockPos pos = ((BlockHitResult) raycast).getBlockPos();
 			int brushTicks = CopperBrushItem.getBrushTicks(getOxidizationLevel(user.getActiveItem()));
 
-			if (remainingUseTicks % brushTicks == 0) {
+			if ((remainingUseTicks + 1) % brushTicks == 0) {
 				BlockState state = world.getBlockState(pos);
 
 				if (!world.isClient) {
-					if (remainingUseTicks % brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty()) == 0) {
+					if ((remainingUseTicks + 1) % brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty()) == 0) {
 						int damage = world.getRandom().nextInt(2);
 						stack.damage(damage, user, p -> p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND));					
 					}

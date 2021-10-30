@@ -83,6 +83,15 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
 	}
 
     @Override
+	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+        if (canHarden(state, world.getBlockState(pos.down()))) {
+			if (!world.isClient && !world.getBlockTickScheduler().isScheduled(pos, this)) {
+                world.getBlockTickScheduler().schedule(pos, this, 10);
+            }
+		}
+	}
+
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {                
         if (direction == Direction.DOWN && canHarden(state, neighborState)) {
 			if (!world.isClient() && !world.getBlockTickScheduler().isScheduled(pos, this)) {

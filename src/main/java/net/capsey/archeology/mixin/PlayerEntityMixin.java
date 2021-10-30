@@ -14,7 +14,7 @@ public abstract class PlayerEntityMixin implements PlayerEntityMixinInterface {
 
     private int lastBrushedTicks;
 
-    @Inject(method = "tick()Z", at = @At("TAIL"))
+    @Inject(method = "tick()V", at = @At("TAIL"))
     public void tick(CallbackInfo info) {
         if (lastBrushedTicks < 10) {
             lastBrushedTicks++;
