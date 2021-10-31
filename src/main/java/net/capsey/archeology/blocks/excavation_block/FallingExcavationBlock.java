@@ -2,17 +2,18 @@ package net.capsey.archeology.blocks.excavation_block;
 
 import java.util.Random;
 
+import net.capsey.archeology.blocks.FallingBlockWithBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FallingBlock;
 import net.minecraft.block.LandingBlock;
-import net.minecraft.entity.FallingBlockEntity;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-public class FallingExcavationBlock extends ExcavationBlock implements LandingBlock {
+public class FallingExcavationBlock extends ExcavationBlock implements FallingBlockWithBlockEntity, LandingBlock {
 
     private FallingBlock mimicingBlock;
 
@@ -22,39 +23,39 @@ public class FallingExcavationBlock extends ExcavationBlock implements LandingBl
     }
 
 	@Override
+	public boolean overrideDroppedItem() {
+        return true;
+    }
+
+	@Override
+    public ItemConvertible getStackOnDestroy() {
+        return mimicingBlock;
+    }
+
+	@Override
 	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-		if (FallingBlock.canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= world.getBottomY()) {
-			world.getBlockTickScheduler().schedule(pos, this, getFallDelay());
-		}
+		this.tryScheduleTick(world, pos, this);
 	}
 
 	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-		if (FallingBlock.canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= world.getBottomY()) {
-			world.getBlockTickScheduler().schedule(pos, this, getFallDelay());
-		}
-		
+		this.tryScheduleTick(world, pos, this);
 		return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
 	}
 
 	@Override
 	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-		if (FallingBlock.canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= world.getBottomY()) {
-            int level = world.getBlockState(pos).get(ExcavationBlock.BRUSHING_LEVEL);
+		if (this.canFallThrough(world, pos)) {
+            int level = state.get(ExcavationBlock.BRUSHING_LEVEL);
 
 			if (level == 0) {
+				this.trySpawnFallingBlock(state, world, pos, true);
+			} else {
 				world.breakBlock(pos, true);
-				world.setBlockState(pos, mimicingBlock.getDefaultState());
-				FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, world.getBlockState(pos));
-				world.spawnEntity(fallingBlockEntity);
 			}
 		} else {
 			super.scheduledTick(state, world, pos, random);
 		}
-	}
-
-	private int getFallDelay() {
-		return 2;
 	}
 
 	@Override
