@@ -120,10 +120,11 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
 	}
 
     public void harden(World world, BlockPos pos) {
-        BlockEntity entity = world.getBlockEntity(pos);
+        Optional<RawClayPotBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
 
-        if (entity instanceof RawClayPotBlockEntity) {
-            EnumMap<Side, CeramicShard> shards = ((RawClayPotBlockEntity) entity).getShards();
+        if (entity.isPresent()) {
+            EnumMap<Side, CeramicShard> shards = entity.get().getShards();
+            entity.get().clearShards();
 
             BlockState newState = ArcheologyMod.Blocks.CLAY_POT.getDefaultState();
             world.setBlockState(pos, newState, Block.NOTIFY_LISTENERS);
@@ -133,18 +134,18 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
 
 	@Override
 	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-		if (!world.isClient && !state.isOf(ArcheologyMod.Blocks.RAW_CLAY_POT) && !state.isIn(ArcheologyMod.CLAY_POTS_TAG)) {
-			BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (!state.isOf(newState.getBlock())) {
+			Optional<RawClayPotBlockEntity> blockEntity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
 			
-			if (blockEntity instanceof ShardsContainer) {
-				((ShardsContainer) blockEntity).getShards().values().forEach((item) -> {
+			if (blockEntity.isPresent()) {
+				blockEntity.get().getShards().values().forEach((item) -> {
                     ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), item.getStack());
                 });
 
 				world.updateComparators(pos, this);
 			}
 
-			super.onStateReplaced(state, world, pos, newState, moved);
+            super.onStateReplaced(state, world, pos, newState, moved);
 		}
 	}
 

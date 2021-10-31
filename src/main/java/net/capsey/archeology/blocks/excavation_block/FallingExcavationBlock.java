@@ -43,6 +43,7 @@ public class FallingExcavationBlock extends ExcavationBlock implements LandingBl
             int level = world.getBlockState(pos).get(ExcavationBlock.BRUSHING_LEVEL);
 
 			if (level == 0) {
+				world.breakBlock(pos, true);
 				world.setBlockState(pos, mimicingBlock.getDefaultState());
 				FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, world.getBlockState(pos));
 				world.spawnEntity(fallingBlockEntity);
