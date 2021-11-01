@@ -5,7 +5,6 @@ import java.util.Random;
 import net.capsey.archeology.blocks.FallingBlockWithBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FallingBlock;
-import net.minecraft.block.LandingBlock;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -13,7 +12,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-public class FallingExcavationBlock extends ExcavationBlock implements FallingBlockWithBlockEntity, LandingBlock {
+public class FallingExcavationBlock extends ExcavationBlock implements FallingBlockWithBlockEntity {
 
     private FallingBlock mimicingBlock;
 

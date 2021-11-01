@@ -78,6 +78,7 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
 
             if (i > 0) {
                 world.setBlockState(pos, state.with(HARDENING_PROGRESS, i  - 1), Block.NOTIFY_LISTENERS);
+                world.updateComparators(pos, this);
             }
         }
 	}
@@ -110,6 +111,7 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
 
                 if (i <= 5) {
                     world.setBlockState(pos, state.with(HARDENING_PROGRESS, i), Block.NOTIFY_LISTENERS);
+                    world.updateComparators(pos, this);
                 } else {
                     harden(world, pos);
                 }
@@ -162,6 +164,16 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
         }
 
 		super.onBreak(world, pos, state, player);
+	}
+
+    @Override
+	public boolean hasComparatorOutput(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
+		return state.get(HARDENING_PROGRESS);
 	}
 
     @Override
