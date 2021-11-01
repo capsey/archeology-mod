@@ -1,4 +1,4 @@
-package net.capsey.archeology.items;
+package net.capsey.archeology.items.ceramic_shard;
 
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlockEntity;
 import net.capsey.archeology.blocks.clay_pot.RawClayPotBlockEntity;

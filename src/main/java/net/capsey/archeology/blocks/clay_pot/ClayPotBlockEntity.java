@@ -4,7 +4,7 @@ import java.util.EnumMap;
 import java.util.stream.IntStream;
 
 import net.capsey.archeology.ArcheologyMod;
-import net.capsey.archeology.items.CeramicShard;
+import net.capsey.archeology.items.ceramic_shard.CeramicShard;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;

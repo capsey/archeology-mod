@@ -2,11 +2,11 @@ package net.capsey.archeology.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.FallingBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -21,7 +21,7 @@ public interface FallingBlockWithBlockEntity {
     }
 
     default ItemConvertible getStackOnDestroy() {
-        return Items.STONE;
+        return Blocks.AIR;
     }
 
     default NbtCompound writeFallingBlockNbt(NbtCompound nbt, BlockEntity entity) {

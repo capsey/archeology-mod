@@ -1,8 +1,9 @@
-package net.capsey.archeology.blocks.clay_pot;
+package net.capsey.archeology.blocks.clay_pot.client;
 
 import net.capsey.archeology.ArcheologyClientMod;
+import net.capsey.archeology.blocks.clay_pot.ShardsContainer;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer.Side;
-import net.capsey.archeology.items.CeramicShard;
+import net.capsey.archeology.items.ceramic_shard.CeramicShard;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelData;

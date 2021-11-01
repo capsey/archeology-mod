@@ -6,7 +6,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import net.capsey.archeology.items.CeramicShard;
+import net.capsey.archeology.items.ceramic_shard.CeramicShard;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;

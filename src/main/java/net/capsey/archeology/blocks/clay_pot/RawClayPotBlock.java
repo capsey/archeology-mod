@@ -6,8 +6,8 @@ import java.util.Random;
 
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer.Side;
-import net.capsey.archeology.items.CeramicShard;
-import net.capsey.archeology.items.CeramicShardRegistry;
+import net.capsey.archeology.items.ceramic_shard.CeramicShard;
+import net.capsey.archeology.items.ceramic_shard.CeramicShardRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;

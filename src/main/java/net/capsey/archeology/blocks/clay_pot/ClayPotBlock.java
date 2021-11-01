@@ -5,13 +5,11 @@ import java.util.Random;
 import net.capsey.archeology.blocks.FallingBlockWithBlockEntity;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.LandingBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
@@ -52,11 +50,6 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
 	@Override
 	public boolean overrideDroppedItem() {
         return true;
-    }
-
-	@Override
-    public ItemConvertible getStackOnDestroy() {
-        return Blocks.AIR;
     }
 
 	@Override

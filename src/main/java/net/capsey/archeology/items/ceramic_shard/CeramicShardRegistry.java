@@ -1,10 +1,12 @@
-package net.capsey.archeology.items;
+package net.capsey.archeology.items.ceramic_shard;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import net.capsey.archeology.items.CeramicShardItem;
+import net.capsey.archeology.items.CeramicShards;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.Item;

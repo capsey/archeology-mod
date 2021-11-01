@@ -1,5 +1,6 @@
 package net.capsey.archeology.items;
 
+import net.capsey.archeology.items.ceramic_shard.CeramicShardRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 
