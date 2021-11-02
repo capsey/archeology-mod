@@ -28,7 +28,7 @@ public abstract class BuiltinModelItemRendererMixin {
     private final ClayPotBlockEntity renderClayPot = new ClayPotBlockEntity(BlockPos.ORIGIN, ArcheologyMod.Blocks.CLAY_POT.getDefaultState());
     private final RawClayPotBlockEntity renderRawClayPot = new RawClayPotBlockEntity(BlockPos.ORIGIN, ArcheologyMod.Blocks.RAW_CLAY_POT.getDefaultState());
 
-    @Inject(at = @At("HEAD"), cancellable = true, method = "render(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformation/Mode;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;II)V")
+    @Inject(at = @At("HEAD"), cancellable = true, method = "render(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformation$Mode;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;II)V")
     public void render(ItemStack stack, ModelTransformation.Mode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, CallbackInfo info) {
         Item item = stack.getItem();
 		if (item instanceof BlockItem) {

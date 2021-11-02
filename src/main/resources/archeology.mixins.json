@@ -17,6 +17,7 @@
     "client": [
         "BuiltinModelItemRendererAccessor",
         "BuiltinModelItemRendererMixin",
+        "FallingBlockEntityRendererMixin",
         "HeldItemRendererMixin",
         "PlayerEntityRendererMixin",
         "TexturedRenderLayersMixin"

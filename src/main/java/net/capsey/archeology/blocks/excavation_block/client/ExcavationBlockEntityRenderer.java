@@ -19,13 +19,11 @@ public class ExcavationBlockEntityRenderer implements BlockEntityRenderer<Excava
     @Override
     public void render(ExcavationBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         if (blockEntity.isLootGenerated()) {
-            // Mandatory call before GL calls
             matrices.push();
 
             matrices.translate(0.5, 0.4, 0.5);
             MinecraftClient.getInstance().getItemRenderer().renderItem(blockEntity.getOneLootItem(), ModelTransformation.Mode.GROUND, light, overlay, matrices, vertexConsumers, overlay);
 
-            // Mandatory call after GL calls
             matrices.pop();
         }
     }

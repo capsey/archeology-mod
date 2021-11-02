@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
@@ -73,6 +74,14 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 		NbtCompound nbtCompound = stack.getSubNbt("BlockEntityTag");
 		if (nbtCompound != null) {
 			readNbt(nbtCompound);
+		}
+	}
+
+	public void readFrom(FallingBlockEntity entity) {
+		ceramic_shards.clear();
+		
+		if (entity.blockEntityData != null) {
+			readNbt(entity.blockEntityData);
 		}
 	}
 
