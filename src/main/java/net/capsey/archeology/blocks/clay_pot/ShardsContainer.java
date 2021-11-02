@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.hit.BlockHitResult;
@@ -54,6 +55,25 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 
     public boolean hasShards() {
 		return !ceramic_shards.isEmpty();
+	}
+
+	public static NbtList getPatternListTag(ItemStack stack) {
+		NbtList nbtList = null;
+		NbtCompound nbtCompound = stack.getSubNbt("BlockEntityTag");
+		if (nbtCompound != null && nbtCompound.contains("Patterns", 9)) {
+			nbtList = nbtCompound.getList("Patterns", 10).copy();
+		}
+
+		return nbtList;
+	}
+
+	public void readFrom(ItemStack stack) {
+		ceramic_shards.clear();
+		
+		NbtCompound nbtCompound = stack.getSubNbt("BlockEntityTag");
+		if (nbtCompound != null) {
+			readNbt(nbtCompound);
+		}
 	}
 
 	@Override
@@ -124,14 +144,10 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 		SouthWest(false),
 		West(true);
 
-		private boolean straight;
+		public final boolean straight;
 
 		private Side(boolean straight) {
 			this.straight = straight;
-		}
-
-		public boolean isStraight() {
-			return this.straight;
 		}
 
 		public static boolean validHit(BlockHitResult hit) {

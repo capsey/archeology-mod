@@ -37,25 +37,25 @@ public class CeramicShardRegistry {
      * 
      * @return Returns registered {@link CeramicShard} object
      */
-    public static Item registerShard(Identifier itemId, Identifier rawShardId, Identifier shardId) {
+    public static Item registerShard(Identifier itemId, Identifier shardId) {
         if (SHARDS.containsKey(itemId)) {
             throw new IllegalArgumentException(itemId + " is already a registered shard!");
         }
 
         Item shardItem = new CeramicShardItem(new Item.Settings().maxCount(16).rarity(Rarity.UNCOMMON).group(SHARDS_ITEM_GROUP));
         Registry.register(Registry.ITEM, itemId, shardItem);
-        CeramicShard shard = new CeramicShard(shardItem, itemId, rawShardId, shardId);
+        CeramicShard shard = new CeramicShard(shardItem, itemId, shardId);
 
         SHARDS.put(itemId, shard);
         return shardItem;
     }
 
     public static Stream<SpriteIdentifier> getSpriteIds() {
-        return SHARDS.values().stream().map(s -> s.getSpriteId());
+        return SHARDS.values().stream().map(s -> s.getSpriteId(0));
     }
 
     public static Stream<SpriteIdentifier> getRawSpriteIds() {
-        return SHARDS.values().stream().map(s -> s.getRawSpriteId());
+        return SHARDS.values().stream().map(s -> s.getSpriteId(1));
     }
 
     public static Optional<CeramicShard> getShard(ItemStack item) {

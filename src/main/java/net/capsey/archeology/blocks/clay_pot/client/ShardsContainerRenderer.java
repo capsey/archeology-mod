@@ -24,30 +24,34 @@ import net.minecraft.util.math.Vec3f;
 @Environment(EnvType.CLIENT)
 public abstract class ShardsContainerRenderer<T extends ShardsContainer> implements BlockEntityRenderer<T> {
 
-	private final Class<T> entityClass;
+	protected final int type;
 
     private final ModelPart straight;
-	private final ModelPart corner;
+	private final ModelPart[] corners = new ModelPart[2];
 
-	public ShardsContainerRenderer(BlockEntityRendererFactory.Context ctx, Class<T> entityClass) {
-		this.entityClass = entityClass;
+	public ShardsContainerRenderer(BlockEntityRendererFactory.Context ctx, int type) {
+		this.type = type;
 
-		ModelPart modelPart = ctx.getLayerModelPart(ArcheologyClientMod.getModelLayer(this.entityClass));
+		ModelPart modelPart = ctx.getLayerModelPart(ArcheologyClientMod.CLAY_POT_SHARDS_MODEL_LAYER);
 		this.straight = modelPart.getChild("straight");
-		this.corner = modelPart.getChild("corner");
+		this.corners[0] = modelPart.getChild("corner-0");
+		this.corners[1] = modelPart.getChild("corner-1");
 	}
 
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
 
-		ModelPartBuilder straightBuilder = ModelPartBuilder.create().uv(8, 0).cuboid(0.0F, 0.0F, 0.0F, 16.0F, 10.0F, 16.0F);
+		ModelPartBuilder straightBuilder = ModelPartBuilder.create().uv(0, 0).cuboid(0.0F, 0.0F, 0.0F, 16.0F, 10.0F, 0.0F);
 		modelPartData.addChild("straight", straightBuilder, ModelTransform.NONE);
 
-		ModelPartBuilder cornerBuilder = ModelPartBuilder.create().uv(0, 0).cuboid(0.0F, 0.0F, 0.0F, 16.0F, 10.0F, 16.0F);
-		modelPartData.addChild("corner", cornerBuilder, ModelTransform.NONE);
+		ModelPartBuilder corner0Builder = ModelPartBuilder.create().uv(0, 0).cuboid(8.0F, 0.0F, 0.0F, 8.0F, 10.0F, 0.0F);
+		modelPartData.addChild("corner-0", corner0Builder, ModelTransform.NONE);
 
-		return TexturedModelData.of(modelData, 72, 26);
+		ModelPartBuilder corner1Builder = ModelPartBuilder.create().uv(0, -8).cuboid(16.0F, 0.0F, 0.0F, 0.0F, 10.0F, 8.0F);
+		modelPartData.addChild("corner-1", corner1Builder, ModelTransform.NONE);
+
+		return TexturedModelData.of(modelData, 32, 10);
 	}
 
     @Override
@@ -56,8 +60,8 @@ public abstract class ShardsContainerRenderer<T extends ShardsContainer> impleme
 			matrices.push();
 
 			// Z-fighting fix
-			matrices.scale(1.002F, 1.0F, 1.002F);
-			matrices.translate(-0.001F, 0.0F, -0.001F);
+			matrices.scale(1.0002F, 1.0F, 1.0002F);
+			matrices.translate(-0.0001F, 0.0F, -0.0001F);
 			
 			// Upside down fix
 			matrices.scale(-1.0F, -1.0F, 1.0F);
@@ -70,7 +74,7 @@ public abstract class ShardsContainerRenderer<T extends ShardsContainer> impleme
 					renderShard(shard, side, matrices, vertexConsumers, light, overlay);
 				}
 
-				if (side.isStraight()) {
+				if (side.straight) {
 					matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(90.0F));
 					matrices.translate(-1.0F, 0.0F, 0.0F);
 				}
@@ -81,10 +85,15 @@ public abstract class ShardsContainerRenderer<T extends ShardsContainer> impleme
     }
 
 	private void renderShard(CeramicShard shard, Side side, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-		SpriteIdentifier spriteIdentifier = shard.getSpriteId(entityClass);
-		VertexConsumer spriteConsumer = spriteIdentifier.getVertexConsumer(vertexConsumers, RenderLayer::getEntityNoOutline);
+		SpriteIdentifier spriteIdentifier = shard.getSpriteId(type);
+		VertexConsumer spriteConsumer = spriteIdentifier.getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
 
-		(side.isStraight() ? straight : corner).render(matrices, spriteConsumer, light, overlay);
+		if (side.straight) {
+			this.straight.render(matrices, spriteConsumer, light, overlay);
+		} else {
+			this.corners[0].render(matrices, spriteConsumer, light, overlay);
+			this.corners[1].render(matrices, spriteConsumer, light, overlay);
+		}
 	}
 
 }
