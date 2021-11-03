@@ -11,7 +11,6 @@ import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
@@ -73,44 +72,33 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 		
 		NbtCompound nbtCompound = stack.getSubNbt("BlockEntityTag");
 		if (nbtCompound != null) {
-			readNbt(nbtCompound);
+			readShards(nbtCompound);
 		}
 	}
 
-	public void readFrom(FallingBlockEntity entity) {
+	public void readShards(NbtCompound tag) {
 		ceramic_shards.clear();
 		
-		if (entity.blockEntityData != null) {
-			readNbt(entity.blockEntityData);
-		}
-	}
-
-	@Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
-        
-        if (tag.contains("Shards")) {
-            ceramic_shards.clear();
-            NbtList nbtList = tag.getList("Shards", 10);
-
-			if (nbtList.size() <= Side.values().length) {
-				for (int i = 0; i < nbtList.size(); i++) {
-					NbtCompound nbtCompound = nbtList.getCompound(i);
-					int j = nbtCompound.getByte("Side");
-
-					if (j < Side.values().length) {
-						ceramic_shards.put(Side.values()[j], CeramicShard.fromNbt(nbtCompound));
+		if (tag != null) {
+			if (tag.contains("Shards")) {
+				NbtList nbtList = tag.getList("Shards", 10);
+	
+				if (nbtList.size() <= Side.values().length) {
+					for (int i = 0; i < nbtList.size(); i++) {
+						NbtCompound nbtCompound = nbtList.getCompound(i);
+						int j = nbtCompound.getByte("Side");
+	
+						if (j < Side.values().length) {
+							ceramic_shards.put(Side.values()[j], CeramicShard.fromNbt(nbtCompound));
+						}
 					}
 				}
 			}
-        }
-    }
+		}
+	}
 
-    @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
-
-        if (hasShards()) {
+	public NbtCompound writeShards(NbtCompound tag) {
+		if (hasShards()) {
 			List<Side> values = Arrays.asList(Side.values());
             NbtList nbtList = new NbtList();
 
@@ -129,18 +117,30 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
     
             tag.put("Shards", nbtList);
         }
- 
-        return tag;
+
+		return tag;
+	}
+
+	@Override
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
+        readShards(tag);
+    }
+
+    @Override
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
+        return writeShards(tag);
     }
 
     @Override
     public void fromClientTag(NbtCompound tag) {
-        readNbt(tag);
+        readShards(tag);
     }
 
     @Override
     public NbtCompound toClientTag(NbtCompound tag) {
-        return writeNbt(tag);
+        return writeShards(tag);
     }
 
 	public enum Side {

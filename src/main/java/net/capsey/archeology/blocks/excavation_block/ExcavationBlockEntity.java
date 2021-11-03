@@ -3,8 +3,8 @@ package net.capsey.archeology.blocks.excavation_block;
 import java.util.Optional;
 
 import net.capsey.archeology.ArcheologyMod;
+import net.capsey.archeology.entity.PlayerEntityMixinInterface;
 import net.capsey.archeology.items.CopperBrushItem;
-import net.capsey.archeology.PlayerEntityMixinInterface;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Oxidizable.OxidizationLevel;
 import net.minecraft.entity.player.PlayerEntity;

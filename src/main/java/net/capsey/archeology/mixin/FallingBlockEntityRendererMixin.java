@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlockEntity;
+import net.capsey.archeology.entity.FallingBlockEntityMixinInterface;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
@@ -39,8 +40,7 @@ public abstract class FallingBlockEntityRendererMixin extends EntityRenderer<Fal
                 matrices.push();
                 matrices.translate(-0.5D, 0.0D, -0.5D);
 
-                // TODO: Doesn't work, since on client FallingBlockEntity.blockEntityData is always null
-                renderClayPot.readFrom(entity);
+                renderClayPot.readShards(((FallingBlockEntityMixinInterface) entity).getClientBlockEntityData());
                 MinecraftClient.getInstance().getBlockEntityRenderDispatcher().renderEntity(renderClayPot, matrices, vertexConsumers, light, OverlayTexture.DEFAULT_UV);
                 
                 matrices.pop();

@@ -1,5 +1,6 @@
 package net.capsey.archeology.blocks;
 
+import net.capsey.archeology.entity.FallingBlockEntityMixinInterface;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -28,6 +29,10 @@ public interface FallingBlockWithBlockEntity {
         return entity.writeNbt(nbt);
     }
 
+    default NbtCompound writeClientData(NbtCompound nbt, BlockEntity entity) {
+        return nbt;
+    }
+
     default boolean canFallThrough(WorldAccess world, BlockPos pos) {
         return FallingBlock.canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= world.getBottomY();
     }
@@ -47,6 +52,7 @@ public interface FallingBlockWithBlockEntity {
 
             if (entity != null) {
                 fallingBlockEntity.blockEntityData = writeFallingBlockNbt(new NbtCompound(), entity);
+                ((FallingBlockEntityMixinInterface) fallingBlockEntity).setClientBlockEntityData(writeClientData(new NbtCompound(), entity));
             }
 
             world.spawnEntity(fallingBlockEntity);

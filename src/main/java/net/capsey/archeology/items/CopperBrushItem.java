@@ -1,8 +1,8 @@
 package net.capsey.archeology.items;
 
 import net.capsey.archeology.ArcheologyMod;
-import net.capsey.archeology.PlayerEntityMixinInterface;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
+import net.capsey.archeology.entity.PlayerEntityMixinInterface;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Oxidizable.OxidizationLevel;
