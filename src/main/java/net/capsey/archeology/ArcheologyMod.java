@@ -62,8 +62,8 @@ public class ArcheologyMod implements ModInitializer {
         public static final Block EXCAVATION_DIRT = new ExcavationBlock(FabricBlockSettings.copyOf(net.minecraft.block.Blocks.DIRT).hardness(1.0F));
         public static final Block EXCAVATION_GRAVEL = new FallingExcavationBlock(FabricBlockSettings.copyOf(net.minecraft.block.Blocks.GRAVEL).hardness(1.2F), (FallingBlock) net.minecraft.block.Blocks.GRAVEL);
     
-        public static final Block RAW_CLAY_POT = new RawClayPotBlock(FabricBlockSettings.copyOf(net.minecraft.block.Blocks.CLAY));
-        public static final Block CLAY_POT = new ClayPotBlock(FabricBlockSettings.copyOf(net.minecraft.block.Blocks.TERRACOTTA).sounds(ClayPotBlock.SOUND_GROUP));
+        public static final Block RAW_CLAY_POT = new RawClayPotBlock(FabricBlockSettings.copyOf(net.minecraft.block.Blocks.CLAY).nonOpaque());
+        public static final Block CLAY_POT = new ClayPotBlock(FabricBlockSettings.copyOf(net.minecraft.block.Blocks.TERRACOTTA).nonOpaque().sounds(ClayPotBlock.SOUND_GROUP));
 
         public static void onInitialize() {
             Registry.register(Registry.BLOCK, new Identifier("archeology", "excavation_dirt"), EXCAVATION_DIRT);

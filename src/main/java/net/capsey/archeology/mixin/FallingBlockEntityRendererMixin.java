@@ -39,6 +39,7 @@ public abstract class FallingBlockEntityRendererMixin extends EntityRenderer<Fal
                 matrices.push();
                 matrices.translate(-0.5D, 0.0D, -0.5D);
 
+                // TODO: Doesn't work, since on client FallingBlockEntity.blockEntityData is always null
                 renderClayPot.readFrom(entity);
                 MinecraftClient.getInstance().getBlockEntityRenderDispatcher().renderEntity(renderClayPot, matrices, vertexConsumers, light, OverlayTexture.DEFAULT_UV);
                 
