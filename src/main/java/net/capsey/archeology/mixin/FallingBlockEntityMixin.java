@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.capsey.archeology.blocks.FallingBlockWithBlockEntity;
+import net.capsey.archeology.blocks.FallingBlockWithEntity;
 import net.capsey.archeology.entity.FallingBlockEntityMixinInterface;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -44,12 +44,9 @@ public abstract class FallingBlockEntityMixin extends Entity implements FallingB
 
     @Override
 	public ItemEntity dropItem(ItemConvertible item) {
-        if (item instanceof FallingBlockWithBlockEntity) {
-            FallingBlockWithBlockEntity block = (FallingBlockWithBlockEntity) item;
-
-            if (block.overrideDroppedItem()) {
-                return super.dropItem(block.getStackOnDestroy());
-            }
+        if (item instanceof FallingBlockWithEntity) {
+            FallingBlockWithEntity block = (FallingBlockWithEntity) item;
+            return block.dropItem((FallingBlockEntity)(Object) this, item);
         }
 
 		return super.dropItem(item);

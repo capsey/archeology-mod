@@ -2,9 +2,11 @@ package net.capsey.archeology.blocks.excavation_block;
 
 import java.util.Random;
 
-import net.capsey.archeology.blocks.FallingBlockWithBlockEntity;
+import net.capsey.archeology.blocks.FallingBlockWithEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FallingBlock;
+import net.minecraft.entity.FallingBlockEntity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -12,7 +14,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-public class FallingExcavationBlock extends ExcavationBlock implements FallingBlockWithBlockEntity {
+public class FallingExcavationBlock extends ExcavationBlock implements FallingBlockWithEntity {
 
     private FallingBlock mimicingBlock;
 
@@ -22,13 +24,8 @@ public class FallingExcavationBlock extends ExcavationBlock implements FallingBl
     }
 
 	@Override
-	public boolean overrideDroppedItem() {
-        return true;
-    }
-
-	@Override
-    public ItemConvertible getStackOnDestroy() {
-        return mimicingBlock;
+	public ItemEntity dropItem(FallingBlockEntity entity, ItemConvertible item) {
+        return entity.dropItem(mimicingBlock);
     }
 
 	@Override

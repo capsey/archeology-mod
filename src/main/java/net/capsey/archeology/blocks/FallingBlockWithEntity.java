@@ -3,26 +3,22 @@ package net.capsey.archeology.blocks;
 import net.capsey.archeology.entity.FallingBlockEntityMixinInterface;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.FallingBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.FallingBlockEntity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-public interface FallingBlockWithBlockEntity {
+public interface FallingBlockWithEntity {
     
     public static final int fallDelay = 2;
 
-    default boolean overrideDroppedItem() {
-        return false;
-    }
-
-    default ItemConvertible getStackOnDestroy() {
-        return Blocks.AIR;
+    default ItemEntity dropItem(FallingBlockEntity entity, ItemConvertible item) {
+        return entity.dropItem(item);
     }
 
     default NbtCompound writeFallingBlockNbt(NbtCompound nbt, BlockEntity entity) {

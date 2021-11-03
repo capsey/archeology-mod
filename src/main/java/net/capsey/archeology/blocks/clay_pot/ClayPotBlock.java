@@ -2,14 +2,16 @@ package net.capsey.archeology.blocks.clay_pot;
 
 import java.util.Random;
 
-import net.capsey.archeology.blocks.FallingBlockWithBlockEntity;
+import net.capsey.archeology.blocks.FallingBlockWithEntity;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LandingBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.FallingBlockEntity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
@@ -24,7 +26,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityProvider, FallingBlockWithBlockEntity, LandingBlock {
+public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityProvider, FallingBlockWithEntity, LandingBlock {
 
     public static final BlockSoundGroup SOUND_GROUP = new BlockSoundGroup(1.0F, 1.0F, SoundEvents.BLOCK_GLASS_BREAK, SoundEvents.BLOCK_STONE_STEP, SoundEvents.BLOCK_STONE_PLACE, SoundEvents.BLOCK_STONE_HIT, SoundEvents.BLOCK_STONE_FALL);
 
@@ -58,12 +60,7 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
     }
 
 	@Override
-	public boolean overrideDroppedItem() {
-        return true;
-    }
-
-	@Override
-	public void onDestroyedOnLanding(World world, BlockPos pos, FallingBlockEntity entity) {
+	public ItemEntity dropItem(FallingBlockEntity entity, ItemConvertible item) {
 		DefaultedList<ItemStack> items = DefaultedList.ofSize(9, ItemStack.EMPTY);
 
 		if (entity.blockEntityData != null) {
@@ -71,7 +68,12 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
 			items.forEach(entity::dropStack);
 		}
 
-		world.playSound(null, pos, getSoundGroup(entity.getBlockState()).getBreakSound(), SoundCategory.AMBIENT, 1.0F, 1.0F);
+        return null;
+    }
+	
+	@Override
+	public void onDestroyedOnLanding(World world, BlockPos pos, FallingBlockEntity entity) {
+		world.playSound(null, pos, getSoundGroup(entity.getBlockState()).getBreakSound(), SoundCategory.NEUTRAL, 1.0F, 1.0F);
 	}
 
 	@Override
