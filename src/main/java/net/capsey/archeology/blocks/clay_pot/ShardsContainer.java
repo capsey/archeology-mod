@@ -40,11 +40,20 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 		return ceramic_shards.get(direction);
 	}
 
-	public boolean addShard(Side direction, CeramicShard shard) {
-		boolean bl = ceramic_shards.putIfAbsent(direction, shard) == null;
+	public boolean hasShard(Side direction) {
+		return ceramic_shards.containsKey(direction);
+	}
+
+	public void setShard(Side direction, CeramicShard shard) {
+		ceramic_shards.put(direction, shard);
 		this.markDirty();
 		this.sync();
-		return bl;
+	}
+
+	public void removeShard(Side direction) {
+		ceramic_shards.remove(direction);
+		this.markDirty();
+		this.sync();
 	}
 
 	public void clearShards() {

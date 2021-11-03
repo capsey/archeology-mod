@@ -39,19 +39,37 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {        
-        if (!world.isClient) {
-            ItemStack item = player.getStackInHand(hand);
-            Optional<CeramicShard> shard = CeramicShardRegistry.getShard(item);
-    
-            if (shard.isPresent()) {
-                RawClayPotBlockEntity blockEntity = (RawClayPotBlockEntity) world.getBlockEntity(pos);
-        
-                if (Side.validHit(hit) && blockEntity.addShard(Side.fromHit(hit), shard.get())) {
-                    if (!player.isCreative()) {
-                        item.decrement(1);
-                    }
+        if (Side.validHit(hit)) {
+            Optional<RawClayPotBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
 
-                    return ActionResult.SUCCESS;
+            if (entity.isPresent()) {
+                ItemStack item = player.getStackInHand(hand);
+                Side side = Side.fromHit(hit);
+
+                if (item.isEmpty() && hand == Hand.MAIN_HAND) {
+                    CeramicShard shard = entity.get().getShard(side);
+                    
+                    if (shard != null) {
+                        if (!world.isClient) {
+                            player.setStackInHand(hand, shard.getStack());
+                            entity.get().removeShard(side);
+                        }
+
+                        return ActionResult.success(!world.isClient);
+                    }
+                } else if (!entity.get().hasShard(side)) {
+                    Optional<CeramicShard> shard = CeramicShardRegistry.getShard(item);
+            
+                    if (shard.isPresent()) {
+                        if (!world.isClient) {
+                            entity.get().setShard(side, shard.get());
+                            if (!player.isCreative()) {
+                                item.decrement(1);
+                            }
+                        }
+                        
+                        return ActionResult.success(!world.isClient);
+                    }
                 }
             }
         }
