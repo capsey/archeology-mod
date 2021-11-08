@@ -17,7 +17,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -76,22 +75,17 @@ public class ExcavationBlock extends BlockWithEntity {
             Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY);
     
             if (entity.isPresent() && entity.get().brushingCheck()) {
-                Optional<BlockHitResult> raycast = entity.get().getRaycast();
     
-                if (raycast.isPresent() && pos.equals(raycast.get().getBlockPos())) {
-        
-                    if (i < MAX_BRUSHING_LEVELS) {
-                        if (entity.get().isTime(world.getDifficulty())) {
-                            world.setBlockState(pos, state.with(ExcavationBlock.BRUSHING_LEVEL, i + 1), NOTIFY_LISTENERS);
-                        }
-
-                        entity.get().breakingTick(raycast.get());
-                        world.getBlockTickScheduler().schedule(pos, this, 1);
-                        return;
-                    } else {
-                        entity.get().successfullyBrushed();
-                        entity.get().dropLoot();
+                if (i < MAX_BRUSHING_LEVELS) {
+                    if (entity.get().isTime(world.getDifficulty())) {
+                        world.setBlockState(pos, state.with(ExcavationBlock.BRUSHING_LEVEL, i + 1), NOTIFY_LISTENERS);
                     }
+
+                    world.getBlockTickScheduler().schedule(pos, this, 1);
+                    return;
+                } else {
+                    entity.get().successfullyBrushed();
+                    entity.get().dropLoot();
                 }
             }
     
@@ -124,13 +118,14 @@ public class ExcavationBlock extends BlockWithEntity {
         return new ExcavationBlockEntity(pos, state);
     }
 
+    @Override
     public BlockRenderType getRenderType(BlockState state) {
 		return BlockRenderType.MODEL;
 	}
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        float num = 8 - state.get(BRUSHING_LEVEL);
+        float num = 8.0F - state.get(BRUSHING_LEVEL);
         return VoxelShapes.cuboid(0.0F, 0.0F, 0.0F, 1.0F, (num / 8), 1.0F);
     }
 
