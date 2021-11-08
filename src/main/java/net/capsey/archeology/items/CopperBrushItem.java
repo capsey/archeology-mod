@@ -1,11 +1,11 @@
 package net.capsey.archeology.items;
 
-import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
 import net.capsey.archeology.entity.PlayerEntityMixinInterface;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Oxidizable.OxidizationLevel;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,8 +13,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.UseAction;
@@ -80,28 +78,27 @@ public class CopperBrushItem extends Item {
 
 	@Override
 	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-		// TODO: Remove hardcoded player reach value
-		HitResult raycast = user.raycast(4.5F, 1, false);
+		int brushTicks = CopperBrushItem.getBrushTicks(getOxidizationLevel(user.getActiveItem()));
 
-		if (raycast instanceof BlockHitResult blockResult) {
-			BlockPos pos = blockResult.getBlockPos();
-			int brushTicks = CopperBrushItem.getBrushTicks(getOxidizationLevel(user.getActiveItem()));
+		if (world.isClient) {
+			MinecraftClient client = MinecraftClient.getInstance();
+			float reachDistance = client.interactionManager.getReachDistance();
+			HitResult raycast = user.raycast(reachDistance, 1, false);
 
-			if ((remainingUseTicks + 1) % brushTicks == 0) {
-				BlockState state = world.getBlockState(pos);
-
-				if (!world.isClient) {
-					if ((remainingUseTicks + 1) % brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty()) == 0) {
-						int damage = world.getRandom().nextInt(2);
-						stack.damage(damage, user, p -> p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND));					
-					}
-
-					BlockSoundGroup soundGroup = state.getSoundGroup();
-					world.playSound(null, pos, soundGroup.getBreakSound(), SoundCategory.BLOCKS, 0.3F * soundGroup.getVolume(), soundGroup.getPitch());
-					world.playSound(null, user.getBlockPos(), ArcheologyMod.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1f, 1f);
+			if (raycast instanceof BlockHitResult blockResult) {
+				BlockPos pos = blockResult.getBlockPos();
+	
+				if (remainingUseTicks % brushTicks == 0) {
+					BlockState state = world.getBlockState(pos);
+					world.addBlockBreakParticles(pos, state);
 				}
-
-				world.addBlockBreakParticles(pos, state);
+			}
+		} else {
+			if (remainingUseTicks % brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty()) == 0) {
+				int damage = world.getRandom().nextInt(2);
+				stack.damage(damage, user, p -> 
+					p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
+				);
 			}
 		}
 	}

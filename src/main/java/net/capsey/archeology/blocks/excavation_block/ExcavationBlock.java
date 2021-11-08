@@ -56,7 +56,7 @@ public class ExcavationBlock extends BlockWithEntity {
                     entity.get().startBrushing(player, stack);
                     
                     world.setBlockState(pos, state.with(BRUSHING_LEVEL, 1));
-                    world.getBlockTickScheduler().schedule(pos, this, 1);
+                    world.getBlockTickScheduler().schedule(pos, this, 2);
                     
                     player.incrementStat(Stats.MINED.getOrCreateStat(this));
                     return true;
@@ -81,6 +81,7 @@ public class ExcavationBlock extends BlockWithEntity {
                         world.setBlockState(pos, state.with(ExcavationBlock.BRUSHING_LEVEL, i + 1), NOTIFY_LISTENERS);
                     }
 
+                    entity.get().aesteticTick();
                     world.getBlockTickScheduler().schedule(pos, this, 1);
                     return;
                 } else {
