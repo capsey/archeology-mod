@@ -2,7 +2,6 @@ package net.capsey.archeology.items.ceramic_shard;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import net.capsey.archeology.items.CeramicShardItem;
@@ -15,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
 
 public class CeramicShardRegistry {
     
@@ -24,7 +22,12 @@ public class CeramicShardRegistry {
 		() -> new ItemStack(CeramicShards.ENDER_DRAGON)
     );
 
-    private static final Map<Identifier, CeramicShard> SHARDS = new HashMap<Identifier, CeramicShard>();
+    private static final Map<Identifier, CeramicShard> SHARDS = new HashMap<>();
+    private static final Map<Identifier, Item> ITEMS = new HashMap<>();
+
+    private CeramicShardRegistry() {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * Registering Ceramic Shard item to special Creative Menu {@link net.minecraft.item.ItemGroup ItemGroup}
@@ -32,21 +35,21 @@ public class CeramicShardRegistry {
      * Items are added to ItemGroup in order of registering!
      * 
      * @param itemId is Identifier of shard item
-     * @param rawShardId is Identifier of shard texture for the Raw Clay Pot (e.g. "archeology:raw_shard/ender_dragon")
-     * @param shardId is Identifier of shard texture for the Clay Pot (e.g. "archeology:shard/ender_dragon")
+     * @param shardId is Identifier of shard texture for the Clay Pot (e.g. "archeology:ender_dragon")
      * 
-     * @return Returns registered {@link CeramicShard} object
+     * @return Returns registered {@link Item} object of the shard
      */
     public static Item registerShard(Identifier itemId, Identifier shardId) {
         if (SHARDS.containsKey(itemId)) {
             throw new IllegalArgumentException(itemId + " is already a registered shard!");
         }
 
-        Item shardItem = new CeramicShardItem(new Item.Settings().maxCount(16).rarity(Rarity.UNCOMMON).group(SHARDS_ITEM_GROUP));
+        CeramicShard shard = new CeramicShard(shardId);
+        Item shardItem = new CeramicShardItem(shard, new Item.Settings().maxCount(16).rarity(Rarity.UNCOMMON).group(SHARDS_ITEM_GROUP));
         Registry.register(Registry.ITEM, itemId, shardItem);
-        CeramicShard shard = new CeramicShard(shardItem, itemId, shardId);
 
-        SHARDS.put(itemId, shard);
+        SHARDS.put(shardId, shard);
+        ITEMS.put(shardId, shardItem);
         return shardItem;
     }
 
@@ -58,13 +61,12 @@ public class CeramicShardRegistry {
         return SHARDS.values().stream().map(s -> s.getSpriteId(1));
     }
 
-    public static Optional<CeramicShard> getShard(ItemStack item) {
-        RegistryKey<Item> key = Registry.ITEM.getKey(item.getItem()).get();
-        return Optional.ofNullable(getShard(key.getValue()));
-    }
-
     public static CeramicShard getShard(Identifier id) {
         return SHARDS.get(id);
+    }
+
+    public static Item getShardItem(Identifier id) {
+        return ITEMS.get(id);
     }
 
 }

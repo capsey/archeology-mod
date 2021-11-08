@@ -1,10 +1,7 @@
 package net.capsey.archeology.blocks.clay_pot;
 
 import java.security.InvalidParameterException;
-import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.List;
-import java.util.Map.Entry;
 
 import net.capsey.archeology.items.ceramic_shard.CeramicShard;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
@@ -13,6 +10,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -21,49 +19,49 @@ import net.minecraft.util.math.Vec3d;
 
 public abstract class ShardsContainer extends BlockEntity implements BlockEntityClientSerializable {
 
-	public EnumMap<Side, CeramicShard> ceramic_shards = new EnumMap<Side, CeramicShard>(Side.class);
+	private final EnumMap<Side, CeramicShard> ceramicShards = new EnumMap<>(Side.class);
 
-	public ShardsContainer(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+	protected ShardsContainer(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
 
 	protected void replaceShards(EnumMap<Side, CeramicShard> shards) {
-		ceramic_shards.clear();
-		ceramic_shards.putAll(shards);
+		ceramicShards.clear();
+		ceramicShards.putAll(shards);
     }
 
 	public EnumMap<Side, CeramicShard> getShards() {
-		return ceramic_shards.clone();
+		return ceramicShards.clone();
 	}
 
 	public CeramicShard getShard(Side direction) {
-		return ceramic_shards.get(direction);
+		return ceramicShards.get(direction);
 	}
 
 	public boolean hasShard(Side direction) {
-		return ceramic_shards.containsKey(direction);
+		return ceramicShards.containsKey(direction);
 	}
 
 	public void setShard(Side direction, CeramicShard shard) {
-		ceramic_shards.put(direction, shard);
+		ceramicShards.put(direction, shard);
 		this.markDirty();
 		this.sync();
 	}
 
 	public void removeShard(Side direction) {
-		ceramic_shards.remove(direction);
+		ceramicShards.remove(direction);
 		this.markDirty();
 		this.sync();
 	}
 
 	public void clearShards() {
-		ceramic_shards.clear();
+		ceramicShards.clear();
 		this.markDirty();
 		this.sync();
 	}
 
     public boolean hasShards() {
-		return !ceramic_shards.isEmpty();
+		return !ceramicShards.isEmpty();
 	}
 
 	public static NbtList getPatternListTag(ItemStack stack) {
@@ -77,7 +75,7 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 	}
 
 	public void readFrom(ItemStack stack) {
-		ceramic_shards.clear();
+		ceramicShards.clear();
 		
 		NbtCompound nbtCompound = stack.getSubNbt("BlockEntityTag");
 		if (nbtCompound != null) {
@@ -86,20 +84,18 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 	}
 
 	public void readShards(NbtCompound tag) {
-		ceramic_shards.clear();
+		ceramicShards.clear();
 		
-		if (tag != null) {
-			if (tag.contains("Shards")) {
-				NbtList nbtList = tag.getList("Shards", 10);
-	
-				if (nbtList.size() <= Side.values().length) {
-					for (int i = 0; i < nbtList.size(); i++) {
-						NbtCompound nbtCompound = nbtList.getCompound(i);
-						int j = nbtCompound.getByte("Side");
-	
-						if (j < Side.values().length) {
-							ceramic_shards.put(Side.values()[j], CeramicShard.fromNbt(nbtCompound));
-						}
+		if (tag != null && tag.contains("Shards")) {
+			NbtList nbtList = tag.getList("Shards", NbtElement.COMPOUND_TYPE);
+
+			if (nbtList.size() <= Side.values().length) {
+				for (int i = 0; i < nbtList.size(); i++) {
+					NbtCompound nbtCompound = nbtList.getCompound(i);
+					CeramicShard shard = CeramicShard.fromNbt(nbtCompound);
+
+					if (shard != null) {
+						ceramicShards.put(Side.values()[i], shard);
 					}
 				}
 			}
@@ -108,18 +104,15 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 
 	public NbtCompound writeShards(NbtCompound tag) {
 		if (hasShards()) {
-			List<Side> values = Arrays.asList(Side.values());
             NbtList nbtList = new NbtList();
 
-            for (Entry<Side, CeramicShard> entry : ceramic_shards.entrySet()) {
-				if (entry.getValue() == null) {
-					continue;
+            for (Side side : Side.values()) {
+				NbtCompound nbtCompound = new NbtCompound();
+				CeramicShard shard = ceramicShards.get(side);
+
+				if (shard != null) {
+					shard.writeNbt(nbtCompound);
 				}
-
-                NbtCompound nbtCompound = new NbtCompound();
-
-				nbtCompound.putByte("Side", (byte) values.indexOf(entry.getKey()));
-                entry.getValue().writeNbt(nbtCompound);
 
                 nbtList.add(nbtCompound);
             }
@@ -153,14 +146,14 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
     }
 
 	public enum Side {
-		NorthWest(false),
-		North(true),
-		NorthEast(false),
-		East(true),
-		SouthEast(false),
-		South(true),
-		SouthWest(false),
-		West(true);
+		NORTH_WEST(false),
+		NORTH(true),
+		NORTH_EAST(false),
+		EAST(true),
+		SOUTH_EAST(false),
+		SOUTH(true),
+		SOUTH_WEST(false),
+		WEST(true);
 
 		public final boolean straight;
 
@@ -173,7 +166,7 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 			Vec3d relativePos = blockPos.relativize(hit.getPos());
 
 			boolean correctMin = relativePos.getY() > 0;
-			boolean correctMax = relativePos.getY() < ClayPotBlock.BASE_SHAPE.getBoundingBox().getYLength();
+			boolean correctMax = relativePos.getY() < AbstractClayPotBlock.BASE_SHAPE.getBoundingBox().getYLength();
 
 			return correctMin && correctMax;
 		}
@@ -189,14 +182,14 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 			int compass = ((int) Math.round(MathHelper.atan2(-relativePos.getZ(), relativePos.getX()) / (2 * MathHelper.PI / 8)) + 8) % 8;
 
 			switch (compass) {
-				case 0: return East;
-				case 1: return NorthEast;
-				case 2: return North;
-				case 3: return NorthWest;
-				case 4: return West;
-				case 5: return SouthWest;
-				case 6: return South;
-				case 7: return SouthEast;
+				case 0: return EAST;
+				case 1: return NORTH_EAST;
+				case 2: return NORTH;
+				case 3: return NORTH_WEST;
+				case 4: return WEST;
+				case 5: return SOUTH_WEST;
+				case 6: return SOUTH;
+				case 7: return SOUTH_EAST;
 
 				default: throw new IllegalStateException("WTF... How?");
 			}

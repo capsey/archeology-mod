@@ -15,7 +15,7 @@ import net.minecraft.world.WorldAccess;
 
 public interface FallingBlockWithEntity {
     
-    public static final int fallDelay = 2;
+    public static final int FALL_DELAY = 2;
 
     default ItemEntity dropItem(FallingBlockEntity entity, ItemConvertible item) {
         return entity.dropItem(item);
@@ -35,7 +35,7 @@ public interface FallingBlockWithEntity {
 
 	default void tryScheduleTick(WorldAccess world, BlockPos pos, Block block) {
 		if (canFallThrough(world, pos)) {
-			world.getBlockTickScheduler().schedule(pos, block, fallDelay);
+			world.getBlockTickScheduler().schedule(pos, block, FALL_DELAY);
 		}
 	}
 

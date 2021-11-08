@@ -6,8 +6,8 @@ import java.util.Random;
 
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer.Side;
+import net.capsey.archeology.items.CeramicShardItem;
 import net.capsey.archeology.items.ceramic_shard.CeramicShard;
-import net.capsey.archeology.items.ceramic_shard.CeramicShardRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -57,19 +57,15 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
 
                         return ActionResult.success(!world.isClient);
                     }
-                } else if (!entity.get().hasShard(side)) {
-                    Optional<CeramicShard> shard = CeramicShardRegistry.getShard(item);
-            
-                    if (shard.isPresent()) {
-                        if (!world.isClient) {
-                            entity.get().setShard(side, shard.get());
-                            if (!player.isCreative()) {
-                                item.decrement(1);
-                            }
+                } else if (!entity.get().hasShard(side) && item.getItem() instanceof CeramicShardItem shard) {            
+                    if (!world.isClient) {
+                        entity.get().setShard(side, shard.getShard());
+                        if (!player.isCreative()) {
+                            item.decrement(1);
                         }
-                        
-                        return ActionResult.success(!world.isClient);
                     }
+                    
+                    return ActionResult.success(!world.isClient);
                 }
             }
         }
@@ -158,9 +154,9 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
 			Optional<RawClayPotBlockEntity> blockEntity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
 			
 			if (blockEntity.isPresent()) {
-				blockEntity.get().getShards().values().forEach((item) -> {
-                    ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), item.getStack());
-                });
+				blockEntity.get().getShards().values().forEach(item -> 
+                    ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), item.getStack())
+                );
 
 				world.updateComparators(pos, this);
 			}
@@ -173,12 +169,8 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
-        if (blockEntity instanceof RawClayPotBlockEntity) {
-            RawClayPotBlockEntity rawClayPotBlockEntity = (RawClayPotBlockEntity) blockEntity;
-
-            if (!world.isClient && player.isCreative()) {
-                rawClayPotBlockEntity.clearShards();
-            }
+        if (!world.isClient && player.isCreative() && blockEntity instanceof RawClayPotBlockEntity clayPot) {
+            clayPot.clearShards();
         }
 
 		super.onBreak(world, pos, state, player);
