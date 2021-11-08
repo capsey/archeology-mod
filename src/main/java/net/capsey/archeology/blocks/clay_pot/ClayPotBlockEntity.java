@@ -1,6 +1,6 @@
 package net.capsey.archeology.blocks.clay_pot;
 
-import java.util.EnumMap;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 import net.capsey.archeology.ArcheologyMod;
@@ -21,7 +21,7 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
 
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(9, ItemStack.EMPTY);
 
-    public ClayPotBlockEntity(BlockPos pos, BlockState state, EnumMap<Side, CeramicShard> shards) {
+    public ClayPotBlockEntity(BlockPos pos, BlockState state, Map<Side, CeramicShard> shards) {
         super(ArcheologyMod.BlockEntities.CLAY_POT_BLOCK_ENTITY, pos, state);
         replaceShards(shards);
     }

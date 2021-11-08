@@ -2,6 +2,7 @@ package net.capsey.archeology.blocks.clay_pot;
 
 import java.security.InvalidParameterException;
 import java.util.EnumMap;
+import java.util.Map;
 
 import net.capsey.archeology.items.ceramic_shard.CeramicShard;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
@@ -25,12 +26,12 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 		super(type, pos, state);
 	}
 
-	protected void replaceShards(EnumMap<Side, CeramicShard> shards) {
+	protected void replaceShards(Map<Side, CeramicShard> shards) {
 		ceramicShards.clear();
 		ceramicShards.putAll(shards);
     }
 
-	public EnumMap<Side, CeramicShard> getShards() {
+	public Map<Side, CeramicShard> getShards() {
 		return ceramicShards.clone();
 	}
 

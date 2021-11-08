@@ -26,16 +26,14 @@ import net.minecraft.world.World;
 public class CopperBrushItem extends Item {
 
 	public static OxidizationLevel getOxidizationLevel(ItemStack item) {
-		int index = (int) Math.floor(4 * item.getDamage() / item.getMaxDamage());
+		int index = 4 * item.getDamage() / item.getMaxDamage();
 
         switch (index) {
             case 0: return OxidizationLevel.UNAFFECTED;
             case 1: return OxidizationLevel.EXPOSED;
             case 2: return OxidizationLevel.WEATHERED;
-            case 3: return OxidizationLevel.OXIDIZED;
+            default: return OxidizationLevel.OXIDIZED;
         }
-
-		return OxidizationLevel.OXIDIZED;
 	}
 
 	private static final int[] BRUSH_TICKS = { 8, 7, 6, 5 };
@@ -58,18 +56,18 @@ public class CopperBrushItem extends Item {
 	public ActionResult useOnBlock(ItemUsageContext context) {
 		World world = context.getWorld();
 
-		if (!world.isClient) {
+		if (!world.isClient && context.getPlayer().getAbilities().allowModifyWorld) {
 			BlockPos pos = context.getBlockPos();
 			Block block = world.getBlockState(pos).getBlock();
 
-			if (block instanceof ExcavationBlock) {
+			if (block instanceof ExcavationBlock excBlock) {
 				PlayerEntity player = context.getPlayer();
 				float cooldown = ((PlayerEntityMixinInterface) player).getBrushCooldownProgress();
 	
 				if (cooldown >= 1) {
 					ItemStack stack = context.getStack();
 
-					if (((ExcavationBlock) block).startBrushing(world, pos, player, stack)) {
+					if (excBlock.startBrushing(world, pos, player, stack)) {
 						player.setCurrentHand(context.getHand());
 						return ActionResult.CONSUME;
 					}
@@ -85,8 +83,8 @@ public class CopperBrushItem extends Item {
 		// TODO: Remove hardcoded player reach value
 		HitResult raycast = user.raycast(4.5F, 1, false);
 
-		if (raycast instanceof BlockHitResult) {
-			BlockPos pos = ((BlockHitResult) raycast).getBlockPos();
+		if (raycast instanceof BlockHitResult blockResult) {
+			BlockPos pos = blockResult.getBlockPos();
 			int brushTicks = CopperBrushItem.getBrushTicks(getOxidizationLevel(user.getActiveItem()));
 
 			if ((remainingUseTicks + 1) % brushTicks == 0) {

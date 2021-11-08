@@ -1,6 +1,6 @@
 package net.capsey.archeology.blocks.clay_pot;
 
-import java.util.EnumMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -139,7 +139,7 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
         Optional<RawClayPotBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
 
         if (entity.isPresent()) {
-            EnumMap<Side, CeramicShard> shards = entity.get().getShards();
+            Map<Side, CeramicShard> shards = entity.get().getShards();
             entity.get().clearShards();
 
             BlockState newState = ArcheologyMod.Blocks.CLAY_POT.getDefaultState();
