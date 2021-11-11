@@ -1,9 +1,9 @@
 package net.capsey.archeology.items;
 
-import net.capsey.archeology.ClientExcavationManager;
-import net.capsey.archeology.ClientWorldMixinInterface;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
+import net.capsey.archeology.client.ClientExcavationManager;
+import net.capsey.archeology.client.ExcavationManagerAccessor;
 import net.capsey.archeology.entity.PlayerEntityMixinInterface;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -70,8 +70,8 @@ public class CopperBrushItem extends Item {
 
 					if (excBlock.startBrushing(world, pos, player, stack)) {
 						if (world.isClient) {
-							ClientWorldMixinInterface clientWorld = (ClientWorldMixinInterface) world;
-							clientWorld.getExcavationManager().startBrushing((ExcavationBlockEntity) world.getBlockEntity(pos));
+							ExcavationManagerAccessor managerAccessor = (ExcavationManagerAccessor) MinecraftClient.getInstance();
+							managerAccessor.getExcavationManager().startBrushing((ExcavationBlockEntity) world.getBlockEntity(pos));
 						}
 						
 						player.setCurrentHand(context.getHand());
@@ -89,8 +89,8 @@ public class CopperBrushItem extends Item {
 		int brushTicks = CopperBrushItem.getBrushTicks(getOxidizationLevel(user.getActiveItem()));
 
 		if (world.isClient) {
-			ClientExcavationManager excavationManager = ((ClientWorldMixinInterface) world).getExcavationManager();
 			MinecraftClient client = MinecraftClient.getInstance();
+			ClientExcavationManager excavationManager = ((ExcavationManagerAccessor) client).getExcavationManager();
 
 			HitResult raycast = user.raycast(client.interactionManager.getReachDistance(), 1, false);
 
@@ -121,8 +121,8 @@ public class CopperBrushItem extends Item {
 			player.resetLastBrushedTicks();
 		}
 
-		if (world.isClient && world instanceof ClientWorldMixinInterface clientWorld) {
-			clientWorld.getExcavationManager().stopBrushing();
+		if (world.isClient && MinecraftClient.getInstance() instanceof ExcavationManagerAccessor accessor) {
+			accessor.getExcavationManager().stopBrushing();
 		}
 	}
 

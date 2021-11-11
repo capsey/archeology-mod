@@ -20,9 +20,9 @@
     "client": [
         "BuiltinModelItemRendererAccessor",
         "BuiltinModelItemRendererMixin",
-        "ClientWorldMixin",
         "FallingBlockEntityRendererMixin",
         "HeldItemRendererMixin",
+        "MinecraftClientMixin",
         "PlayerEntityRendererMixin",
         "TexturedRenderLayersMixin"
     ],
