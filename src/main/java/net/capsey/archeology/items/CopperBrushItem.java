@@ -1,6 +1,9 @@
 package net.capsey.archeology.items;
 
+import net.capsey.archeology.ClientExcavationManager;
+import net.capsey.archeology.ClientWorldMixinInterface;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
+import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.capsey.archeology.entity.PlayerEntityMixinInterface;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -54,7 +57,7 @@ public class CopperBrushItem extends Item {
 	public ActionResult useOnBlock(ItemUsageContext context) {
 		World world = context.getWorld();
 
-		if (!world.isClient && context.getPlayer().getAbilities().allowModifyWorld) {
+		if (context.getPlayer().getAbilities().allowModifyWorld) {
 			BlockPos pos = context.getBlockPos();
 			Block block = world.getBlockState(pos).getBlock();
 
@@ -66,6 +69,11 @@ public class CopperBrushItem extends Item {
 					ItemStack stack = context.getStack();
 
 					if (excBlock.startBrushing(world, pos, player, stack)) {
+						if (world.isClient) {
+							ClientWorldMixinInterface clientWorld = (ClientWorldMixinInterface) world;
+							clientWorld.getExcavationManager().startBrushing((ExcavationBlockEntity) world.getBlockEntity(pos));
+						}
+						
 						player.setCurrentHand(context.getHand());
 						return ActionResult.CONSUME;
 					}
@@ -81,17 +89,21 @@ public class CopperBrushItem extends Item {
 		int brushTicks = CopperBrushItem.getBrushTicks(getOxidizationLevel(user.getActiveItem()));
 
 		if (world.isClient) {
+			ClientExcavationManager excavationManager = ((ClientWorldMixinInterface) world).getExcavationManager();
 			MinecraftClient client = MinecraftClient.getInstance();
-			float reachDistance = client.interactionManager.getReachDistance();
-			HitResult raycast = user.raycast(reachDistance, 1, false);
+
+			HitResult raycast = user.raycast(client.interactionManager.getReachDistance(), 1, false);
 
 			if (raycast instanceof BlockHitResult blockResult) {
-				BlockPos pos = blockResult.getBlockPos();
-	
 				if (remainingUseTicks % brushTicks == 0) {
+					BlockPos pos = blockResult.getBlockPos();
 					BlockState state = world.getBlockState(pos);
 					world.addBlockBreakParticles(pos, state);
 				}
+
+				excavationManager.excavationTick(user, blockResult, remainingUseTicks);
+			} else {
+				user.stopUsingItem();
 			}
 		} else {
 			if (remainingUseTicks % brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty()) == 0) {
@@ -100,6 +112,17 @@ public class CopperBrushItem extends Item {
 					p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
 				);
 			}
+		}
+	}
+
+	@Override
+	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+		if (user instanceof PlayerEntityMixinInterface player) {
+			player.resetLastBrushedTicks();
+		}
+
+		if (world.isClient && world instanceof ClientWorldMixinInterface clientWorld) {
+			clientWorld.getExcavationManager().stopBrushing();
 		}
 	}
 

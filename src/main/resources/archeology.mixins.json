@@ -13,11 +13,14 @@
         "PlantBlockMixin",
         "PlayerEntityMixin",
         "SaplingBlockMixin",
+        "ServerPlayNetworkHandlerMixin",
+        "ServerPlayPacketListenerMixin",
         "UseActionMixin"
     ],
     "client": [
         "BuiltinModelItemRendererAccessor",
         "BuiltinModelItemRendererMixin",
+        "ClientWorldMixin",
         "FallingBlockEntityRendererMixin",
         "HeldItemRendererMixin",
         "PlayerEntityRendererMixin",

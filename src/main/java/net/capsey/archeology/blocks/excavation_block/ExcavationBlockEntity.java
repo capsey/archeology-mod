@@ -1,7 +1,8 @@
 package net.capsey.archeology.blocks.excavation_block;
 
+import java.util.Objects;
+
 import net.capsey.archeology.ArcheologyMod;
-import net.capsey.archeology.entity.PlayerEntityMixinInterface;
 import net.capsey.archeology.items.CopperBrushItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Oxidizable.OxidizationLevel;
@@ -60,13 +61,8 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
         }
     }
 
-    public void onBlockBreak() {
-        if (brushingPlayer != null) {
-            ((PlayerEntityMixinInterface) brushingPlayer).resetLastBrushedTicks();
-            brushingPlayer.stopUsingItem();
-        }
-
-        world.setBlockBreakingInfo(0, pos, -1);
+    public boolean isCorrectPlayer(PlayerEntity entity) {
+        return Objects.equals(brushingPlayer, entity);
     }
 
 }

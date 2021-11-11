@@ -11,6 +11,10 @@ public class CeramicShards {
     public static Item DIAMOND;
     public static Item EMERALD;
 
+    private CeramicShards() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static void registerDefaultShards() {
         ENDER_DRAGON = CeramicShardRegistry.registerShard(
             new Identifier("archeology", "ender_dragon_shard"), 
