@@ -1,4 +1,4 @@
-package net.capsey.archeology.mixin;
+package net.capsey.archeology.mixin.network;
 
 import java.util.Optional;
 

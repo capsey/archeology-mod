@@ -1,4 +1,4 @@
-package net.capsey.archeology.mixin;
+package net.capsey.archeology.mixin.render;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
