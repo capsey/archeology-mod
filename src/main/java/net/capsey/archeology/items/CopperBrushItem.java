@@ -2,13 +2,11 @@ package net.capsey.archeology.items;
 
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
-import net.capsey.archeology.client.ClientExcavationManager;
-import net.capsey.archeology.client.ExcavationManagerAccessor;
+import net.capsey.archeology.client.ExcavationManagerContainer;
 import net.capsey.archeology.entity.PlayerEntityMixinInterface;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Oxidizable.OxidizationLevel;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,8 +17,6 @@ import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.UseAction;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -56,13 +52,13 @@ public class CopperBrushItem extends Item {
 	@Override
 	public ActionResult useOnBlock(ItemUsageContext context) {
 		World world = context.getWorld();
+		PlayerEntity player = context.getPlayer();
 
-		if (context.getPlayer().getAbilities().allowModifyWorld) {
+		if (player.getAbilities().allowModifyWorld) {
 			BlockPos pos = context.getBlockPos();
 			Block block = world.getBlockState(pos).getBlock();
 
 			if (block instanceof ExcavationBlock excBlock) {
-				PlayerEntity player = context.getPlayer();
 				float cooldown = ((PlayerEntityMixinInterface) player).getBrushCooldownProgress();
 	
 				if (cooldown >= 1) {
@@ -70,8 +66,8 @@ public class CopperBrushItem extends Item {
 
 					if (excBlock.startBrushing(world, pos, player, stack)) {
 						if (world.isClient) {
-							ExcavationManagerAccessor managerAccessor = (ExcavationManagerAccessor) MinecraftClient.getInstance();
-							managerAccessor.getExcavationManager().startBrushing((ExcavationBlockEntity) world.getBlockEntity(pos));
+							ExcavationManagerContainer managerAccessor = (ExcavationManagerContainer) world.getChunkManager();
+							managerAccessor.addExcavationManager((ExcavationBlockEntity) world.getBlockEntity(pos), (ClientWorld) world);
 						}
 						
 						player.setCurrentHand(context.getHand());
@@ -88,24 +84,7 @@ public class CopperBrushItem extends Item {
 	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
 		int brushTicks = CopperBrushItem.getBrushTicks(getOxidizationLevel(user.getActiveItem()));
 
-		if (world.isClient) {
-			MinecraftClient client = MinecraftClient.getInstance();
-			ClientExcavationManager excavationManager = ((ExcavationManagerAccessor) client).getExcavationManager();
-
-			HitResult raycast = user.raycast(client.interactionManager.getReachDistance(), 1, false);
-
-			if (raycast instanceof BlockHitResult blockResult) {
-				if (remainingUseTicks % brushTicks == 0) {
-					BlockPos pos = blockResult.getBlockPos();
-					BlockState state = world.getBlockState(pos);
-					world.addBlockBreakParticles(pos, state);
-				}
-
-				excavationManager.excavationTick(user, blockResult, remainingUseTicks);
-			} else {
-				user.stopUsingItem();
-			}
-		} else {
+		if (!world.isClient) {
 			if (remainingUseTicks % brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty()) == 0) {
 				int damage = world.getRandom().nextInt(2);
 				stack.damage(damage, user, p -> 
@@ -119,10 +98,6 @@ public class CopperBrushItem extends Item {
 	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
 		if (user instanceof PlayerEntityMixinInterface player) {
 			player.resetLastBrushedTicks();
-		}
-
-		if (world.isClient && MinecraftClient.getInstance() instanceof ExcavationManagerAccessor accessor) {
-			accessor.getExcavationManager().stopBrushing();
 		}
 	}
 

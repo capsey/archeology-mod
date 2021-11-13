@@ -35,7 +35,7 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
         return brushingPlayer.getItemUseTime() % (CopperBrushItem.getBrushTicks(oxidizationLevel) * ExcavationBlock.getBrushTicksPerLayer(difficulty)) == 0;
     }
 
-    public void aesteticTick() {
+    public void aestheticTick() {
         if (brushingPlayer.getItemUseTime() % CopperBrushItem.getBrushTicks(oxidizationLevel) == 0) {
             BlockSoundGroup soundGroup = getCachedState().getSoundGroup();
             world.playSound(null, pos, soundGroup.getBreakSound(), SoundCategory.BLOCKS, 0.3F * soundGroup.getVolume(), soundGroup.getPitch());

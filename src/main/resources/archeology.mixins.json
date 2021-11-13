@@ -18,13 +18,13 @@
         "network.ServerPlayPacketListenerMixin"
     ],
     "client": [
+        "client.ClientChunkManagerMixin",
         "render.BuiltinModelItemRendererAccessor",
         "render.BuiltinModelItemRendererMixin",
         "render.FallingBlockEntityRendererMixin",
         "render.HeldItemRendererMixin",
         "render.PlayerEntityRendererMixin",
-        "render.TexturedRenderLayersMixin",
-        "MinecraftClientMixin"
+        "render.TexturedRenderLayersMixin"
     ],
     "injectors": {
         "defaultRequire": 1
