@@ -16,19 +16,19 @@ import net.minecraft.client.world.ClientWorld;
 @Mixin(ClientChunkManager.class)
 public class ClientChunkManagerMixin implements ExcavationManagerContainer {
 
-    private ClientExcavationManager excavationManager;
+	private ClientExcavationManager excavationManager;
 
-    @Override
-    public void addExcavationManager(ExcavationBlockEntity entity, ClientWorld world) {
-        excavationManager = new ClientExcavationManager(entity, world);
-    }
-
-    @Inject(method = "tick(Ljava/util/function/BooleanSupplier;)V", at = @At("HEAD"))
-    public void tick(BooleanSupplier supplier, CallbackInfo info) {
-        if (excavationManager != null && excavationManager.tick()) {
-            excavationManager.onRemoved();
-            excavationManager = null;
-        }
+	@Override
+	public void addExcavationManager(ExcavationBlockEntity entity, ClientWorld world) {
+		excavationManager = new ClientExcavationManager(entity, world);
 	}
-    
+
+	@Inject(method = "tick(Ljava/util/function/BooleanSupplier;)V", at = @At("HEAD"))
+	public void tick(BooleanSupplier supplier, CallbackInfo info) {
+		if (excavationManager != null && excavationManager.tick()) {
+			excavationManager.onRemoved();
+            excavationManager = null;
+		}
+	}
+
 }

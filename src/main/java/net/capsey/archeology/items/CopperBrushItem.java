@@ -66,10 +66,10 @@ public class CopperBrushItem extends Item {
 
 					if (excBlock.startBrushing(world, pos, player, stack)) {
 						if (world.isClient) {
-							ExcavationManagerContainer managerAccessor = (ExcavationManagerContainer) world.getChunkManager();
-							managerAccessor.addExcavationManager((ExcavationBlockEntity) world.getBlockEntity(pos), (ClientWorld) world);
+							ExcavationManagerContainer container = (ExcavationManagerContainer) world.getChunkManager();
+							container.addExcavationManager((ExcavationBlockEntity) world.getBlockEntity(pos), (ClientWorld) world);
 						}
-						
+
 						player.setCurrentHand(context.getHand());
 						return ActionResult.CONSUME;
 					}
