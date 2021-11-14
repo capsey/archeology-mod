@@ -38,9 +38,9 @@ public class CopperBrushItem extends Item {
 	public static int getBrushTicks(OxidizationLevel level) {
 		switch (level) {
             case UNAFFECTED: return BRUSH_TICKS[0];
-            case EXPOSED: return BRUSH_TICKS[0];
-            case WEATHERED: return BRUSH_TICKS[0];
-            case OXIDIZED: return BRUSH_TICKS[0];
+            case EXPOSED: return BRUSH_TICKS[1];
+            case WEATHERED: return BRUSH_TICKS[2];
+            case OXIDIZED: return BRUSH_TICKS[3];
             default: throw new IllegalArgumentException();
         }
 	}
@@ -61,7 +61,10 @@ public class CopperBrushItem extends Item {
 			if (block instanceof ExcavationBlock excBlock) {
 				float cooldown = ((PlayerEntityMixinInterface) player).getBrushCooldownProgress();
 	
-				if (cooldown >= 1) {
+				// TODO:
+				// Fix bug, when Brushing Cooldown of player is not perfectly synced and Player
+				// starts brushing only on Server, leaving ClientExcavationManager not being added!
+				if (cooldown >= 1.0F) {
 					ItemStack stack = context.getStack();
 
 					if (excBlock.startBrushing(world, pos, player, stack)) {
@@ -84,13 +87,11 @@ public class CopperBrushItem extends Item {
 	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
 		int brushTicks = CopperBrushItem.getBrushTicks(getOxidizationLevel(user.getActiveItem()));
 
-		if (!world.isClient) {
-			if (remainingUseTicks % brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty()) == 0) {
-				int damage = world.getRandom().nextInt(2);
-				stack.damage(damage, user, p -> 
-					p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
-				);
-			}
+		if (!world.isClient && remainingUseTicks % brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty()) == 0) {
+			int damage = world.getRandom().nextInt(2);
+			stack.damage(damage, user, p -> 
+				p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
+			);
 		}
 	}
 
