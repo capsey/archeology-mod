@@ -2,6 +2,6 @@ package net.capsey.archeology.network;
 
 public interface ServerPlayPacketListenerMixinInterface {
 
-    void onExcavationFailed(ExcavationBreakingC2SPacket packet);
+    void onExcavationBreakingStageChanged(ExcavationBreakingC2SPacket packet);
     
 }

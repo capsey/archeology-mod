@@ -61,6 +61,12 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
         }
     }
 
+    public void onBlockBreak() {
+        if (brushingPlayer != null && brushingPlayer.isUsingItem() && brushingPlayer.getItemUseTimeLeft() > 0) {
+            brushingPlayer.stopUsingItem();
+        }
+    }
+
     public boolean isCorrectPlayer(PlayerEntity entity) {
         return Objects.equals(brushingPlayer, entity);
     }

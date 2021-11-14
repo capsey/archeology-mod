@@ -18,19 +18,24 @@ import net.minecraft.util.math.BlockPos;
 public class ServerPlayNetworkHandlerMixin implements ServerPlayPacketListenerMixinInterface {
 
     @Override
-    public void onExcavationFailed(ExcavationBreakingC2SPacket packet) {
+    public void onExcavationBreakingStageChanged(ExcavationBreakingC2SPacket packet) {
         ServerPlayNetworkHandler self = (ServerPlayNetworkHandler)(Object) this;
         NetworkThreadUtils.forceMainThread(packet, self, self.getPlayer().getServerWorld());
 
         ServerPlayerEntity player = self.getPlayer();
         ServerWorld world = player.getServerWorld();
         BlockPos pos = packet.getBlockPos();
-
+        
         Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY);
-
+        
         if (entity.isPresent() && entity.get().isCorrectPlayer(player)) {
-            world.breakBlock(pos, true);
-            player.stopUsingItem();
+            int newStage = packet.getNewStage();
+
+            if (newStage >= 0 && newStage < 9) {
+                world.setBlockBreakingInfo(0, pos, newStage);
+            } else {
+                world.breakBlock(pos, false);
+            }
         }
     }
     

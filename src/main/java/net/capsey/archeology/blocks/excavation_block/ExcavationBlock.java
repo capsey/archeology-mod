@@ -95,6 +95,20 @@ public class ExcavationBlock extends BlockWithEntity {
 	}
 
     @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+		if (!world.isClient && !state.isOf(newState.getBlock())) {
+            world.setBlockBreakingInfo(0, pos, -1);
+            Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY);
+
+            if (entity.isPresent()) {
+                entity.get().onBlockBreak();
+            }
+
+			super.onStateReplaced(state, world, pos, newState, moved);
+		}
+	}
+
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(BRUSHING_LEVEL);
     }

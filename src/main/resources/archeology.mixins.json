@@ -18,7 +18,6 @@
         "network.ServerPlayPacketListenerMixin"
     ],
     "client": [
-        "client.ClientChunkManagerMixin",
         "render.BuiltinModelItemRendererAccessor",
         "render.BuiltinModelItemRendererMixin",
         "render.FallingBlockEntityRendererMixin",
