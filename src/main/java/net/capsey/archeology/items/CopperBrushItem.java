@@ -1,7 +1,7 @@
 package net.capsey.archeology.items;
 
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
-import net.capsey.archeology.entity.PlayerEntityMixinInterface;
+import net.capsey.archeology.entity.ExcavatorPlayerEntity;
 import net.capsey.archeology.network.ExcavationBreakingC2SPacket;
 import net.minecraft.block.Block;
 import net.minecraft.block.Oxidizable.OxidizationLevel;
@@ -63,7 +63,7 @@ public class CopperBrushItem extends Item {
 			Block block = world.getBlockState(pos).getBlock();
 
 			if (block instanceof ExcavationBlock excBlock) {
-				float cooldown = ((PlayerEntityMixinInterface) player).getBrushCooldownProgress();
+				float cooldown = ((ExcavatorPlayerEntity) player).getBrushCooldownProgress();
 
 				if (cooldown >= 1.0F) {
 					ItemStack stack = context.getStack();
@@ -85,21 +85,24 @@ public class CopperBrushItem extends Item {
 
 		if (world.isClient) {
 			MinecraftClient client = MinecraftClient.getInstance();
-			HitResult raycast = user.raycast(client.interactionManager.getReachDistance(), 1, false);
+			HitResult raycast = client.crosshairTarget;
 			
 			if (remainingUseTicks == 6000) {
 				breakingProgress = 0.0F;
 				currentStage = -1;
 			}
 			
-			if (raycast instanceof BlockHitResult blockResult) {
+			// Add check for correct block targeting
+			if (raycast.getType() == HitResult.Type.BLOCK) {
 				breakingProgress += 0.02F;
 				int stage = (int) (breakingProgress * 10);
 
 				if (currentStage != stage) {
-					world.sendPacket(new ExcavationBreakingC2SPacket(blockResult.getBlockPos(), stage));
+					world.sendPacket(new ExcavationBreakingC2SPacket(stage));
 					currentStage = stage;
 				}
+			} else {
+				world.sendPacket(new ExcavationBreakingC2SPacket(10));
 			}
 		} else if (remainingUseTicks % brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty()) == 0) {
 			int damage = world.getRandom().nextInt(2);
@@ -111,7 +114,7 @@ public class CopperBrushItem extends Item {
 
 	@Override
 	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-		if (user instanceof PlayerEntityMixinInterface player) {
+		if (user instanceof ExcavatorPlayerEntity player) {
 			player.resetLastBrushedTicks();
 		}
 	}

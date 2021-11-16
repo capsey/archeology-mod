@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.Random;
 
 import net.capsey.archeology.ArcheologyMod;
+import net.capsey.archeology.entity.ExcavatorPlayerEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -59,6 +60,7 @@ public class ExcavationBlock extends BlockWithEntity {
                     world.getBlockTickScheduler().schedule(pos, this, 2);
                     
                     player.incrementStat(Stats.MINED.getOrCreateStat(this));
+                    ((ExcavatorPlayerEntity) player).startBrushing(entity.get());
                     return true;
                 }
             }
