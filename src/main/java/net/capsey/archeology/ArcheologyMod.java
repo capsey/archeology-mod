@@ -99,9 +99,11 @@ public class ArcheologyMod implements ModInitializer {
 	});
 
     public static final Identifier BRUSHING_SOUND_ID = new Identifier("archeology:item.copper_brush.brushing");
-    public static SoundEvent BRUSHING_SOUND_EVENT = new SoundEvent(BRUSHING_SOUND_ID);
+    public static final SoundEvent BRUSHING_SOUND_EVENT = new SoundEvent(BRUSHING_SOUND_ID);
 
     public static final Identifier EXCAVATED = new Identifier("archeology", "excavated");
+
+    public static final Identifier START_BRUSHING = new Identifier("archeology", "start_brushing");
 
     @Override
     public void onInitialize() {
@@ -120,9 +122,7 @@ public class ArcheologyMod implements ModInitializer {
     private static LootContextType createLootContextType(Consumer<LootContextType.Builder> type) {
 		LootContextType.Builder builder = new LootContextType.Builder();
 		type.accept(builder);
-		LootContextType lootContextType = builder.build();
-
-        return lootContextType;
+		return builder.build();
 	}
     
 }

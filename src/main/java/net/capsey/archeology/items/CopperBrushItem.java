@@ -2,10 +2,8 @@ package net.capsey.archeology.items;
 
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
 import net.capsey.archeology.entity.ExcavatorPlayerEntity;
-import net.capsey.archeology.network.ExcavationBreakingC2SPacket;
 import net.minecraft.block.Block;
 import net.minecraft.block.Oxidizable.OxidizationLevel;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,8 +14,6 @@ import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.UseAction;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -35,9 +31,6 @@ public class CopperBrushItem extends Item {
 	}
 
 	private static final int[] BRUSH_TICKS = { 8, 7, 6, 5 };
-
-	private float breakingProgress = 0.0F;
-	private int currentStage = 0;
 
 	public static int getBrushTicks(OxidizationLevel level) {
 		switch (level) {
@@ -83,28 +76,7 @@ public class CopperBrushItem extends Item {
 	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
 		int brushTicks = CopperBrushItem.getBrushTicks(getOxidizationLevel(user.getActiveItem()));
 
-		if (world.isClient) {
-			MinecraftClient client = MinecraftClient.getInstance();
-			HitResult raycast = client.crosshairTarget;
-			
-			if (remainingUseTicks == 6000) {
-				breakingProgress = 0.0F;
-				currentStage = -1;
-			}
-			
-			// Add check for correct block targeting
-			if (raycast.getType() == HitResult.Type.BLOCK) {
-				breakingProgress += 0.02F;
-				int stage = (int) (breakingProgress * 10);
-
-				if (currentStage != stage) {
-					world.sendPacket(new ExcavationBreakingC2SPacket(stage));
-					currentStage = stage;
-				}
-			} else {
-				world.sendPacket(new ExcavationBreakingC2SPacket(10));
-			}
-		} else if (remainingUseTicks % brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty()) == 0) {
+		if (!world.isClient && remainingUseTicks % brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty()) == 0) {
 			int damage = world.getRandom().nextInt(2);
 			stack.damage(damage, user, p -> 
 				p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
