@@ -2,8 +2,6 @@ package net.capsey.archeology;
 
 import java.util.function.Consumer;
 
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlock;
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlockEntity;
 import net.capsey.archeology.blocks.clay_pot.RawClayPotBlock;
@@ -113,8 +111,6 @@ public class ArcheologyMod implements ModInitializer {
         BlockEntities.onInitialize();
         
         Registry.register(Registry.SOUND_EVENT, BRUSHING_SOUND_ID, BRUSHING_SOUND_EVENT);
-        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
-
         Registry.register(Registry.CUSTOM_STAT, "excavated", EXCAVATED);
         Stats.CUSTOM.getOrCreateStat(EXCAVATED, StatFormatter.DEFAULT);
     }

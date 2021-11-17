@@ -5,6 +5,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import me.shedaniel.autoconfig.AutoConfig;
+import net.capsey.archeology.ModConfig;
 import net.capsey.archeology.entity.BrushingPlayerEntity;
 import net.capsey.archeology.network.ExcavationBreakingC2SPacket;
 import net.minecraft.client.MinecraftClient;
@@ -12,6 +14,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 @Mixin(ClientPlayerEntity.class)
 public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
@@ -27,10 +30,21 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
             
             if (client.crosshairTarget.getType() == HitResult.Type.BLOCK) {
                 BlockHitResult raycast = (BlockHitResult) client.crosshairTarget;
-
+                
                 if (raycast.getBlockPos().equals(brushingPos)) {
-                    breakingProgress += 0.02F;
-                    int stage = (int) (breakingProgress * 10);
+                    ModConfig config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+                    ClientPlayerEntity player = client.player;
+
+                    Vec3d lookDir = Vec3d.fromPolar(player.getPitch(), player.getHeadYaw());
+                    Vec3d prevLookDir = Vec3d.fromPolar(player.prevPitch, player.prevHeadYaw);
+                    double change = 1 - prevLookDir.dotProduct(lookDir);
+                    
+                    boolean bl1 = config.mojangExcavationBreaking && change >= 0.0001D;
+                    boolean bl2 = !config.mojangExcavationBreaking && change < 0.0001D;
+                    float breakDelta = bl1 || bl2 ? 0.05F : -0.01F;
+
+                    breakingProgress = Math.max(breakingProgress + breakDelta, 0);
+                    int stage = (int) (breakingProgress * 10) - 1;
         
                     if (currentStage != stage) {
                         client.world.sendPacket(new ExcavationBreakingC2SPacket(stage));
@@ -53,9 +67,9 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
     }
 
     private void reset() {
-        this.brushingPos = null;
         this.breakingProgress = 0.0F;
         this.currentStage = -1;
+        this.brushingPos = null;
     }
     
 }

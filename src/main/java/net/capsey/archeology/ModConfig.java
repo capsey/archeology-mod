@@ -10,4 +10,7 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip(count = 2)
     public boolean stopUsingAfterBrushing = true;
 
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    public boolean mojangExcavationBreaking = false;
+
 }

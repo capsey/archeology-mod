@@ -23,9 +23,14 @@
     "subtitles.archeology.item.copper_brush.brushing": "Блок раскапывается",
 
     "text.autoconfig.archeology.title": "Archeology Mod Config",
+
     "text.autoconfig.archeology.option.stopUsingAfterBrushing": "Перестать использовать после раскопки кистью",
     "text.autoconfig.archeology.option.stopUsingAfterBrushing.@Tooltip[0]": "Если включен, при остановке раскопки будет отпущена клавиша использования.",
     "text.autoconfig.archeology.option.stopUsingAfterBrushing.@Tooltip[1]": "Например, если блок раскопки был разрушен или раскопка успешно завершилась.",
+
+    "text.autoconfig.archeology.option.mojangExcavationBreaking": "Разрушение блока раскопок от Mojang",
+    "text.autoconfig.archeology.option.mojangExcavationBreaking.@Tooltip[0]": "Если включен, разрушение блока раскопок будет таким же, как и на",
+    "text.autoconfig.archeology.option.mojangExcavationBreaking.@Tooltip[1]": "Minecraft Live 2020, т.е. нужно будет быть терпеливым во время раскопки.",
 
     "stat.archeology.excavated": "Успешно очищенных блоков"
 }

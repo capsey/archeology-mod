@@ -23,10 +23,10 @@ public class ServerPlayNetworkHandlerMixin implements ServerPlayPacketListenerMi
         ServerWorld world = player.getServerWorld();
         ExcavationBlockEntity entity = ((ExcavatorPlayerEntity) player).getExcavatingBlock();
         
-        if (entity != null && entity.isCorrectPlayer(player)) {
+        if (entity != null && !entity.isRemoved() && entity.isCorrectPlayer(player)) {
             int newStage = packet.getNewStage();
 
-            if (newStage >= 0 && newStage < 9) {
+            if (newStage < 9) {
                 world.setBlockBreakingInfo(0, entity.getPos(), newStage);
             } else {
                 world.breakBlock(entity.getPos(), false);
