@@ -3,7 +3,6 @@ package net.capsey.archeology.items;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
 import net.capsey.archeology.entity.ExcavatorPlayerEntity;
 import net.minecraft.block.Block;
-import net.minecraft.block.Oxidizable.OxidizationLevel;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,27 +18,14 @@ import net.minecraft.world.World;
 
 public class CopperBrushItem extends Item {
 
-	public static OxidizationLevel getOxidizationLevel(ItemStack item) {
-		int index = 4 * item.getDamage() / item.getMaxDamage();
-
-        switch (index) {
-            case 0: return OxidizationLevel.UNAFFECTED;
-            case 1: return OxidizationLevel.EXPOSED;
-            case 2: return OxidizationLevel.WEATHERED;
-            default: return OxidizationLevel.OXIDIZED;
-        }
-	}
-
 	private static final int[] BRUSH_TICKS = { 8, 7, 6, 5 };
 
-	public static int getBrushTicks(OxidizationLevel level) {
-		switch (level) {
-            case UNAFFECTED: return BRUSH_TICKS[0];
-            case EXPOSED: return BRUSH_TICKS[1];
-            case WEATHERED: return BRUSH_TICKS[2];
-            case OXIDIZED: return BRUSH_TICKS[3];
-            default: throw new IllegalArgumentException();
-        }
+	public static int getBrushTicks(ItemStack item) {
+		return BRUSH_TICKS[getOxidizationIndex(item)];
+	}
+
+	public static int getOxidizationIndex(ItemStack item) {
+		return item.isDamaged() ? (4 * item.getDamage() / item.getMaxDamage()) % 4 : 0;
 	}
 
     public CopperBrushItem(Settings settings) {
@@ -74,7 +60,7 @@ public class CopperBrushItem extends Item {
 
 	@Override
 	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-		int brushTicks = CopperBrushItem.getBrushTicks(getOxidizationLevel(user.getActiveItem()));
+		int brushTicks = CopperBrushItem.getBrushTicks(user.getActiveItem());
 
 		if (!world.isClient && remainingUseTicks % brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty()) == 0) {
 			int damage = world.getRandom().nextInt(2);
