@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
 
@@ -36,7 +37,7 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
             int i = CopperBrushItem.getOxidizationIndex(item) + (difficulty.getId() / 2);
             return (change > BREAK_THRESHOLD[i] ? REGULAR_REPAIR_DELTAS : REGULAR_BREAK_DELTAS)[i];
         } else {
-            return change > 1.0E-6 ? 0.5F : -0.02F;
+            return change > 1.0E-7 ? 0.7F : -0.04F;
         }
     }
 
@@ -66,6 +67,9 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
                         breakingProgress = 0.0F;
                     }
 
+                    client.particleManager.addBlockBreakingParticles(raycast.getBlockPos(), Direction.UP);
+                    client.particleManager.addBlockBreakingParticles(raycast.getBlockPos(), Direction.UP);
+                    client.particleManager.addBlockBreakingParticles(raycast.getBlockPos(), Direction.UP);
                     return;
                 }
             }
