@@ -68,8 +68,6 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
                     }
 
                     client.particleManager.addBlockBreakingParticles(raycast.getBlockPos(), Direction.UP);
-                    client.particleManager.addBlockBreakingParticles(raycast.getBlockPos(), Direction.UP);
-                    client.particleManager.addBlockBreakingParticles(raycast.getBlockPos(), Direction.UP);
                     return;
                 }
             }
