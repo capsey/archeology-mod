@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.capsey.archeology.ArcheologyMod;
+import net.capsey.archeology.items.CopperBrushItem;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -24,20 +25,13 @@ public abstract class FossilContainerBlockEntity extends BlockEntity implements 
     private static final float[] LUCK_POINTS = { 1.0F, 2.0F, 3.0F, 4.0F };
 
     private static float getLuckPoints(ItemStack stack) {
-        if (!stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
-            return 0.0F;
-        }
-
-        int index = (int) Math.floor(4 * stack.getDamage() / stack.getMaxDamage());
-        index = Math.max(Math.min(index, LUCK_POINTS.length - 1), 0);
-
-        return LUCK_POINTS[index];
+        return LUCK_POINTS[CopperBrushItem.getOxidizationIndex(stack)];
     }
 
     protected Identifier lootTableId;
     protected ArrayList<ItemStack> loot = new ArrayList<ItemStack>();
 
-    public FossilContainerBlockEntity(BlockPos pos, BlockState state, Identifier lootTable) {
+    protected FossilContainerBlockEntity(BlockPos pos, BlockState state, Identifier lootTable) {
         super(ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY, pos, state);
         lootTableId = lootTable;
     }

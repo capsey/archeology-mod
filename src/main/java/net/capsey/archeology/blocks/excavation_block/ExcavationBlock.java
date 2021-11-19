@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.Random;
 
 import net.capsey.archeology.ArcheologyMod;
+import net.capsey.archeology.entity.ExcavatorPlayerEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -17,7 +18,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -57,9 +57,10 @@ public class ExcavationBlock extends BlockWithEntity {
                     entity.get().startBrushing(player, stack);
                     
                     world.setBlockState(pos, state.with(BRUSHING_LEVEL, 1));
-                    world.getBlockTickScheduler().schedule(pos, this, 1);
+                    world.getBlockTickScheduler().schedule(pos, this, 2);
                     
                     player.incrementStat(Stats.MINED.getOrCreateStat(this));
+                    ((ExcavatorPlayerEntity) player).startBrushing(entity.get());
                     return true;
                 }
             }
@@ -76,22 +77,18 @@ public class ExcavationBlock extends BlockWithEntity {
             Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY);
     
             if (entity.isPresent() && entity.get().brushingCheck()) {
-                Optional<BlockHitResult> raycast = entity.get().getRaycast();
     
-                if (raycast.isPresent() && pos.equals(raycast.get().getBlockPos())) {
-        
-                    if (i < MAX_BRUSHING_LEVELS) {
-                        if (entity.get().isTime(world.getDifficulty())) {
-                            world.setBlockState(pos, state.with(ExcavationBlock.BRUSHING_LEVEL, i + 1), NOTIFY_LISTENERS);
-                        }
-
-                        entity.get().breakingTick(raycast.get());
-                        world.getBlockTickScheduler().schedule(pos, this, 1);
-                        return;
-                    } else {
-                        entity.get().successfullyBrushed();
-                        entity.get().dropLoot();
+                if (i < MAX_BRUSHING_LEVELS) {
+                    if (entity.get().isTime(world.getDifficulty())) {
+                        world.setBlockState(pos, state.with(ExcavationBlock.BRUSHING_LEVEL, i + 1), NOTIFY_LISTENERS);
                     }
+
+                    entity.get().aestheticTick();
+                    world.getBlockTickScheduler().schedule(pos, this, 1);
+                    return;
+                } else {
+                    entity.get().successfullyBrushed();
+                    entity.get().dropLoot();
                 }
             }
     
@@ -100,17 +97,18 @@ public class ExcavationBlock extends BlockWithEntity {
 	}
 
     @Override
-	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
 		if (!state.isOf(newState.getBlock())) {
             if (!world.isClient) {
+                world.setBlockBreakingInfo(0, pos, -1);
                 Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY);
-
+    
                 if (entity.isPresent()) {
                     entity.get().onBlockBreak();
                 }
             }
 
-            super.onStateReplaced(state, world, pos, newState, moved);
+			super.onStateReplaced(state, world, pos, newState, moved);
 		}
 	}
 
@@ -124,13 +122,14 @@ public class ExcavationBlock extends BlockWithEntity {
         return new ExcavationBlockEntity(pos, state);
     }
 
+    @Override
     public BlockRenderType getRenderType(BlockState state) {
 		return BlockRenderType.MODEL;
 	}
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        float num = 8 - state.get(BRUSHING_LEVEL);
+        float num = 8.0F - state.get(BRUSHING_LEVEL);
         return VoxelShapes.cuboid(0.0F, 0.0F, 0.0F, 1.0F, (num / 8), 1.0F);
     }
 

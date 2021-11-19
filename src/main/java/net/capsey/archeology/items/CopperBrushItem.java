@@ -1,11 +1,8 @@
 package net.capsey.archeology.items;
 
-import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
-import net.capsey.archeology.entity.PlayerEntityMixinInterface;
+import net.capsey.archeology.entity.ExcavatorPlayerEntity;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Oxidizable.OxidizationLevel;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,39 +10,22 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.UseAction;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class CopperBrushItem extends Item {
 
-	public static OxidizationLevel getOxidizationLevel(ItemStack item) {
-		int index = 4 * item.getDamage() / item.getMaxDamage();
-
-        switch (index) {
-            case 0: return OxidizationLevel.UNAFFECTED;
-            case 1: return OxidizationLevel.EXPOSED;
-            case 2: return OxidizationLevel.WEATHERED;
-            default: return OxidizationLevel.OXIDIZED;
-        }
-	}
-
 	private static final int[] BRUSH_TICKS = { 8, 7, 6, 5 };
 
-	public static int getBrushTicks(OxidizationLevel level) {
-		switch (level) {
-            case UNAFFECTED: return BRUSH_TICKS[0];
-            case EXPOSED: return BRUSH_TICKS[0];
-            case WEATHERED: return BRUSH_TICKS[0];
-            case OXIDIZED: return BRUSH_TICKS[0];
-            default: throw new IllegalArgumentException();
-        }
+	public static int getBrushTicks(ItemStack item) {
+		return BRUSH_TICKS[getOxidizationIndex(item)];
+	}
+
+	public static int getOxidizationIndex(ItemStack item) {
+		return item.isDamaged() ? (4 * item.getDamage() / item.getMaxDamage()) % 4 : 0;
 	}
 
     public CopperBrushItem(Settings settings) {
@@ -55,16 +35,16 @@ public class CopperBrushItem extends Item {
 	@Override
 	public ActionResult useOnBlock(ItemUsageContext context) {
 		World world = context.getWorld();
+		PlayerEntity player = context.getPlayer();
 
-		if (!world.isClient && context.getPlayer().getAbilities().allowModifyWorld) {
+		if (!world.isClient && player.getAbilities().allowModifyWorld) {
 			BlockPos pos = context.getBlockPos();
 			Block block = world.getBlockState(pos).getBlock();
 
 			if (block instanceof ExcavationBlock excBlock) {
-				PlayerEntity player = context.getPlayer();
-				float cooldown = ((PlayerEntityMixinInterface) player).getBrushCooldownProgress();
-	
-				if (cooldown >= 1) {
+				float cooldown = ((ExcavatorPlayerEntity) player).getBrushCooldownProgress();
+
+				if (cooldown >= 1.0F) {
 					ItemStack stack = context.getStack();
 
 					if (excBlock.startBrushing(world, pos, player, stack)) {
@@ -80,29 +60,20 @@ public class CopperBrushItem extends Item {
 
 	@Override
 	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-		// TODO: Remove hardcoded player reach value
-		HitResult raycast = user.raycast(4.5F, 1, false);
+		int brushTicks = CopperBrushItem.getBrushTicks(user.getActiveItem());
 
-		if (raycast instanceof BlockHitResult blockResult) {
-			BlockPos pos = blockResult.getBlockPos();
-			int brushTicks = CopperBrushItem.getBrushTicks(getOxidizationLevel(user.getActiveItem()));
+		if (!world.isClient && remainingUseTicks % brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty()) == 0) {
+			int damage = world.getRandom().nextInt(2);
+			stack.damage(damage, user, p -> 
+				p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
+			);
+		}
+	}
 
-			if ((remainingUseTicks + 1) % brushTicks == 0) {
-				BlockState state = world.getBlockState(pos);
-
-				if (!world.isClient) {
-					if ((remainingUseTicks + 1) % brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty()) == 0) {
-						int damage = world.getRandom().nextInt(2);
-						stack.damage(damage, user, p -> p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND));					
-					}
-
-					BlockSoundGroup soundGroup = state.getSoundGroup();
-					world.playSound(null, pos, soundGroup.getBreakSound(), SoundCategory.BLOCKS, 0.3F * soundGroup.getVolume(), soundGroup.getPitch());
-					world.playSound(null, user.getBlockPos(), ArcheologyMod.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1f, 1f);
-				}
-
-				world.addBlockBreakParticles(pos, state);
-			}
+	@Override
+	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+		if (user instanceof ExcavatorPlayerEntity player) {
+			player.resetLastBrushedTicks();
 		}
 	}
 

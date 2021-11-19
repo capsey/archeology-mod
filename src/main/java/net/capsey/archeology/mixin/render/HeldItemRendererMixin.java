@@ -1,4 +1,4 @@
-package net.capsey.archeology.mixin;
+package net.capsey.archeology.mixin.render;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -43,7 +43,7 @@ public abstract class HeldItemRendererMixin {
                     boolean bl = arm == Arm.RIGHT;
 
                     int side = bl ? 1 : -1;
-                    float max = CopperBrushItem.getBrushTicks(CopperBrushItem.getOxidizationLevel(item)) * ExcavationBlock.MAX_BRUSHING_LEVELS;
+                    float max = CopperBrushItem.getBrushTicks(item) * ExcavationBlock.MAX_BRUSHING_LEVELS;
                     float progress = (float) player.getItemUseTime() / max;
                     float angle_coef = MathHelper.sin(ExcavationBlock.MAX_BRUSHING_LEVELS * progress * 3.1415927F);
 

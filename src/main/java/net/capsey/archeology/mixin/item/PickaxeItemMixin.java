@@ -1,4 +1,4 @@
-package net.capsey.archeology.mixin;
+package net.capsey.archeology.mixin.item;
 
 import org.spongepowered.asm.mixin.Mixin;
 

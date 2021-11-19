@@ -1,4 +1,4 @@
-package net.capsey.archeology.mixin;
+package net.capsey.archeology.mixin.item;
 
 import java.util.ArrayList;
 import java.util.Arrays;
