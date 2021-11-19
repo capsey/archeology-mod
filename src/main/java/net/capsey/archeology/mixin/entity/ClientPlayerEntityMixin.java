@@ -26,8 +26,8 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
 	private int currentStage = 0;
     private BlockPos brushingPos;
 
-    private static final float[] REGULAR_BREAK_DELTAS = { 0.03F, 0.03F, 0.04F, 0.05F, 0.06F };
-    private static final float[] REGULAR_REPAIR_DELTAS = { -0.015F, -0.015F, -0.01F, -0.007F, -0.005F };
+    private static final float[] REGULAR_BREAK_DELTAS = { 0.3F, 0.3F, 0.4F, 0.5F, 0.6F };
+    private static final float[] REGULAR_REPAIR_DELTAS = { -0.15F, -0.15F, -0.1F, -0.07F, -0.05F };
 
     private static final double[] BREAK_THRESHOLD = { 5.0E-6, 1.0E-5, 2.0E-5, 5.0E-5, 1.0E-4 };
 
@@ -36,7 +36,7 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
             int i = CopperBrushItem.getOxidizationIndex(item) + (difficulty.getId() / 2);
             return (change > BREAK_THRESHOLD[i] ? REGULAR_REPAIR_DELTAS : REGULAR_BREAK_DELTAS)[i];
         } else {
-            return change > 1.0E-6 ? 0.05F : -0.002F;
+            return change > 1.0E-6 ? 0.5F : -0.02F;
         }
     }
 
@@ -56,13 +56,14 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
                     Vec3d prevLookDir = Vec3d.fromPolar(player.prevPitch, player.prevHeadYaw);
                     double change = prevLookDir.squaredDistanceTo(lookDir);
 
-                    float breakDelta = getBreakDelta(change, player.getActiveItem(), client.world.getDifficulty(), config.mojangExcavationBreaking);
-                    breakingProgress = Math.max(breakingProgress + breakDelta, 0);
-                    int stage = (int) (breakingProgress * 10) - 1;
+                    breakingProgress += getBreakDelta(change, player.getActiveItem(), client.world.getDifficulty(), config.mojangExcavationBreaking);
 
-                    if (currentStage != stage) {
-                        client.world.sendPacket(new ExcavationBreakingC2SPacket(stage));
-                        currentStage = stage;
+                    if (breakingProgress >= 1.0F) {
+                        client.world.sendPacket(new ExcavationBreakingC2SPacket(++currentStage));
+                        breakingProgress = 0.0F;
+                    } else if (breakingProgress <= -1.0F) {
+                        client.world.sendPacket(new ExcavationBreakingC2SPacket(--currentStage));
+                        breakingProgress = 0.0F;
                     }
 
                     return;
