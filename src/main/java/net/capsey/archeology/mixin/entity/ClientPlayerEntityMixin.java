@@ -26,15 +26,17 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
 	private int currentStage = 0;
     private BlockPos brushingPos;
 
-    private static final float[] REGULAR_BREAK_DELTAS = { 0.02F, 0.03F, 0.04F, 0.05F, 0.06F };
-    private static final float[] REGULAR_REPAIR_DELTAS = { -0.02F, -0.02F, -0.01F, -0.01F, -0.005F };
+    private static final float[] REGULAR_BREAK_DELTAS = { 0.03F, 0.03F, 0.04F, 0.05F, 0.06F };
+    private static final float[] REGULAR_REPAIR_DELTAS = { -0.015F, -0.015F, -0.01F, -0.007F, -0.005F };
+
+    private static final double[] BREAK_THRESHOLD = { 5.0E-6, 1.0E-5, 2.0E-5, 5.0E-5, 1.0E-4 };
 
     private static float getBreakDelta(double change, ItemStack item, Difficulty difficulty, boolean mojang) {
         if (!mojang) {
             int i = CopperBrushItem.getOxidizationIndex(item) + (difficulty.getId() / 2);
-            return (change > 0.000001D ? REGULAR_REPAIR_DELTAS : REGULAR_BREAK_DELTAS)[i];
+            return (change > BREAK_THRESHOLD[i] ? REGULAR_REPAIR_DELTAS : REGULAR_BREAK_DELTAS)[i];
         } else {
-            return change > 0.000001D ? 0.05F : -0.002F;
+            return change > 1.0E-6 ? 0.05F : -0.002F;
         }
     }
 
