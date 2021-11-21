@@ -83,7 +83,6 @@ public class ExcavationBlock extends BlockWithEntity {
                         world.setBlockState(pos, state.with(ExcavationBlock.BRUSHING_LEVEL, i + 1), NOTIFY_LISTENERS);
                     }
 
-                    entity.get().aestheticTick();
                     world.getBlockTickScheduler().schedule(pos, this, 1);
                     return;
                 } else {

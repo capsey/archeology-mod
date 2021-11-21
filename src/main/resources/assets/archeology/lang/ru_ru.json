@@ -1,5 +1,5 @@
 {
-    "item.archeology.copper_brush": "Медная кисть",
+    "item.archeology.copper_brush": "Медная щетка",
 
     "item.archeology.ender_dragon_shard": "Керамический осколок",
     "item.archeology.ender_dragon_shard.desc": "Дракон Края",
@@ -24,13 +24,24 @@
 
     "text.autoconfig.archeology.title": "Archeology Mod Config",
 
-    "text.autoconfig.archeology.option.stopUsingAfterBrushing": "Перестать использовать после раскопки кистью",
-    "text.autoconfig.archeology.option.stopUsingAfterBrushing.@Tooltip[0]": "Если включен, при остановке раскопки будет отпущена клавиша использования.",
-    "text.autoconfig.archeology.option.stopUsingAfterBrushing.@Tooltip[1]": "Например, если блок раскопки был разрушен или раскопка успешно завершилась.",
-
     "text.autoconfig.archeology.option.mojangExcavationBreaking": "Разрушение блока раскопок от Mojang",
     "text.autoconfig.archeology.option.mojangExcavationBreaking.@Tooltip[0]": "Если включен, разрушение блока раскопок будет таким же, как и на",
     "text.autoconfig.archeology.option.mojangExcavationBreaking.@Tooltip[1]": "Minecraft Live 2020, т.е. нужно будет быть терпеливым во время раскопки.",
 
-    "stat.archeology.excavated": "Успешно очищенных блоков"
+    "text.autoconfig.archeology.option.thresholdCoef": "Коэффициент порога разрушения",
+    "text.autoconfig.archeology.option.thresholdCoef.@Tooltip[0]": "Определяет чувствительность к движению камеры во время раскопки щеткой.",
+    "text.autoconfig.archeology.option.thresholdCoef.@Tooltip[1]": "В процентах, чем больше тем сложнее.",
+
+    "text.autoconfig.archeology.option.breakingSpeed": "Коэффициент скорости разрушение",
+    "text.autoconfig.archeology.option.breakingSpeed.@Tooltip[0]": "Определяет скорость разрушения Блока Раскопок во время раскопки щеткой.",
+    "text.autoconfig.archeology.option.breakingSpeed.@Tooltip[1]": "В процентах, чем больше тем сложнее.",
+
+    "text.autoconfig.archeology.option.repairingSpeed": "Коэффициент скорости восстановления",
+    "text.autoconfig.archeology.option.repairingSpeed.@Tooltip[0]": "Определяет скорость восстановления Блока Раскопок во время раскопки щеткой.",
+    "text.autoconfig.archeology.option.repairingSpeed.@Tooltip[1]": "В процентах, чем больше тем проще.",
+
+    "stat.archeology.excavated": "Успешно очищенных блоков",
+
+    "advancements.archeology.root.title": "Археология",
+    "advancements.archeology.root.description": "Археология и раскопки"
 }

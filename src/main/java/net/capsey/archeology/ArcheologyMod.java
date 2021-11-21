@@ -87,20 +87,28 @@ public class ArcheologyMod implements ModInitializer {
 
     }
 
+    public static class Sounds {
+
+        public static final Identifier BRUSHING_SOUND_ID = new Identifier("archeology:item.copper_brush.brushing");
+        public static final SoundEvent BRUSHING_SOUND_EVENT = new SoundEvent(BRUSHING_SOUND_ID);
+
+    }
+
+    // Block Tags
     public static final Tag<Block> CLAY_POTS_TAG = TagFactory.BLOCK.create(new Identifier("archeology", "clay_pots"));
     public static final Tag<Block> CLAY_POT_PLANTABLE_TAG = TagFactory.BLOCK.create(new Identifier("archeology", "clay_pot_plantable"));
 
+    // Loot context type for Fossil Container
     public static final LootContextType EXCAVATION_LOOT_CONTEXT_TYPE = createLootContextType(builder -> {
 		builder.require(LootContextParameters.TOOL)
         .allow(LootContextParameters.THIS_ENTITY)
         .allow(LootContextParameters.BLOCK_ENTITY);
 	});
 
-    public static final Identifier BRUSHING_SOUND_ID = new Identifier("archeology:item.copper_brush.brushing");
-    public static final SoundEvent BRUSHING_SOUND_EVENT = new SoundEvent(BRUSHING_SOUND_ID);
-
+    // Player Statistics
     public static final Identifier EXCAVATED = new Identifier("archeology", "excavated");
 
+    // S2C Network Packet ID
     public static final Identifier START_BRUSHING = new Identifier("archeology", "start_brushing");
 
     @Override
@@ -110,7 +118,7 @@ public class ArcheologyMod implements ModInitializer {
         Blocks.onInitialize();
         BlockEntities.onInitialize();
         
-        Registry.register(Registry.SOUND_EVENT, BRUSHING_SOUND_ID, BRUSHING_SOUND_EVENT);
+        Registry.register(Registry.SOUND_EVENT, Sounds.BRUSHING_SOUND_ID, Sounds.BRUSHING_SOUND_EVENT);
         Registry.register(Registry.CUSTOM_STAT, "excavated", EXCAVATED);
         Stats.CUSTOM.getOrCreateStat(EXCAVATED, StatFormatter.DEFAULT);
     }

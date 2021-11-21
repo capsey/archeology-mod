@@ -1,5 +1,6 @@
 package net.capsey.archeology.items;
 
+import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
 import net.capsey.archeology.entity.ExcavatorPlayerEntity;
 import net.minecraft.block.Block;
@@ -10,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.UseAction;
@@ -60,13 +62,19 @@ public class CopperBrushItem extends Item {
 
 	@Override
 	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-		int brushTicks = CopperBrushItem.getBrushTicks(user.getActiveItem());
+		if (!world.isClient) {
+			int brushTicks = CopperBrushItem.getBrushTicks(user.getActiveItem());
 
-		if (!world.isClient && remainingUseTicks % brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty()) == 0) {
-			int damage = world.getRandom().nextInt(2);
-			stack.damage(damage, user, p -> 
-				p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
-			);
+			if (remainingUseTicks % brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty()) == 0) {
+				int damage = world.getRandom().nextInt(2);
+				stack.damage(damage, user, p -> 
+					p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
+				);
+			}
+
+			if (remainingUseTicks % brushTicks == 0) {
+				world.playSound(null, user.getBlockPos(), ArcheologyMod.Sounds.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1f, 1f);
+			}
 		}
 	}
 

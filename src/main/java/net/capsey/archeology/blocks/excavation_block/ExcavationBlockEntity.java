@@ -7,8 +7,6 @@ import net.capsey.archeology.items.CopperBrushItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
@@ -32,14 +30,6 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
 
     public boolean isTime(Difficulty difficulty) {
         return brushingPlayer.getItemUseTime() % (brushTicks * ExcavationBlock.getBrushTicksPerLayer(difficulty)) == 0;
-    }
-
-    public void aestheticTick() {
-        if (brushingPlayer.getItemUseTime() % brushTicks == 0) {
-            BlockSoundGroup soundGroup = getCachedState().getSoundGroup();
-            world.playSound(null, pos, soundGroup.getBreakSound(), SoundCategory.BLOCKS, 0.3F * soundGroup.getVolume(), soundGroup.getPitch());
-            world.playSound(null, pos, ArcheologyMod.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1f, 1f);
-        }
     }
 
     public boolean brushingCheck() {

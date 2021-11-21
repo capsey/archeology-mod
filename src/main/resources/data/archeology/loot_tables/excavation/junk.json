@@ -2,14 +2,14 @@
     "type": "archeology:excavation",
     "pools": [{
         "rolls": 1.0,
-        "bonus_rolls": 0.5,
+        "bonus_rolls": 0.1,
         "entries": [
             {
                 "type": "minecraft:item",
                 "name": "minecraft:rotten_flesh",
                 "functions": [{
                     "function": "set_count",
-                    "count": { "min": 3, "max": 6 }
+                    "count": { "min": 2, "max": 4 }
                 }]
             },
             {
@@ -17,7 +17,7 @@
                 "name": "minecraft:bone",
                 "functions": [{
                     "function": "set_count",
-                    "count": { "min": 3, "max": 6 }
+                    "count": { "min": 2, "max": 4 }
                 }]
             },
             {
@@ -25,7 +25,7 @@
                 "name": "minecraft:coal",
                 "functions": [{
                     "function": "set_count",
-                    "count": { "min": 3, "max": 6 }
+                    "count": { "min": 2, "max": 4 }
                 }]
             },
             {
@@ -33,7 +33,7 @@
                 "name": "minecraft:clay_ball",
                 "functions": [{
                     "function": "set_count",
-                    "count": { "min": 3, "max": 6 }
+                    "count": { "min": 2, "max": 4 }
                 }]
             }
         ]

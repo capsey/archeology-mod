@@ -18,7 +18,6 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.Difficulty;
 
 @Mixin(ClientPlayerEntity.class)
 public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
@@ -27,18 +26,26 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
 	private int currentStage = 0;
     private BlockPos brushingPos;
 
-    private static final float[] REGULAR_BREAK_DELTAS = { 0.3F, 0.3F, 0.4F, 0.5F, 0.6F };
-    private static final float[] REGULAR_REPAIR_DELTAS = { -0.15F, -0.15F, -0.1F, -0.07F, -0.05F };
+    private static final float[] REGULAR_BREAK_DELTAS = { 0.3F, 0.3F, 0.4F, 0.5F };
+    private static final float[] REGULAR_REPAIR_DELTAS = { -0.15F, -0.15F, -0.1F, -0.07F };
 
-    private static final double[] BREAK_THRESHOLD = { 5.0E-6, 1.0E-5, 2.0E-5, 5.0E-5, 1.0E-4 };
+    private static final double[] BREAK_THRESHOLD = { 5.0E-6, 1.0E-5, 2.0E-5, 5.0E-5 };
 
-    private static float getBreakDelta(double change, ItemStack item, Difficulty difficulty, boolean mojang) {
+    private static float getBreakDelta(double change, ItemStack item, boolean mojang) {
+        ModConfig config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+        float value;
+        boolean moved;
+
         if (!mojang) {
-            int i = CopperBrushItem.getOxidizationIndex(item) + (difficulty.getId() / 2);
-            return (change > BREAK_THRESHOLD[i] ? REGULAR_REPAIR_DELTAS : REGULAR_BREAK_DELTAS)[i];
+            int i = CopperBrushItem.getOxidizationIndex(item);
+            moved = change > (BREAK_THRESHOLD[i] * config.getThresholdCoef());
+            value = (moved ? REGULAR_REPAIR_DELTAS : REGULAR_BREAK_DELTAS)[i];
         } else {
-            return change > 1.0E-7 ? 0.7F : -0.04F;
+            moved = change > 0;
+            value = moved ? 0.7F : -0.04F;
         }
+
+        return value * config.getBreakDeltaCoef(moved);
     }
 
     @Inject(method = "tick()V", at = @At("TAIL"))
@@ -57,7 +64,7 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
                     Vec3d prevLookDir = Vec3d.fromPolar(player.prevPitch, player.prevHeadYaw);
                     double change = prevLookDir.squaredDistanceTo(lookDir);
 
-                    breakingProgress += getBreakDelta(change, player.getActiveItem(), client.world.getDifficulty(), config.mojangExcavationBreaking);
+                    breakingProgress += getBreakDelta(change, player.getActiveItem(), config.mojangExcavationBreaking);
 
                     if (breakingProgress >= 1.0F) {
                         client.world.sendPacket(new ExcavationBreakingC2SPacket(++currentStage));
