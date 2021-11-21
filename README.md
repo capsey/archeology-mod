@@ -3,6 +3,10 @@ Archeology Mod is a [Fabric](https://fabricmc.net/) mod for [Minecraft](https://
 
 This is my first-ever mod, so don't expect too stable experience or sensible code. If you found a bug, or have a suggestion, advice, please create a [GitHub Issue](https://github.com/capsey/archeology-mod/issues) or message me on Discord.
 
+![Fancy screenie](https://i.ibb.co/TLVfRy7/2021-11-20-21-05-28.png "Fancy screenie")
+
+*The mod requires [Cloth Config API (Fabric)](https://github.com/shedaniel/cloth-config) and [Fabric API](https://github.com/FabricMC/fabric) to work! Also, this is recommended to use [Mod Menu](https://github.com/TerraformersMC/ModMenu) to easily edit mod's config.*
+
 ## What is the Archeology System?
 Archeology was firstly introduced at [Minecraft Live 2020](https://youtu.be/DWZIfsaIgtE?t=7229), but was later [delayed from 1.17](https://youtu.be/6YgKUZnUyak?t=285) Caves and Cliffs Update. Officially announced features of the Archeology System:
 * [Excavation Dig Sites](https://minecraft-archive.fandom.com/wiki/Excavation_Sites) (structures)
@@ -20,13 +24,17 @@ Copper Brush is a new tool, used for excavating special blocks for getting loot.
 * Less durability left on a brush, more oxidized it gets, until it breaks.
 * More oxidized brush is, rarer loot you get (similar to [Luck of the Sea](https://minecraft.fandom.com/wiki/Luck_of_the_Sea) enchantment), but harder to control brushing.
 
+![Excavation Gravel (Diamond)](https://i.ibb.co/HVbt1M1/2021-11-20-20-46-24.png "Excavation Gravel (Diamond)")
+
 ### Brushing Excavation Blocks
 New block type — Excavation Block! Currently, there are two excavation blocks in the mod: Excavation Dirt and Gravel, since this is two blocks that was shown to be able to be brushed by Mojang.
 * They look like regular block (e.g., Dirt or Gravel), but you can use a Copper Brush on it to start brushing its layers off.
 * When fully brushed off, the block drops random loot (depending on excavation site you found it, and oxidation level of the brush)
-While brushing, you should move your camera to stop the block from breaking. If you don't move enough, the block will break eventually, and you won't get anything. The more oxidized your brush is, the faster the block breaks, and therefore faster you need to move.
+* While brushing, you should move your camera to stop the block from breaking. If you don't move enough, the block will break eventually, and you won't get anything. The more oxidized your brush is, the faster the block breaks, and therefore faster you need to move.
 	
 	> Actually, Mojang showed this feature as completely opposite: if you move your screen too much, the block will break. You can enable this instead, if you prefer it more than mine.
+
+![Excavation Dirt (Breaking)](https://i.ibb.co/XCPcrDW/2021-11-20-20-46-50.png "Excavation Dirt (Breaking)")
 
 ### Ceramic Shards
 Ceramic Shards are items, that are dropped from brushing the Excavation Blocks. You can place them on the Raw Clay Pot, so that when hardened, this pot will remain placed shards and have pretty drawing on it.
@@ -37,12 +45,16 @@ This is block, that used to make (Hardened) Clay Pot. It is made of 5 [Clay Ball
 * You can put up to 8 shards on one raw clay pot: 4 on the sides and 4 on the corners.
 * If you light up a fire or a campfire underneath it, it will harden after some time and become a Clay Pot.
 
+![Hardening the Raw Clat Pot (1)](https://i.ibb.co/47R9Q0b/2021-11-20-21-10-34.png "Hardening the Raw Clat Pot (1)")
+
 ### Clay Pots (AKA Hardened Clay Pots)
 This is a container block, that have 9 item slots (shards contained separately). The player cannot interact with this container in any way, and should rather use a hopper or a dropper to insert items. However, after inserting, there's no way to get these items back without breaking the pot. Think about it like a [Piggy Bank](https://en.wikipedia.org/wiki/Piggy_bank).
 * Clay Pots are [Gravity-Affected Blocks](https://minecraft.fandom.com/wiki/Falling_Block), and preserve inserted items after landing. This makes it sorta-movable container block.
 * If a Clay Pot don't find a place to land (like [sand landed on a torch](https://minecraft.fandom.com/wiki/Falling_Block#Behavior)), or despawn over time, it will break and pop all items in it, without block itself.
 
-## Unimplemented Features
+![Hardening the Raw Clat Pot (2)](https://i.ibb.co/NVNzLrb/2021-11-20-21-10-37.png "Hardening the Raw Clat Pot (2)")
+
+## Unimplemented Features (yet)
 * Dyeing the Clay Pots (separate from Ceramic Shards)
 * Copper Brush enchantments
 * Advancements
