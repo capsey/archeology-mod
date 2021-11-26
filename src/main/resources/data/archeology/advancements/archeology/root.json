@@ -1,7 +1,7 @@
 {
 	"display": {
 		"icon": {
-			"item": "archeology:copper_brush"
+			"item": "archeology:excavation_dirt"
 		},
 		"title": {
 			"translate": "advancements.archeology.root.title"

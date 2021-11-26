@@ -43,5 +43,8 @@
     "stat.archeology.excavated": "Succesfully Excavated Blocks",
 
     "advancements.archeology.root.title": "Archeology",
-    "advancements.archeology.root.description": "Archeology and excavation"
+    "advancements.archeology.root.description": "Archeology and excavation",
+
+    "advancements.archeology.dragon_shard.title": "Foreshadowing",
+    "advancements.archeology.dragon_shard.description": "Eery drawing of a giant creature"
 }
