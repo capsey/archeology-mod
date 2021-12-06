@@ -1,6 +1,7 @@
 package net.capsey.archeology.blocks.clay_pot.client;
 
 import net.capsey.archeology.ArcheologyClientMod;
+import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -24,8 +25,8 @@ public class ClayPotBlockEntityRenderer<T extends ShardsContainer> extends Shard
 	public static final Identifier CLAY_POTS_ATLAS_TEXTURE = new Identifier("textures/atlas/shards.png");
 
 	public static final SpriteIdentifier[] MODEL_TEXTURES = { 
-		new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier("archeology", "entity/clay_pot")),
-		new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier("archeology", "entity/raw_clay_pot"))
+		new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MODID, "entity/clay_pot")),
+		new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MODID, "entity/raw_clay_pot"))
 	};
 	
 	private final ModelPart base;

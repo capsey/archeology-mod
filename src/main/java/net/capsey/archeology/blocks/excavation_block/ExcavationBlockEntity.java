@@ -17,7 +17,7 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
     private int brushTicks;
 
     public ExcavationBlockEntity(BlockPos pos, BlockState state) {
-        super(pos, state, new Identifier("archeology", "excavation/excavation_site"));
+        super(pos, state, new Identifier(ArcheologyMod.MODID, "excavation/excavation_site"));
     }
 
     public void startBrushing(PlayerEntity player, ItemStack stack) {

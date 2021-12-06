@@ -4,7 +4,7 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
-@Config(name = "archeology")
+@Config(name = ArcheologyMod.MODID)
 public class ModConfig implements ConfigData {
 
     @ConfigEntry.Gui.Tooltip(count = 2)
