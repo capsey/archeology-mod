@@ -95,16 +95,16 @@ public class ArcheologyMod implements ModInitializer {
         public static BlockEntityType<ClayPotBlockEntity> CLAY_POT_BLOCK_ENTITY;
 
         public static void onInitialize() {
-            EXCAVATION_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, "archeology:excavation_block_entity", FabricBlockEntityTypeBuilder.create(ExcavationBlockEntity::new, Blocks.EXCAVATION_DIRT, Blocks.EXCAVATION_GRAVEL).build(null));
-            RAW_CLAY_POT_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, "archeology:raw_clay_pot_block_entity", FabricBlockEntityTypeBuilder.create(RawClayPotBlockEntity::new, Blocks.RAW_CLAY_POT).build(null));
-            CLAY_POT_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, "archeology:clay_pot_block_entity", FabricBlockEntityTypeBuilder.create(ClayPotBlockEntity::new, Blocks.CLAY_POT).build(null));
+            EXCAVATION_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MODID + ":excavation_block_entity", FabricBlockEntityTypeBuilder.create(ExcavationBlockEntity::new, Blocks.EXCAVATION_DIRT, Blocks.EXCAVATION_GRAVEL).build(null));
+            RAW_CLAY_POT_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MODID + ":raw_clay_pot_block_entity", FabricBlockEntityTypeBuilder.create(RawClayPotBlockEntity::new, Blocks.RAW_CLAY_POT).build(null));
+            CLAY_POT_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MODID + ":clay_pot_block_entity", FabricBlockEntityTypeBuilder.create(ClayPotBlockEntity::new, Blocks.CLAY_POT).build(null));
         }
 
     }
 
     public static class Sounds {
 
-        public static final Identifier BRUSHING_SOUND_ID = new Identifier("archeology:item.copper_brush.brushing");
+        public static final Identifier BRUSHING_SOUND_ID = new Identifier(MODID + ":item.copper_brush.brushing");
         public static final SoundEvent BRUSHING_SOUND_EVENT = new SoundEvent(BRUSHING_SOUND_ID);
 
     }
@@ -117,18 +117,17 @@ public class ArcheologyMod implements ModInitializer {
 
         public static void onInitialize() {
             FabricStructureBuilder.create(new Identifier(MODID, "excavation_site"), EXCAVATION_SITE)
-                .step(GenerationStep.Feature.SURFACE_STRUCTURES)
-                .defaultConfig(new StructureConfig(10, 5, 399117345))
-                .superflatFeature(EXCAVATION_SITE.configure(FeatureConfig.DEFAULT))
-                .adjustsSurface()
-                .register();
+                    .step(GenerationStep.Feature.SURFACE_STRUCTURES)
+                    .defaultConfig(new StructureConfig(10, 5, 399117345))
+                    .superflatFeature(EXCAVATION_SITE.configure(FeatureConfig.DEFAULT))
+                    .adjustsSurface()
+                    .register();
 
             RegistryKey<ConfiguredStructureFeature<?, ?>> excavationSite = RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY, new Identifier(MODID, "excavation_site"));
             Registry.register(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, excavationSite.getValue(), CONFIGURED_EXCAVATION_SITE);
 
             // Jesus Christ, I hate VS Code's deprecated code warning
-            BiomeModifications.create(new Identifier(MODID, "excavation_site_addition"))
-                .add(ModificationPhase.ADDITIONS,
+            BiomeModifications.create(new Identifier(MODID, "excavation_site_addition")).add(ModificationPhase.ADDITIONS,
                 BiomeSelectors.foundInOverworld(),
                 context -> context.getGenerationSettings().addBuiltInStructure(CONFIGURED_EXCAVATION_SITE)
             );
@@ -143,8 +142,8 @@ public class ArcheologyMod implements ModInitializer {
     // Loot context type for Fossil Container
     public static final LootContextType EXCAVATION_LOOT_CONTEXT_TYPE = createLootContextType(builder -> {
 		builder.require(LootContextParameters.TOOL)
-        .allow(LootContextParameters.THIS_ENTITY)
-        .allow(LootContextParameters.BLOCK_ENTITY);
+                .allow(LootContextParameters.THIS_ENTITY)
+                .allow(LootContextParameters.BLOCK_ENTITY);
 	});
 
     // Player Statistics
