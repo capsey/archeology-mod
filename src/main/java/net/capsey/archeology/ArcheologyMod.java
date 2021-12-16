@@ -104,7 +104,7 @@ public class ArcheologyMod implements ModInitializer {
 
     public static class Sounds {
 
-        public static final Identifier BRUSHING_SOUND_ID = new Identifier(MODID + ":item.copper_brush.brushing");
+        public static final Identifier BRUSHING_SOUND_ID = new Identifier(MODID, "item.copper_brush.brushing");
         public static final SoundEvent BRUSHING_SOUND_EVENT = new SoundEvent(BRUSHING_SOUND_ID);
 
     }
