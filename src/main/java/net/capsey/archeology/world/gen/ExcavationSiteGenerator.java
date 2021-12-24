@@ -32,12 +32,16 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 public class ExcavationSiteGenerator {
 
+	static final Identifier STRUCTURE_TOP_ID = new Identifier(ArcheologyMod.MODID, "ancient_ruins/ancient_ruins_top");
 	static final Identifier STRUCTURE_ID = new Identifier(ArcheologyMod.MODID, "ancient_ruins/ancient_ruins_1");
-	static final BlockPos GENERATION_OFFSET = new BlockPos(0, -9, 0);
-	static final int UP_SCAN_LIMIT = 12;
+
+	static final int UP_SCAN_LIMIT = 10;
+	static final BlockPos STRUCTURE_TOP_OFFSET = new BlockPos(2, 0, 1);
+	static final BlockPos STRUCTURE_OFFSET = new BlockPos(0, -UP_SCAN_LIMIT, 0);
 
 	public static void addPieces(StructureManager manager, BlockPos pos, BlockRotation rotation, StructurePiecesHolder structurePiecesHolder, Random random) {
 		structurePiecesHolder.addPiece(new ExcavationSiteGenerator.Piece(manager, STRUCTURE_ID, pos, rotation));
+		structurePiecesHolder.addPiece(new ExcavationSiteGenerator.Piece(manager, STRUCTURE_TOP_ID, pos.add(STRUCTURE_TOP_OFFSET.rotate(rotation)), rotation));
 	}
 
 	public static class Piece extends SimpleStructurePiece {
@@ -80,19 +84,21 @@ public class ExcavationSiteGenerator {
 
 		@Override
 		public boolean generate(StructureWorldAccess world, StructureAccessor accessor, ChunkGenerator generator, Random random, BlockBox box, ChunkPos chunkPos, BlockPos pos) {
-			// Moving underground (here because if at adding a piece, terrain will adjust)
-			this.pos = this.pos.add(GENERATION_OFFSET);
-			this.placementData.setBoundingBox(boundingBox);
-			this.boundingBox = this.structure.calculateBoundingBox(this.placementData, this.pos);
+			if (!STRUCTURE_TOP_ID.toString().equals(this.identifier)) {
+				// Moving underground (here because if at adding a piece, terrain will adjust)
+				this.pos = this.pos.add(STRUCTURE_OFFSET);
+				this.placementData.setBoundingBox(boundingBox);
+				this.boundingBox = this.structure.calculateBoundingBox(this.placementData, this.pos);
 
-			// Replacing some blocks to Excavation Block
-			BlockPos start = new BlockPos(this.boundingBox.getMinX(), this.boundingBox.getMinY() - 1, this.boundingBox.getMinZ());
-			BlockPos end = new BlockPos(this.boundingBox.getMaxX(), this.boundingBox.getMinY() - 1, this.boundingBox.getMaxZ());
-			Iterator<BlockPos> iterator = BlockPos.iterate(start, end).iterator();
+				// Replacing some blocks to Excavation Block
+				BlockPos start = new BlockPos(this.boundingBox.getMinX(), this.boundingBox.getMinY() - 1, this.boundingBox.getMinZ());
+				BlockPos end = new BlockPos(this.boundingBox.getMaxX(), this.boundingBox.getMinY() - 1, this.boundingBox.getMaxZ());
+				Iterator<BlockPos> iterator = BlockPos.iterate(start, end).iterator();
 
-			while (iterator.hasNext()) {
-				BlockPos current = iterator.next();
-				this.upScan(world, current, random);
+				while (iterator.hasNext()) {
+					BlockPos current = iterator.next();
+					this.upScan(world, current, random);
+				}
 			}
 
 			// Spawning structure
@@ -100,20 +106,28 @@ public class ExcavationSiteGenerator {
 		}
 
 		private void upScan(StructureWorldAccess world, BlockPos pos, Random random) {
-			// Iterate over 20 blocks upwards
-			for (int i = 0; i <= UP_SCAN_LIMIT; i++) {
+			// Find surface level
+			int n = UP_SCAN_LIMIT;
+
+			for (int i = 1; i <= UP_SCAN_LIMIT; i++) {
 				BlockPos p = pos.add(0, i, 0);
 				BlockState state = world.getBlockState(p);
 				
-				// Stop at surface
 				if (state.isAir()) {
+					n = i;
 					break;
 				}
+			}
 
-				// Closer to the limit, greater chance to replace
-				float chance = 1.0F / (1 + UP_SCAN_LIMIT - i);
+			float hn = n / (2.0F - 0.5F);
 
-				if (canReplaceWithExcavationBlock(state) && random.nextFloat() < chance) {
+			// Replace until surface
+			for (int i = 0; i <= n; i++) {
+				BlockPos p = pos.add(0, i, 0);
+				BlockState state = world.getBlockState(p);
+				float chance = (i == n) ? 1 : Math.abs((i - hn) / hn);
+
+				if (canReplaceWithExcavationBlock(state) && random.nextFloat() < chance * 0.8F) {
 					// Placing block and configuring its loot table
 					BlockState newState = (state.isOf(Blocks.STONE) ? ArcheologyMod.Blocks.EXCAVATION_GRAVEL : ArcheologyMod.Blocks.EXCAVATION_DIRT).getDefaultState();
 					world.setBlockState(p, newState, Block.NOTIFY_LISTENERS);
