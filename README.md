@@ -56,9 +56,9 @@ This is a container block, that have 9 item slots (shards contained separately).
 ![Hardening the Raw Clat Pot (2)](https://i.ibb.co/k0K92yB/hardening-1.png "Hardening the Raw Clat Pot (2)")
 
 ### Excavation Sites
-Excavation Sites are structures in where you can find Excavation Blocks. This is only place where these blocks spawn naturally and where you can find them in Survival. Currently there is only one type of Excavation Site - Ancient Ruins. You can find them in such biomes as Plains, Savanna, Desert, Forest, Birch Forest and Taiga.
+Excavation Sites are structures in where you can find Excavation Blocks. This is the only place where these blocks spawn naturally and where you can find them in Survival. Currently there is only one type of Excavation Site - Ancient Ruins. You can find them in such biomes as Plains, Savanna, Desert, Forest, Birch Forest and Taiga.
 
-When you enter any Excavation Site you get an advancement called "Forgotten Legacy".
+When you enter any Excavation Site, you get an advancement called "Forgotten Legacy".
 
 ## Unimplemented Features (yet)
 * Dyeing the Clay Pots (separate from Ceramic Shards)
