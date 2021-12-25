@@ -121,25 +121,37 @@ public class AncientRuinsGenerator {
 
 			// Replace until surface
 			for (int i = 0; i <= n; i++) {
-				BlockPos p = pos.add(0, i, 0);
-				BlockState state = world.getBlockState(p);
 				float chance = (i == n) ? 1 : Math.abs((i - hn) / hn);
 
-				if (canReplaceWithExcavationBlock(state) && random.nextFloat() < chance * 0.6F) {
-					// Placing block and configuring its loot table
-					BlockState newState = (state.isOf(Blocks.STONE) ? ArcheologyMod.Blocks.EXCAVATION_GRAVEL : ArcheologyMod.Blocks.EXCAVATION_DIRT).getDefaultState();
-					world.setBlockState(p, newState, Block.NOTIFY_LISTENERS);
-					BlockEntity blockEntity = world.getBlockEntity(p);
-					
-					if (blockEntity instanceof ExcavationBlockEntity excEntity) {
-						excEntity.setLootTable(ExcavationBlockEntity.DEFAULT_LOOT_TABLE);
-					}
+				if (random.nextFloat() < chance * 0.6F) {
+					tryPlaceExcavationBlock(world, pos.add(0, i, 0), random);
 				}
 			}
 		}
 
-		private static boolean canReplaceWithExcavationBlock(BlockState state) {
-			return state.isOpaque() && !state.isOf(Blocks.OBSIDIAN) && !state.isIn(BlockTags.FEATURES_CANNOT_REPLACE);
+		private static boolean canReplaceWithExcavationBlock(BlockState state, StructureWorldAccess world, BlockPos pos) {
+			return state.isSolidBlock(world, pos) && !state.isOf(Blocks.OBSIDIAN) && !state.isIn(BlockTags.FEATURES_CANNOT_REPLACE);
+		}
+
+		private static void tryPlaceExcavationBlock(StructureWorldAccess world, BlockPos pos, Random random) {
+			BlockState state = world.getBlockState(pos);
+			
+			if (canReplaceWithExcavationBlock(state, world, pos)) {
+				boolean exc = random.nextFloat() < 0.5F;
+				BlockState newState;
+
+				if (state.isOf(Blocks.STONE)) {
+					newState = (exc ? ArcheologyMod.Blocks.EXCAVATION_GRAVEL : Blocks.TUFF).getDefaultState();
+				} else {
+					newState = (exc ? ArcheologyMod.Blocks.EXCAVATION_DIRT : Blocks.COARSE_DIRT).getDefaultState();
+				}
+				
+				world.setBlockState(pos, newState, Block.NOTIFY_LISTENERS);
+				
+				if (exc && world.getBlockEntity(pos) instanceof ExcavationBlockEntity excEntity) {
+					excEntity.setLootTable(ExcavationBlockEntity.DEFAULT_LOOT_TABLE);
+				}
+			}
 		}
 
 	}
