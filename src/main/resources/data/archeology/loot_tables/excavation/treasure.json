@@ -1,8 +1,8 @@
 {
     "type": "archeology:excavation",
     "pools": [{
-        "rolls": 1.0,
-        "bonus_rolls": 0.1,
+        "rolls": 0.2,
+        "bonus_rolls": 0.2,
         "entries": [
             {
                 "type": "minecraft:item",

@@ -1,5 +1,5 @@
 {
-	"parent": "archeology:archeology/root",
+	"parent": "archeology:archeology/find_ruins",
 	"display": {
 		"icon": {
 			"item": "archeology:ender_dragon_shard"
