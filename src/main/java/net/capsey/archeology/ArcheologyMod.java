@@ -1,5 +1,6 @@
 package net.capsey.archeology;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlock;
@@ -11,10 +12,10 @@ import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.capsey.archeology.blocks.excavation_block.FallingExcavationBlock;
 import net.capsey.archeology.items.CeramicShards;
 import net.capsey.archeology.items.CopperBrushItem;
-import net.capsey.archeology.world.gen.ExcavationSiteFeature;
+import net.capsey.archeology.world.gen.AncientRuinsFeature;
+import net.capsey.archeology.world.gen.AncientRuinsGenerator;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -32,11 +33,14 @@ import net.minecraft.loot.context.LootContextType;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.StatFormatter;
 import net.minecraft.stat.Stats;
+import net.minecraft.structure.StructurePieceType;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.chunk.StructureConfig;
 import net.minecraft.world.gen.feature.ConfiguredStructureFeature;
@@ -111,25 +115,27 @@ public class ArcheologyMod implements ModInitializer {
 
     public static class Features {
 
-        private static final StructureFeature<DefaultFeatureConfig> EXCAVATION_SITE = new ExcavationSiteFeature(DefaultFeatureConfig.CODEC);
+        public static final StructurePieceType ANCIENT_RUINS_PIECE = Registry.register(Registry.STRUCTURE_PIECE, "aruins", AncientRuinsGenerator.Piece::new);
 
-        private static final ConfiguredStructureFeature<?, ?> CONFIGURED_EXCAVATION_SITE = EXCAVATION_SITE.configure(FeatureConfig.DEFAULT);
+        private static final StructureFeature<DefaultFeatureConfig> ANCIENT_RUINS = new AncientRuinsFeature(DefaultFeatureConfig.CODEC);
+        private static final ConfiguredStructureFeature<?, ?> CONFIGURED_ANCIENT_RUINS = ANCIENT_RUINS.configure(FeatureConfig.DEFAULT);
+
+        private static final List<RegistryKey<Biome>> ANCIENT_RUINS_BIOMES = List.of(BiomeKeys.PLAINS, BiomeKeys.SAVANNA, BiomeKeys.DESERT, BiomeKeys.FOREST, BiomeKeys.BIRCH_FOREST, BiomeKeys.TAIGA);
 
         public static void onInitialize() {
-            FabricStructureBuilder.create(new Identifier(MODID, "excavation_site"), EXCAVATION_SITE)
+            FabricStructureBuilder.create(new Identifier(MODID, "ancient_ruins"), ANCIENT_RUINS)
                     .step(GenerationStep.Feature.SURFACE_STRUCTURES)
-                    .defaultConfig(new StructureConfig(10, 5, 399117345))
-                    .superflatFeature(EXCAVATION_SITE.configure(FeatureConfig.DEFAULT))
+                    .defaultConfig(new StructureConfig(20, 8, 14357621))
+                    .superflatFeature(ANCIENT_RUINS.configure(FeatureConfig.DEFAULT))
                     .adjustsSurface()
                     .register();
 
-            RegistryKey<ConfiguredStructureFeature<?, ?>> excavationSite = RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY, new Identifier(MODID, "excavation_site"));
-            Registry.register(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, excavationSite.getValue(), CONFIGURED_EXCAVATION_SITE);
+            RegistryKey<ConfiguredStructureFeature<?, ?>> ancientRuins = RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY, new Identifier(MODID, "ancient_ruins"));
+            Registry.register(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, ancientRuins.getValue(), CONFIGURED_ANCIENT_RUINS);
 
-            // Jesus Christ, I hate VS Code's deprecated code warning
-            BiomeModifications.create(new Identifier(MODID, "excavation_site_addition")).add(ModificationPhase.ADDITIONS,
-                BiomeSelectors.foundInOverworld(),
-                context -> context.getGenerationSettings().addBuiltInStructure(CONFIGURED_EXCAVATION_SITE)
+            BiomeModifications.create(new Identifier(MODID, "ancient_ruins_addition")).add(ModificationPhase.ADDITIONS,
+                context -> ANCIENT_RUINS_BIOMES.contains(context.getBiomeKey()),
+                context -> context.getGenerationSettings().addBuiltInStructure(CONFIGURED_ANCIENT_RUINS)
             );
         }
 

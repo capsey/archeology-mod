@@ -14,7 +14,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.SimpleStructurePiece;
 import net.minecraft.structure.StructureManager;
-import net.minecraft.structure.StructurePieceType;
 import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
@@ -30,28 +29,28 @@ import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
-public class ExcavationSiteGenerator {
+public class AncientRuinsGenerator {
 
 	static final Identifier STRUCTURE_TOP_ID = new Identifier(ArcheologyMod.MODID, "ancient_ruins/ancient_ruins_top");
 	static final Identifier STRUCTURE_ID = new Identifier(ArcheologyMod.MODID, "ancient_ruins/ancient_ruins_1");
 
-	static final int UP_SCAN_LIMIT = 10;
+	static final int UP_SCAN_LIMIT = 16;
 	static final BlockPos STRUCTURE_TOP_OFFSET = new BlockPos(2, 0, 1);
-	static final BlockPos STRUCTURE_OFFSET = new BlockPos(0, -UP_SCAN_LIMIT, 0);
+	static final BlockPos STRUCTURE_OFFSET = new BlockPos(0, -12, 0);
 
 	public static void addPieces(StructureManager manager, BlockPos pos, BlockRotation rotation, StructurePiecesHolder structurePiecesHolder, Random random) {
-		structurePiecesHolder.addPiece(new ExcavationSiteGenerator.Piece(manager, STRUCTURE_ID, pos, rotation));
-		structurePiecesHolder.addPiece(new ExcavationSiteGenerator.Piece(manager, STRUCTURE_TOP_ID, pos.add(STRUCTURE_TOP_OFFSET.rotate(rotation)), rotation));
+		structurePiecesHolder.addPiece(new AncientRuinsGenerator.Piece(manager, STRUCTURE_ID, pos.add(STRUCTURE_OFFSET), rotation));
+		structurePiecesHolder.addPiece(new AncientRuinsGenerator.Piece(manager, STRUCTURE_TOP_ID, pos.add(STRUCTURE_TOP_OFFSET.rotate(rotation)), rotation));
 	}
 
 	public static class Piece extends SimpleStructurePiece {
 
 		public Piece(StructureManager manager, Identifier identifier, BlockPos pos, BlockRotation rotation) {
-			super(StructurePieceType.IGLOO, 0, manager, identifier, identifier.toString(), createPlacementData(rotation), pos);
+			super(ArcheologyMod.Features.ANCIENT_RUINS_PIECE, 0, manager, identifier, identifier.toString(), createPlacementData(rotation), pos);
 		}
 
 		public Piece(ServerWorld world, NbtCompound nbt) {
-			super(StructurePieceType.IGLOO, nbt, world, identifier ->
+			super(ArcheologyMod.Features.ANCIENT_RUINS_PIECE, nbt, world, identifier ->
 				createPlacementData(BlockRotation.valueOf(nbt.getString("Rot")))
 			);
 		}
@@ -86,7 +85,6 @@ public class ExcavationSiteGenerator {
 		public boolean generate(StructureWorldAccess world, StructureAccessor accessor, ChunkGenerator generator, Random random, BlockBox box, ChunkPos chunkPos, BlockPos pos) {
 			if (!STRUCTURE_TOP_ID.toString().equals(this.identifier)) {
 				// Moving underground (here because if at adding a piece, terrain will adjust)
-				this.pos = this.pos.add(STRUCTURE_OFFSET);
 				this.placementData.setBoundingBox(boundingBox);
 				this.boundingBox = this.structure.calculateBoundingBox(this.placementData, this.pos);
 
@@ -127,7 +125,7 @@ public class ExcavationSiteGenerator {
 				BlockState state = world.getBlockState(p);
 				float chance = (i == n) ? 1 : Math.abs((i - hn) / hn);
 
-				if (canReplaceWithExcavationBlock(state) && random.nextFloat() < chance * 0.8F) {
+				if (canReplaceWithExcavationBlock(state) && random.nextFloat() < chance * 0.6F) {
 					// Placing block and configuring its loot table
 					BlockState newState = (state.isOf(Blocks.STONE) ? ArcheologyMod.Blocks.EXCAVATION_GRAVEL : ArcheologyMod.Blocks.EXCAVATION_DIRT).getDefaultState();
 					world.setBlockState(p, newState, Block.NOTIFY_LISTENERS);
@@ -141,7 +139,7 @@ public class ExcavationSiteGenerator {
 		}
 
 		private static boolean canReplaceWithExcavationBlock(BlockState state) {
-			return !state.isOf(Blocks.OBSIDIAN) && !state.isIn(BlockTags.FEATURES_CANNOT_REPLACE);
+			return state.isOpaque() && !state.isOf(Blocks.OBSIDIAN) && !state.isIn(BlockTags.FEATURES_CANNOT_REPLACE);
 		}
 
 	}

@@ -15,15 +15,15 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 
-public class ExcavationSiteFeature extends StructureFeature<DefaultFeatureConfig> {
+public class AncientRuinsFeature extends StructureFeature<DefaultFeatureConfig> {
 
-	public ExcavationSiteFeature(Codec<DefaultFeatureConfig> codec) {
+	public AncientRuinsFeature(Codec<DefaultFeatureConfig> codec) {
 		super(codec);
 	}
 
 	@Override
 	public StructureFeature.StructureStartFactory<DefaultFeatureConfig> getStructureStartFactory() {
-		return ExcavationSiteFeature.Start::new;
+		return AncientRuinsFeature.Start::new;
 	}
 
 	public static class Start extends StructureStart<DefaultFeatureConfig> {
@@ -40,7 +40,7 @@ public class ExcavationSiteFeature extends StructureFeature<DefaultFeatureConfig
 			BlockPos blockPos = new BlockPos(pos.getStartX(), y - 1, pos.getStartZ());
 			BlockRotation rotation = BlockRotation.random(this.random);
 			
-			ExcavationSiteGenerator.addPieces(manager, blockPos, rotation, this, this.random);
+			AncientRuinsGenerator.addPieces(manager, blockPos, rotation, this, this.random);
 		}
 
 	}
