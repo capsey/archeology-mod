@@ -33,7 +33,7 @@ New block type — Excavation Block! Currently, there are two excavation blocks 
 * They look similar to regular block (e.g., Dirt or Gravel), but have white stripes, and you can use a Copper Brush on them to start brushing layers off.
 * When fully brushed off, the block drops random loot (depending on excavation site you found it, and oxidation level of the brush)
 * While brushing, you should move your camera to stop the block from breaking. If you don't move enough, the block will break eventually, and you won't get anything. The more oxidized your brush is, the faster the block breaks, and therefore faster you need to move.
-	> Actually, Mojang showed this feature as completely opposite: if you move your screen too much, the block will break. You can enable this instead, if you prefer it more than mine.
+	* Actually, Mojang showed this feature as completely opposite: if you move your screen too much, the block will break. You can enable this instead, if you prefer it more than mine.
 
 ![Excavation Dirt (Breaking)](https://i.ibb.co/QNkhBWZ/breaking.png "Excavation Dirt (Breaking)")
 
@@ -56,9 +56,13 @@ This is a container block, that have 9 item slots (shards contained separately).
 ![Hardening the Raw Clat Pot (2)](https://i.ibb.co/k0K92yB/hardening-1.png "Hardening the Raw Clat Pot (2)")
 
 ### Excavation Sites
-Excavation Sites are structures in where you can find Excavation Blocks. This is the only place where these blocks spawn naturally and where you can find them in Survival. Currently there is only one type of Excavation Site - Ancient Ruins. You can find them in such biomes as Plains, Savanna, Desert, Forest, Birch Forest and Taiga.
+Excavation Sites are structures in where you can find Excavation Blocks. This is the only place where these blocks spawn naturally and where you can find them in Survival. Currently, there is only one type of Excavation Site - Ancient Ruins. You can find them in such biomes as Plains, Savanna, Desert, Forest, Birch Forest and Taiga.
 
 When you enter any Excavation Site, you get an advancement called "Forgotten Legacy".
+
+![Top of the Ancient Ruins](https://i.ibb.co/JnQxYSf/2021-12-26-01-40-09.png "Top of the Ancient Ruins")
+
+It consists of 2 parts: Surface and Main ruins. Surface ruins are the structure you see on the picture above. They are located on the ground and indicate an Ancient Ruins underneath. Main ruins are structures buried under the Surface ones, surrounded with Excavation Blocks. You can find a Clay Pots with loot in them!
 
 ## Unimplemented Features (yet)
 * Dyeing the Clay Pots (separate from Ceramic Shards)
