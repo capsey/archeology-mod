@@ -1,6 +1,6 @@
 {
 	"textures": {
-		"0": "minecraft:block/dirt",
+		"0": "archeology:block/excavation_dirt",
 		"particle": "block/dirt"
 	},
 	"elements": [

@@ -8,12 +8,14 @@ import net.capsey.archeology.items.CopperBrushItem;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
@@ -22,6 +24,7 @@ import net.minecraft.util.math.BlockPos;
 
 public abstract class FossilContainerBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
     
+    private static final String LOOT_TABLE_TAG = "LootTable";
     private static final float[] LUCK_POINTS = { 1.0F, 2.0F, 3.0F, 4.0F };
 
     private static float getLuckPoints(ItemStack stack) {
@@ -29,10 +32,10 @@ public abstract class FossilContainerBlockEntity extends BlockEntity implements 
     }
 
     protected Identifier lootTableId;
-    protected ArrayList<ItemStack> loot = new ArrayList<ItemStack>();
+    protected ArrayList<ItemStack> loot = new ArrayList<>();
 
-    protected FossilContainerBlockEntity(BlockPos pos, BlockState state, Identifier lootTable) {
-        super(ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY, pos, state);
+    protected FossilContainerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, Identifier lootTable) {
+        super(type, pos, state);
         lootTableId = lootTable;
     }
 
@@ -40,18 +43,15 @@ public abstract class FossilContainerBlockEntity extends BlockEntity implements 
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
 
-        if (tag.contains("LootTable")) {
-            String id = tag.getString("LootTable");
-            if (!id.isBlank()) {
-                lootTableId = new Identifier(id);
-            }
+        if (tag.contains(LOOT_TABLE_TAG, NbtElement.STRING_TYPE)) {
+            lootTableId = new Identifier(tag.getString(LOOT_TABLE_TAG));
         }
     }
 
     @Override
     public NbtCompound writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
-        tag.putString("LootTable", lootTableId.toString());
+        tag.putString(LOOT_TABLE_TAG, lootTableId.toString());
  
         return tag;
     }
@@ -84,17 +84,17 @@ public abstract class FossilContainerBlockEntity extends BlockEntity implements 
             
             tag.put("Loot", nbtList);
         }
-
+        
         return writeNbt(tag);
     }
 
     public void generateLoot(PlayerEntity player, ItemStack stack) {
         if (!world.isClient) {
             LootContext.Builder builder = (new LootContext.Builder((ServerWorld)this.world))
-                .parameter(LootContextParameters.TOOL, stack)
-                .parameter(LootContextParameters.THIS_ENTITY, player)
-                .parameter(LootContextParameters.BLOCK_ENTITY, this)
-                .random(this.world.getRandom()).luck(player.getLuck() + getLuckPoints(stack));
+                    .parameter(LootContextParameters.TOOL, stack)
+                    .parameter(LootContextParameters.THIS_ENTITY, player)
+                    .parameter(LootContextParameters.BLOCK_ENTITY, this)
+                    .random(this.world.getRandom()).luck(player.getLuck() + getLuckPoints(stack));
             
             LootTable lootTable = this.world.getServer().getLootManager().getTable(lootTableId);
             List<ItemStack> list = lootTable.generateLoot(builder.build(ArcheologyMod.EXCAVATION_LOOT_CONTEXT_TYPE));

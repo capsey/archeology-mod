@@ -43,5 +43,11 @@
     "stat.archeology.excavated": "Успешно очищенных блоков",
 
     "advancements.archeology.root.title": "Археология",
-    "advancements.archeology.root.description": "Археология и раскопки"
+    "advancements.archeology.root.description": "Археология и раскопки",
+
+    "advancements.archeology.find_ruins.title": "Забытое наследие",
+    "advancements.archeology.find_ruins.description": "Найти Древние Руины",
+
+    "advancements.archeology.dragon_shard.title": "Предзнаменование",
+    "advancements.archeology.dragon_shard.description": "Подозрительный рисунок огромного существа"
 }

@@ -1,10 +1,40 @@
 {
   "variants": {
-    "brushing_level=0": { "model": "archeology:block/excavation_gravel" },
-    "brushing_level=1": { "model": "archeology:block/excavation_gravel_1" },
-    "brushing_level=2": { "model": "archeology:block/excavation_gravel_2" },
-    "brushing_level=3": { "model": "archeology:block/excavation_gravel_3" },
-    "brushing_level=4": { "model": "archeology:block/excavation_gravel_4" },
-    "brushing_level=5": { "model": "archeology:block/excavation_gravel_5" }
+    "brushing_level=0": [
+      { "model": "archeology:block/excavation_gravel" },
+      { "model": "archeology:block/excavation_gravel", "y": 90 },
+      { "model": "archeology:block/excavation_gravel", "y": 180 },
+      { "model": "archeology:block/excavation_gravel", "y": 270 }
+    ],
+    "brushing_level=1": [
+      { "model": "archeology:block/excavation_gravel_1" },
+      { "model": "archeology:block/excavation_gravel_1", "y": 90 },
+      { "model": "archeology:block/excavation_gravel_1", "y": 180 },
+      { "model": "archeology:block/excavation_gravel_1", "y": 270 }
+    ],
+    "brushing_level=2": [
+      { "model": "archeology:block/excavation_gravel_2" },
+      { "model": "archeology:block/excavation_gravel_2", "y": 90 },
+      { "model": "archeology:block/excavation_gravel_2", "y": 180 },
+      { "model": "archeology:block/excavation_gravel_2", "y": 270 }
+    ],
+    "brushing_level=3": [
+      { "model": "archeology:block/excavation_gravel_3" },
+      { "model": "archeology:block/excavation_gravel_3", "y": 90 },
+      { "model": "archeology:block/excavation_gravel_3", "y": 180 },
+      { "model": "archeology:block/excavation_gravel_3", "y": 270 }
+    ],
+    "brushing_level=4": [
+      { "model": "archeology:block/excavation_gravel_4" },
+      { "model": "archeology:block/excavation_gravel_4", "y": 90 },
+      { "model": "archeology:block/excavation_gravel_4", "y": 180 },
+      { "model": "archeology:block/excavation_gravel_4", "y": 270 }
+    ],
+    "brushing_level=5": [
+      { "model": "archeology:block/excavation_gravel_5" },
+      { "model": "archeology:block/excavation_gravel_5", "y": 90 },
+      { "model": "archeology:block/excavation_gravel_5", "y": 180 },
+      { "model": "archeology:block/excavation_gravel_5", "y": 270 }
+    ]
   }
 }

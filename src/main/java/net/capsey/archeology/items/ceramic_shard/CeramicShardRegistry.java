@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.items.CeramicShardItem;
 import net.capsey.archeology.items.CeramicShards;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -18,7 +19,7 @@ import net.minecraft.util.registry.Registry;
 public class CeramicShardRegistry {
     
     public static final ItemGroup SHARDS_ITEM_GROUP = FabricItemGroupBuilder.build(
-		new Identifier("archeology", "shards"),
+		new Identifier(ArcheologyMod.MODID, "shards"),
 		() -> new ItemStack(CeramicShards.ENDER_DRAGON)
     );
 

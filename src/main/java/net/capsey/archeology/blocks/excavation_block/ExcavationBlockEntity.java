@@ -13,11 +13,18 @@ import net.minecraft.world.Difficulty;
 
 public class ExcavationBlockEntity extends FossilContainerBlockEntity {
 
+    public static final Identifier DEFAULT_LOOT_TABLE = new Identifier(ArcheologyMod.MODID, "excavation/ancient_ruins");
+
     private PlayerEntity brushingPlayer;
     private int brushTicks;
 
     public ExcavationBlockEntity(BlockPos pos, BlockState state) {
-        super(pos, state, new Identifier("archeology", "excavation/excavation_site"));
+        super(ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY, pos, state, DEFAULT_LOOT_TABLE);
+    }
+
+    public void setLootTable(Identifier id) {
+        loot.clear();
+        this.lootTableId = id;
     }
 
     public void startBrushing(PlayerEntity player, ItemStack stack) {
