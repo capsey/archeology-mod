@@ -142,6 +142,8 @@ public class ArcheologyMod implements ModInitializer {
     }
 
     // Block Tags
+    public static final Tag<Block> EXCAVATION_BLOCKS_TAG = TagFactory.BLOCK.create(new Identifier(MODID, "excavation_blocks"));
+
     public static final Tag<Block> CLAY_POTS_TAG = TagFactory.BLOCK.create(new Identifier(MODID, "clay_pots"));
     public static final Tag<Block> CLAY_POT_PLANTABLE_TAG = TagFactory.BLOCK.create(new Identifier(MODID, "clay_pot_plantable"));
 
