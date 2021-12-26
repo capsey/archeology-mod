@@ -32,15 +32,24 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 public class AncientRuinsGenerator {
 
 	static final Identifier STRUCTURE_TOP_ID = new Identifier(ArcheologyMod.MODID, "ancient_ruins/ancient_ruins_top");
-	static final Identifier STRUCTURE_ID = new Identifier(ArcheologyMod.MODID, "ancient_ruins/ancient_ruins_1");
+	static final Identifier[] STRUCTURE_IDS = {
+		new Identifier(ArcheologyMod.MODID, "ancient_ruins/ancient_ruins_overhang"),
+		new Identifier(ArcheologyMod.MODID, "ancient_ruins/ancient_ruins_pillar"),
+		new Identifier(ArcheologyMod.MODID, "ancient_ruins/ancient_ruins_pool")
+	};
 
-	static final int UP_SCAN_LIMIT = 16;
-	static final BlockPos STRUCTURE_TOP_OFFSET = new BlockPos(2, 0, 1);
-	static final BlockPos STRUCTURE_OFFSET = new BlockPos(0, -12, 0);
+	static final int UP_SCAN_LIMIT = 20;
+	static final BlockPos STRUCTURE_OFFSET = new BlockPos(0, -16, 0);
 
-	public static void addPieces(StructureManager manager, BlockPos pos, BlockRotation rotation, StructurePiecesHolder structurePiecesHolder, Random random) {
-		structurePiecesHolder.addPiece(new AncientRuinsGenerator.Piece(manager, STRUCTURE_ID, pos.add(STRUCTURE_OFFSET), rotation));
-		structurePiecesHolder.addPiece(new AncientRuinsGenerator.Piece(manager, STRUCTURE_TOP_ID, pos.add(STRUCTURE_TOP_OFFSET.rotate(rotation)), rotation));
+	public static void addPieces(StructureManager manager, BlockPos pos, BlockRotation rotation, StructurePiecesHolder pieces, Random random) {
+		// Selecting random underground part and randomly offsetting
+		int i = random.nextInt(STRUCTURE_IDS.length);
+		BlockPos sOffset = STRUCTURE_OFFSET.add(0, random.nextInt(4), 0);
+		pieces.addPiece(new AncientRuinsGenerator.Piece(manager, STRUCTURE_IDS[i], pos.add(sOffset), rotation));
+
+		// Offsetting top part randomly for variation
+		BlockPos tOffset = new BlockPos(random.nextInt(3) - 1, 0, random.nextInt(3) - 1);
+		pieces.addPiece(new AncientRuinsGenerator.Piece(manager, STRUCTURE_TOP_ID, pos.add(tOffset), rotation));
 	}
 
 	public static class Piece extends SimpleStructurePiece {
@@ -129,25 +138,25 @@ public class AncientRuinsGenerator {
 			}
 		}
 
-		private static boolean canReplaceWithExcavationBlock(BlockState state, StructureWorldAccess world, BlockPos pos) {
-			return state.isSolidBlock(world, pos) && !state.isOf(Blocks.OBSIDIAN) && !state.isIn(BlockTags.FEATURES_CANNOT_REPLACE);
+		private static boolean canReplaceWithExcavationBlock(BlockState state) {
+			return state.isIn(BlockTags.BASE_STONE_OVERWORLD) || state.isIn(BlockTags.DIRT);
 		}
 
 		private static void tryPlaceExcavationBlock(StructureWorldAccess world, BlockPos pos, Random random) {
 			BlockState state = world.getBlockState(pos);
 			
-			if (canReplaceWithExcavationBlock(state, world, pos)) {
+			if (canReplaceWithExcavationBlock(state)) {
 				boolean exc = random.nextFloat() < 0.5F;
 				BlockState newState;
-
-				if (state.isOf(Blocks.STONE)) {
-					newState = (exc ? ArcheologyMod.Blocks.EXCAVATION_GRAVEL : Blocks.TUFF).getDefaultState();
-				} else {
+				
+				if (state.isIn(BlockTags.DIRT)) {
 					newState = (exc ? ArcheologyMod.Blocks.EXCAVATION_DIRT : Blocks.COARSE_DIRT).getDefaultState();
+				} else {
+					newState = (exc ? ArcheologyMod.Blocks.EXCAVATION_GRAVEL : Blocks.ANDESITE).getDefaultState();
 				}
 				
 				world.setBlockState(pos, newState, Block.NOTIFY_LISTENERS);
-				
+
 				if (exc && world.getBlockEntity(pos) instanceof ExcavationBlockEntity excEntity) {
 					excEntity.setLootTable(ExcavationBlockEntity.DEFAULT_LOOT_TABLE);
 				}
