@@ -5,7 +5,6 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import net.capsey.archeology.items.ceramic_shard.CeramicShard;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -13,12 +12,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
-public abstract class ShardsContainer extends BlockEntity implements BlockEntityClientSerializable {
+public abstract class ShardsContainer extends BlockEntity {
+
+	private static final String SHARDS_TAG = "Shards";
 
 	private final EnumMap<Side, CeramicShard> ceramicShards = new EnumMap<>(Side.class);
 
@@ -46,33 +48,20 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 	public void setShard(Side direction, CeramicShard shard) {
 		ceramicShards.put(direction, shard);
 		this.markDirty();
-		this.sync();
 	}
 
 	public void removeShard(Side direction) {
 		ceramicShards.remove(direction);
 		this.markDirty();
-		this.sync();
 	}
 
 	public void clearShards() {
 		ceramicShards.clear();
 		this.markDirty();
-		this.sync();
 	}
 
     public boolean hasShards() {
 		return !ceramicShards.isEmpty();
-	}
-
-	public static NbtList getPatternListTag(ItemStack stack) {
-		NbtList nbtList = null;
-		NbtCompound nbtCompound = stack.getSubNbt("BlockEntityTag");
-		if (nbtCompound != null && nbtCompound.contains("Patterns", 9)) {
-			nbtList = nbtCompound.getList("Patterns", 10).copy();
-		}
-
-		return nbtList;
 	}
 
 	public void readFrom(ItemStack stack) {
@@ -87,8 +76,8 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
 	public void readShards(NbtCompound tag) {
 		ceramicShards.clear();
 		
-		if (tag != null && tag.contains("Shards")) {
-			NbtList nbtList = tag.getList("Shards", NbtElement.COMPOUND_TYPE);
+		if (tag != null && tag.contains(SHARDS_TAG)) {
+			NbtList nbtList = tag.getList(SHARDS_TAG, NbtElement.COMPOUND_TYPE);
 
 			if (nbtList.size() <= Side.values().length) {
 				for (int i = 0; i < nbtList.size(); i++) {
@@ -118,7 +107,7 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
                 nbtList.add(nbtCompound);
             }
     
-            tag.put("Shards", nbtList);
+            tag.put(SHARDS_TAG, nbtList);
         }
 
 		return tag;
@@ -131,18 +120,19 @@ public abstract class ShardsContainer extends BlockEntity implements BlockEntity
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    protected void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
-        return writeShards(tag);
+        writeShards(tag);
+    }
+
+	@Override
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
     }
 
     @Override
-    public void fromClientTag(NbtCompound tag) {
-        readShards(tag);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
+    public NbtCompound toInitialChunkDataNbt() {
+        NbtCompound tag = this.createNbt();
         return writeShards(tag);
     }
 

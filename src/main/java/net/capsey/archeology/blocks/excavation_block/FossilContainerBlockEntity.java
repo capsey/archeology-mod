@@ -5,7 +5,6 @@ import java.util.List;
 
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.items.CopperBrushItem;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -17,14 +16,16 @@ import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 
-public abstract class FossilContainerBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
+public abstract class FossilContainerBlockEntity extends BlockEntity {
     
     private static final String LOOT_TABLE_TAG = "LootTable";
+    private static final String LOOT_TAG = "Loot";
     private static final float[] LUCK_POINTS = { 1.0F, 2.0F, 3.0F, 4.0F };
 
     private static float getLuckPoints(ItemStack stack) {
@@ -46,21 +47,8 @@ public abstract class FossilContainerBlockEntity extends BlockEntity implements 
         if (tag.contains(LOOT_TABLE_TAG, NbtElement.STRING_TYPE)) {
             lootTableId = new Identifier(tag.getString(LOOT_TABLE_TAG));
         }
-    }
 
-    @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
-        tag.putString(LOOT_TABLE_TAG, lootTableId.toString());
- 
-        return tag;
-    }
-
-    @Override
-    public void fromClientTag(NbtCompound tag) {
-        readNbt(tag);
-
-        if (tag.contains("Loot")) {
+        if (tag.contains(LOOT_TAG)) {
             loot.clear();
             NbtList nbtList = tag.getList("Loot", 10);
 
@@ -72,7 +60,20 @@ public abstract class FossilContainerBlockEntity extends BlockEntity implements 
     }
 
     @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
+    protected void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
+        tag.putString(LOOT_TABLE_TAG, lootTableId.toString());
+    }
+
+    @Override
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        NbtCompound tag = this.createNbt();
+
         if (!loot.isEmpty()) {
             NbtList nbtList = new NbtList();
             
@@ -84,8 +85,8 @@ public abstract class FossilContainerBlockEntity extends BlockEntity implements 
             
             tag.put("Loot", nbtList);
         }
-        
-        return writeNbt(tag);
+
+        return tag;
     }
 
     public void generateLoot(PlayerEntity player, ItemStack stack) {
@@ -101,7 +102,6 @@ public abstract class FossilContainerBlockEntity extends BlockEntity implements 
             
             loot.addAll(list);
             this.markDirty();
-            this.sync();
         }
     }
 

@@ -53,11 +53,11 @@ public class ExcavationBlock extends BlockWithEntity {
             if (state.isOf(this) && state.get(BRUSHING_LEVEL) == 0) {
                 Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY);
         
-                if (entity.isPresent() && !world.getBlockTickScheduler().isScheduled(pos, this)) {
+                if (entity.isPresent() && !world.getBlockTickScheduler().isQueued(pos, this)) {
                     entity.get().startBrushing(player, stack);
                     
                     world.setBlockState(pos, state.with(BRUSHING_LEVEL, 1));
-                    world.getBlockTickScheduler().schedule(pos, this, 2);
+                    world.createAndScheduleBlockTick(pos, this, 2);
                     
                     player.incrementStat(Stats.MINED.getOrCreateStat(this));
                     ((ExcavatorPlayerEntity) player).startBrushing(entity.get());
@@ -83,7 +83,7 @@ public class ExcavationBlock extends BlockWithEntity {
                         world.setBlockState(pos, state.with(ExcavationBlock.BRUSHING_LEVEL, i + 1), NOTIFY_LISTENERS);
                     }
 
-                    world.getBlockTickScheduler().schedule(pos, this, 1);
+                    world.createAndScheduleBlockTick(pos, this, 1);
                     return;
                 } else {
                     entity.get().successfullyBrushed();

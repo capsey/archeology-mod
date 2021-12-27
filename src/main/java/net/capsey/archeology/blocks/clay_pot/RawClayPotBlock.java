@@ -99,19 +99,15 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
 
     @Override
 	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        if (canHarden(state, world.getBlockState(pos.down()))) {
-			if (!world.isClient && !world.getBlockTickScheduler().isScheduled(pos, this)) {
-                world.getBlockTickScheduler().schedule(pos, this, 10);
-            }
+        if (canHarden(state, world.getBlockState(pos.down())) && !world.isClient && !world.getBlockTickScheduler().isQueued(pos, this)) {
+            world.createAndScheduleBlockTick(pos, this, 10);
 		}
 	}
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {                
-        if (direction == Direction.DOWN && canHarden(state, neighborState)) {
-			if (!world.isClient() && !world.getBlockTickScheduler().isScheduled(pos, this)) {
-                world.getBlockTickScheduler().schedule(pos, this, 10);
-            }
+        if (direction == Direction.DOWN && canHarden(state, neighborState) && !world.isClient() && !world.getBlockTickScheduler().isQueued(pos, this)) {
+            world.createAndScheduleBlockTick(pos, this, 10);
 		}
 
 		return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
@@ -131,7 +127,7 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
                 }
             }
 
-            world.getBlockTickScheduler().schedule(pos, this, 10);
+            world.createAndScheduleBlockTick(pos, this, 10);
         }
 	}
 

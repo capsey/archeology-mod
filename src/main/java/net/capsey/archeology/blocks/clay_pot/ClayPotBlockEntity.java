@@ -61,15 +61,14 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
+        
         if (lootTableId != null) {
             nbt.putString(LOOT_TABLE_TAG, lootTableId.toString());
         } else {
             Inventories.writeNbt(nbt, items);
         }
-
-        return nbt;
     }
     
     @Override

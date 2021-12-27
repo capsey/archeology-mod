@@ -21,8 +21,8 @@ public interface FallingBlockWithEntity {
         return entity.dropItem(item);
     }
 
-    default NbtCompound writeFallingBlockNbt(NbtCompound nbt, BlockEntity entity) {
-        return entity.writeNbt(nbt);
+    default NbtCompound writeFallingBlockNbt(BlockEntity entity) {
+        return entity.createNbt();
     }
 
     default NbtCompound writeClientData(NbtCompound nbt, BlockEntity entity) {
@@ -35,7 +35,7 @@ public interface FallingBlockWithEntity {
 
 	default void tryScheduleTick(WorldAccess world, BlockPos pos, Block block) {
 		if (canFallThrough(world, pos)) {
-			world.getBlockTickScheduler().schedule(pos, block, FALL_DELAY);
+            world.createAndScheduleBlockTick(pos, block, FALL_DELAY);
 		}
 	}
 
@@ -47,7 +47,7 @@ public interface FallingBlockWithEntity {
             BlockEntity entity = world.getBlockEntity(pos);
 
             if (entity != null) {
-                fallingBlockEntity.blockEntityData = writeFallingBlockNbt(new NbtCompound(), entity);
+                fallingBlockEntity.blockEntityData = writeFallingBlockNbt(entity);
                 ((FallingBlockEntityMixinInterface) fallingBlockEntity).setClientBlockEntityData(writeClientData(new NbtCompound(), entity));
             }
 

@@ -17,10 +17,10 @@ public class ServerPlayNetworkHandlerMixin implements ServerPlayPacketListenerMi
     @Override
     public void onExcavationBreakingStageChanged(ExcavationBreakingC2SPacket packet) {
         ServerPlayNetworkHandler self = (ServerPlayNetworkHandler)(Object) this;
-        NetworkThreadUtils.forceMainThread(packet, self, self.getPlayer().getServerWorld());
+        NetworkThreadUtils.forceMainThread(packet, self, self.getPlayer().getWorld());
 
         ServerPlayerEntity player = self.getPlayer();
-        ServerWorld world = player.getServerWorld();
+        ServerWorld world = player.getWorld();
         ExcavationBlockEntity entity = ((ExcavatorPlayerEntity) player).getExcavatingBlock();
         
         if (entity != null && !entity.isRemoved() && entity.isCorrectPlayer(player)) {

@@ -38,11 +38,11 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
     }
 
 	@Override
-	public NbtCompound writeFallingBlockNbt(NbtCompound nbt, BlockEntity entity) {
-		nbt = entity.writeNbt(nbt);
+	public NbtCompound writeFallingBlockNbt(BlockEntity entity) {
+		NbtCompound nbt = entity.createNbt();
 
-		if (entity instanceof ClayPotBlockEntity) {
-			((ClayPotBlockEntity) entity).clear();
+		if (entity instanceof ClayPotBlockEntity potEntity) {
+			potEntity.clear();
 		}
 
         return nbt;

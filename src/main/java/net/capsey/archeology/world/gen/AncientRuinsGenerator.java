@@ -11,8 +11,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.SimpleStructurePiece;
+import net.minecraft.structure.StructureContext;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.structure.StructurePlacementData;
@@ -58,8 +58,8 @@ public class AncientRuinsGenerator {
 			super(ArcheologyMod.Features.ANCIENT_RUINS_PIECE, 0, manager, identifier, identifier.toString(), createPlacementData(rotation), pos);
 		}
 
-		public Piece(ServerWorld world, NbtCompound nbt) {
-			super(ArcheologyMod.Features.ANCIENT_RUINS_PIECE, nbt, world, identifier ->
+		public Piece(StructureManager manager, NbtCompound nbt) {
+			super(ArcheologyMod.Features.ANCIENT_RUINS_PIECE, nbt, manager, identifier ->
 				createPlacementData(BlockRotation.valueOf(nbt.getString("Rot")))
 			);
 		}
@@ -72,8 +72,8 @@ public class AncientRuinsGenerator {
 		}
 
 		@Override
-		protected void writeNbt(ServerWorld world, NbtCompound nbt) {
-			super.writeNbt(world, nbt);
+		protected void writeNbt(StructureContext context, NbtCompound nbt) {
+			super.writeNbt(context, nbt);
 			nbt.putString("Rot", this.placementData.getRotation().name());
 		}
 
@@ -91,8 +91,8 @@ public class AncientRuinsGenerator {
 		}
 
 		@Override
-		public boolean generate(StructureWorldAccess world, StructureAccessor accessor, ChunkGenerator generator, Random random, BlockBox box, ChunkPos chunkPos, BlockPos pos) {
-			if (!STRUCTURE_TOP_ID.toString().equals(this.identifier)) {
+		public void generate(StructureWorldAccess world, StructureAccessor accessor, ChunkGenerator generator, Random random, BlockBox box, ChunkPos chunkPos, BlockPos pos) {
+			if (!STRUCTURE_TOP_ID.toString().equals(this.template)) {
 				// Moving underground (here because if at adding a piece, terrain will adjust)
 				this.placementData.setBoundingBox(boundingBox);
 				this.boundingBox = this.structure.calculateBoundingBox(this.placementData, this.pos);
@@ -109,7 +109,7 @@ public class AncientRuinsGenerator {
 			}
 
 			// Spawning structure
-			return super.generate(world, accessor, generator, random, box, chunkPos, this.pos);
+			super.generate(world, accessor, generator, random, box, chunkPos, this.pos);
 		}
 
 		private void upScan(StructureWorldAccess world, BlockPos pos, Random random) {

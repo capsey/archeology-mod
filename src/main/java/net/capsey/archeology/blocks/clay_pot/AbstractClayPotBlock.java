@@ -29,15 +29,15 @@ public abstract class AbstractClayPotBlock extends Block implements Waterloggabl
 	public static final VoxelShape NECK_SHAPE;
     public static final VoxelShape HEAD_SHAPE;
 
-    public AbstractClayPotBlock(Settings settings) {
+    protected AbstractClayPotBlock(Settings settings) {
         super(settings);
 		setDefaultState(getStateManager().getDefaultState().with(WATERLOGGED, false));
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-		if ((Boolean)state.get(WATERLOGGED)) {
-			world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		if (state.get(WATERLOGGED).booleanValue()) {
+            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 		}
 
 		return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
@@ -45,7 +45,7 @@ public abstract class AbstractClayPotBlock extends Block implements Waterloggabl
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        return ClayPotBlock.BLOCK_SHAPE;
+        return AbstractClayPotBlock.BLOCK_SHAPE;
     }
 
     @Override
@@ -53,7 +53,7 @@ public abstract class AbstractClayPotBlock extends Block implements Waterloggabl
 		return BlockRenderType.INVISIBLE;
 	}
 
-    @Nullable
+    @Override @Nullable
 	public BlockState getPlacementState(ItemPlacementContext ctx) {
 		FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
 		return getDefaultState().with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
@@ -66,7 +66,7 @@ public abstract class AbstractClayPotBlock extends Block implements Waterloggabl
 
     @Override
     public FluidState getFluidState(BlockState state) {
-		return (Boolean)state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+		return state.get(WATERLOGGED).booleanValue() ? Fluids.WATER.getStill(false) : super.getFluidState(state);
 	}
 
     static {

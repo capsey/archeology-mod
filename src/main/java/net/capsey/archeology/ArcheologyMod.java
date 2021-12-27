@@ -34,6 +34,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.StatFormatter;
 import net.minecraft.stat.Stats;
 import net.minecraft.structure.StructurePieceType;
+import net.minecraft.structure.StructurePieceType.ManagerAware;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
@@ -115,7 +116,7 @@ public class ArcheologyMod implements ModInitializer {
 
     public static class Features {
 
-        public static final StructurePieceType ANCIENT_RUINS_PIECE = Registry.register(Registry.STRUCTURE_PIECE, "aruins", AncientRuinsGenerator.Piece::new);
+        public static final StructurePieceType ANCIENT_RUINS_PIECE = Registry.register(Registry.STRUCTURE_PIECE, "aruins", (ManagerAware) AncientRuinsGenerator.Piece::new);
 
         private static final StructureFeature<DefaultFeatureConfig> ANCIENT_RUINS = new AncientRuinsFeature(DefaultFeatureConfig.CODEC);
         private static final ConfiguredStructureFeature<?, ?> CONFIGURED_ANCIENT_RUINS = ANCIENT_RUINS.configure(FeatureConfig.DEFAULT);
@@ -126,7 +127,6 @@ public class ArcheologyMod implements ModInitializer {
             FabricStructureBuilder.create(new Identifier(MODID, "ancient_ruins"), ANCIENT_RUINS)
                     .step(GenerationStep.Feature.SURFACE_STRUCTURES)
                     .defaultConfig(new StructureConfig(20, 8, 14357621))
-                    .superflatFeature(ANCIENT_RUINS.configure(FeatureConfig.DEFAULT))
                     .adjustsSurface()
                     .register();
 

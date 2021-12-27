@@ -34,7 +34,7 @@ public abstract class FallingBlockEntityRendererMixin extends EntityRenderer<Fal
 		BlockState blockState = entity.getBlockState();
 
         if (blockState.isOf(ArcheologyMod.Blocks.CLAY_POT)) {
-            World world = entity.getWorldClient();
+            World world = entity.getEntityWorld();
 
             if (blockState != world.getBlockState(entity.getBlockPos())) {
                 matrices.push();
