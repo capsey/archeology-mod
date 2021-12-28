@@ -3,6 +3,9 @@ package net.capsey.archeology;
 import java.util.List;
 import java.util.function.Consumer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlock;
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlockEntity;
 import net.capsey.archeology.blocks.clay_pot.RawClayPotBlock;
@@ -52,6 +55,7 @@ import net.minecraft.world.gen.feature.StructureFeature;
 public class ArcheologyMod implements ModInitializer {
 
     public static final String MODID = "archeology";
+    public static final Logger LOGGER = LogManager.getLogger(MODID);
 
     public static class Items {
 
