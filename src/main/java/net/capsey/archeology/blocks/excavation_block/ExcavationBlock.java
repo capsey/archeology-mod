@@ -3,8 +3,10 @@ package net.capsey.archeology.blocks.excavation_block;
 import java.util.Optional;
 import java.util.Random;
 
-import net.capsey.archeology.ArcheologyMod;
+import net.capsey.archeology.BlockEntities;
+import net.capsey.archeology.Items;
 import net.capsey.archeology.entity.ExcavatorPlayerEntity;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -41,17 +43,17 @@ public class ExcavationBlock extends BlockWithEntity {
         }
     }
 
-    public ExcavationBlock(Settings settings) {
+    public ExcavationBlock(AbstractBlock.Settings settings) {
         super(settings);
         setDefaultState(getStateManager().getDefaultState().with(BRUSHING_LEVEL, 0));
     }
 
     public boolean startBrushing(World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
-        if (stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
+        if (stack.isOf(Items.COPPER_BRUSH)) {
             BlockState state = world.getBlockState(pos);
     
             if (state.isOf(this) && state.get(BRUSHING_LEVEL) == 0) {
-                Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY);
+                Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, BlockEntities.EXCAVATION_BLOCK_ENTITY);
         
                 if (entity.isPresent() && !world.getBlockTickScheduler().isQueued(pos, this)) {
                     entity.get().startBrushing(player, stack);
@@ -74,7 +76,7 @@ public class ExcavationBlock extends BlockWithEntity {
         int i = state.get(BRUSHING_LEVEL);
 
         if (i != 0) {
-            Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY);
+            Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, BlockEntities.EXCAVATION_BLOCK_ENTITY);
     
             if (entity.isPresent() && entity.get().brushingCheck()) {
     
@@ -100,7 +102,7 @@ public class ExcavationBlock extends BlockWithEntity {
 		if (!state.isOf(newState.getBlock())) {
             if (!world.isClient) {
                 world.setBlockBreakingInfo(0, pos, -1);
-                Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY);
+                Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, BlockEntities.EXCAVATION_BLOCK_ENTITY);
     
                 if (entity.isPresent()) {
                     entity.get().onBlockBreak();

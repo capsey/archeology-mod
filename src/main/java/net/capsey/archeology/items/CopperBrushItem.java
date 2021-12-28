@@ -1,6 +1,6 @@
 package net.capsey.archeology.items;
 
-import net.capsey.archeology.ArcheologyMod;
+import net.capsey.archeology.Sounds;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
 import net.capsey.archeology.entity.ExcavatorPlayerEntity;
 import net.minecraft.block.Block;
@@ -73,7 +73,7 @@ public class CopperBrushItem extends Item {
 			}
 
 			if (remainingUseTicks % brushTicks == 0) {
-				world.playSound(null, user.getBlockPos(), ArcheologyMod.Sounds.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1f, 1f);
+				world.playSound(null, user.getBlockPos(), Sounds.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1f, 1f);
 			}
 		}
 	}

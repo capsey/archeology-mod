@@ -3,7 +3,7 @@ package net.capsey.archeology.blocks.clay_pot;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import net.capsey.archeology.ArcheologyMod;
+import net.capsey.archeology.BlockEntities;
 import net.capsey.archeology.items.ceramic_shard.CeramicShard;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -35,12 +35,12 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(9, ItemStack.EMPTY);
 
     public ClayPotBlockEntity(BlockPos pos, BlockState state, Map<Side, CeramicShard> shards) {
-        super(ArcheologyMod.BlockEntities.CLAY_POT_BLOCK_ENTITY, pos, state);
+        super(BlockEntities.CLAY_POT_BLOCK_ENTITY, pos, state);
         replaceShards(shards);
     }
 
     public ClayPotBlockEntity(BlockPos pos, BlockState state) {
-        super(ArcheologyMod.BlockEntities.CLAY_POT_BLOCK_ENTITY, pos, state);
+        super(BlockEntities.CLAY_POT_BLOCK_ENTITY, pos, state);
     }
 
     public void setLootTable(Identifier id, long seed) {

@@ -2,7 +2,7 @@ package net.capsey.archeology.mixin.item;
 
 import org.spongepowered.asm.mixin.Mixin;
 
-import net.capsey.archeology.ArcheologyMod;
+import net.capsey.archeology.Blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -20,7 +20,7 @@ public abstract class PickaxeItemMixin extends MiningToolItem {
 
     @Override
     public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
-		if (state.isIn(ArcheologyMod.CLAY_POTS_TAG)) {
+		if (state.isIn(Blocks.CLAY_POTS_TAG)) {
 			return 5.0F;
 		} else {
 			return super.getMiningSpeedMultiplier(stack, state);

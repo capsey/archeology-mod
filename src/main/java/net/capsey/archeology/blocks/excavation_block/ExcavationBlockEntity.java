@@ -3,6 +3,8 @@ package net.capsey.archeology.blocks.excavation_block;
 import java.util.Objects;
 
 import net.capsey.archeology.ArcheologyMod;
+import net.capsey.archeology.BlockEntities;
+import net.capsey.archeology.Items;
 import net.capsey.archeology.items.CopperBrushItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,7 +21,7 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
     private int brushTicks;
 
     public ExcavationBlockEntity(BlockPos pos, BlockState state) {
-        super(ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY, pos, state, DEFAULT_LOOT_TABLE);
+        super(BlockEntities.EXCAVATION_BLOCK_ENTITY, pos, state, DEFAULT_LOOT_TABLE);
     }
 
     public void setLootTable(Identifier id) {
@@ -28,7 +30,7 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
     }
 
     public void startBrushing(PlayerEntity player, ItemStack stack) {
-        if (stack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
+        if (stack.isOf(Items.COPPER_BRUSH)) {
             this.brushingPlayer = player;
             this.brushTicks = CopperBrushItem.getBrushTicks(stack);
             generateLoot(player, stack);
@@ -43,7 +45,7 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
         if (brushingPlayer != null && brushingPlayer.isUsingItem() && brushingPlayer.getItemUseTimeLeft() > 0) {
             ItemStack activeStack = brushingPlayer.getActiveItem();
             
-            if (!activeStack.isEmpty() && activeStack.isOf(ArcheologyMod.Items.COPPER_BRUSH)) {
+            if (!activeStack.isEmpty() && activeStack.isOf(Items.COPPER_BRUSH)) {
                 return true;
             }
         }

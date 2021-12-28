@@ -6,7 +6,6 @@ import java.util.stream.Stream;
 
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.items.CeramicShardItem;
-import net.capsey.archeology.items.CeramicShards;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.Item;

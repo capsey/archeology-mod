@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.capsey.archeology.ArcheologyMod;
+import net.capsey.archeology.Blocks;
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlockEntity;
 import net.capsey.archeology.entity.FallingBlockEntityMixinInterface;
 import net.minecraft.block.BlockState;
@@ -27,13 +27,13 @@ public abstract class FallingBlockEntityRendererMixin extends EntityRenderer<Fal
         super(ctx);
     }
 
-    private final ClayPotBlockEntity renderClayPot = new ClayPotBlockEntity(BlockPos.ORIGIN, ArcheologyMod.Blocks.CLAY_POT.getDefaultState());
+    private final ClayPotBlockEntity renderClayPot = new ClayPotBlockEntity(BlockPos.ORIGIN, Blocks.CLAY_POT.getDefaultState());
 
     @Inject(at = @At("HEAD"), method = "render(Lnet/minecraft/entity/FallingBlockEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V")
     public void render(FallingBlockEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo info) {
 		BlockState blockState = entity.getBlockState();
 
-        if (blockState.isOf(ArcheologyMod.Blocks.CLAY_POT)) {
+        if (blockState.isOf(Blocks.CLAY_POT)) {
             World world = entity.getEntityWorld();
 
             if (blockState != world.getBlockState(entity.getBlockPos())) {

@@ -1,20 +1,15 @@
-package net.capsey.archeology.items;
+package net.capsey.archeology.items.ceramic_shard;
 
 import net.capsey.archeology.ArcheologyMod;
-import net.capsey.archeology.items.ceramic_shard.CeramicShardRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 
 public class CeramicShards {
-    
+
     public static Item ENDER_DRAGON;
     public static Item OVERWORLD;
     public static Item DIAMOND;
     public static Item EMERALD;
-
-    private CeramicShards() {
-        throw new IllegalStateException("Utility class");
-    }
 
     public static void registerDefaultShards() {
         ENDER_DRAGON = CeramicShardRegistry.registerShard(

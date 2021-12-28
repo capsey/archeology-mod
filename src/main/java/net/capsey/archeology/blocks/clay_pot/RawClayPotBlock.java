@@ -4,7 +4,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
-import net.capsey.archeology.ArcheologyMod;
+import net.capsey.archeology.BlockEntities;
+import net.capsey.archeology.Blocks;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer.Side;
 import net.capsey.archeology.items.CeramicShardItem;
 import net.capsey.archeology.items.ceramic_shard.CeramicShard;
@@ -40,7 +41,7 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {        
         if (Side.validHit(hit)) {
-            Optional<RawClayPotBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
+            Optional<RawClayPotBlockEntity> entity = world.getBlockEntity(pos, BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
 
             if (entity.isPresent()) {
                 ItemStack item = player.getStackInHand(hand);
@@ -132,13 +133,13 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
 	}
 
     public void harden(World world, BlockPos pos) {
-        Optional<RawClayPotBlockEntity> entity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
+        Optional<RawClayPotBlockEntity> entity = world.getBlockEntity(pos, BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
 
         if (entity.isPresent()) {
             Map<Side, CeramicShard> shards = entity.get().getShards();
             entity.get().clearShards();
 
-            BlockState newState = ArcheologyMod.Blocks.CLAY_POT.getDefaultState();
+            BlockState newState = Blocks.CLAY_POT.getDefaultState();
             world.setBlockState(pos, newState, Block.NOTIFY_LISTENERS);
             world.addBlockEntity(new ClayPotBlockEntity(pos, newState, shards));
         }
@@ -147,7 +148,7 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
 	@Override
 	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.isOf(newState.getBlock())) {
-			Optional<RawClayPotBlockEntity> blockEntity = world.getBlockEntity(pos, ArcheologyMod.BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
+			Optional<RawClayPotBlockEntity> blockEntity = world.getBlockEntity(pos, BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
 			
 			if (blockEntity.isPresent()) {
 				blockEntity.get().getShards().values().forEach(item -> 

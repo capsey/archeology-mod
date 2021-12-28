@@ -4,11 +4,12 @@ import java.util.Iterator;
 import java.util.Random;
 
 import net.capsey.archeology.ArcheologyMod;
+import net.capsey.archeology.Blocks;
+import net.capsey.archeology.Features;
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlockEntity;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.structure.SimpleStructurePiece;
@@ -55,11 +56,11 @@ public class AncientRuinsGenerator {
 	public static class Piece extends SimpleStructurePiece {
 
 		public Piece(StructureManager manager, Identifier identifier, BlockPos pos, BlockRotation rotation) {
-			super(ArcheologyMod.Features.ANCIENT_RUINS_PIECE, 0, manager, identifier, identifier.toString(), createPlacementData(rotation), pos);
+			super(Features.ANCIENT_RUINS_PIECE, 0, manager, identifier, identifier.toString(), createPlacementData(rotation), pos);
 		}
 
 		public Piece(StructureManager manager, NbtCompound nbt) {
-			super(ArcheologyMod.Features.ANCIENT_RUINS_PIECE, nbt, manager, identifier ->
+			super(Features.ANCIENT_RUINS_PIECE, nbt, manager, identifier ->
 				createPlacementData(BlockRotation.valueOf(nbt.getString("Rot")))
 			);
 		}
@@ -81,7 +82,7 @@ public class AncientRuinsGenerator {
 		protected void handleMetadata(String metadata, BlockPos pos, ServerWorldAccess world, Random random, BlockBox boundingBox) {
 			// Loot Pot has 30% chance to spawn from Data Structure Block (to provide variation in position)
 			if ("loot_pot".equals(metadata) && (new Random(pos.asLong())).nextFloat() < 0.3F) {
-				world.setBlockState(pos, ArcheologyMod.Blocks.CLAY_POT.getDefaultState(), Block.NOTIFY_LISTENERS);
+				world.setBlockState(pos, Blocks.CLAY_POT.getDefaultState(), Block.NOTIFY_LISTENERS);
 				BlockEntity blockEntity = world.getBlockEntity(pos);
 
 				if (blockEntity instanceof ClayPotBlockEntity potEntity) {
@@ -150,9 +151,9 @@ public class AncientRuinsGenerator {
 				BlockState newState;
 				
 				if (state.isIn(BlockTags.DIRT)) {
-					newState = (exc ? ArcheologyMod.Blocks.EXCAVATION_DIRT : Blocks.COARSE_DIRT).getDefaultState();
+					newState = (exc ? Blocks.EXCAVATION_DIRT : net.minecraft.block.Blocks.COARSE_DIRT).getDefaultState();
 				} else {
-					newState = (exc ? ArcheologyMod.Blocks.EXCAVATION_GRAVEL : Blocks.ANDESITE).getDefaultState();
+					newState = (exc ? Blocks.EXCAVATION_GRAVEL : net.minecraft.block.Blocks.ANDESITE).getDefaultState();
 				}
 				
 				world.setBlockState(pos, newState, Block.NOTIFY_LISTENERS);

@@ -24,11 +24,11 @@ public class ArcheologyClientMod implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        BlockEntityRendererRegistry.register(ArcheologyMod.BlockEntities.EXCAVATION_BLOCK_ENTITY, ExcavationBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.register(ArcheologyMod.BlockEntities.CLAY_POT_BLOCK_ENTITY, ctx -> new ClayPotBlockEntityRenderer<ClayPotBlockEntity>(ctx, 0));
-        BlockEntityRendererRegistry.register(ArcheologyMod.BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY, ctx -> new ClayPotBlockEntityRenderer<RawClayPotBlockEntity>(ctx, 1));
+        BlockEntityRendererRegistry.register(BlockEntities.EXCAVATION_BLOCK_ENTITY, ExcavationBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.register(BlockEntities.CLAY_POT_BLOCK_ENTITY, ctx -> new ClayPotBlockEntityRenderer<ClayPotBlockEntity>(ctx, 0));
+        BlockEntityRendererRegistry.register(BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY, ctx -> new ClayPotBlockEntityRenderer<RawClayPotBlockEntity>(ctx, 1));
 
-        FabricModelPredicateProviderRegistry.register(ArcheologyMod.Items.COPPER_BRUSH, new Identifier("damage"), (itemStack, clientWorld, livingEntity, i) -> {
+        FabricModelPredicateProviderRegistry.register(Items.COPPER_BRUSH, new Identifier("damage"), (itemStack, clientWorld, livingEntity, i) -> {
             return itemStack.getDamage() / itemStack.getMaxDamage();
         });
 
