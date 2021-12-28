@@ -3,7 +3,7 @@ Archeology Mod is a [Fabric](https://fabricmc.net/) mod for [Minecraft](https://
 
 _This is my first-ever mod, so don't expect too stable experience or sensible code. If you found a bug, or have a suggestion, advice, please create a [GitHub Issue](https://github.com/capsey/archeology-mod/issues) or message me on Discord._
 
-[![CurseForge Badge](https://cf.way2muchnoise.eu/versions/539957.svg "CurseForge Badge")](https://www.curseforge.com/minecraft/mc-mods/archeology)
+[![CurseForge Badge](https://cf.way2muchnoise.eu/full_539957_downloads.svg "CurseForge Badge")](https://www.curseforge.com/minecraft/mc-mods/archeology)
 
 ![Fancy screenie](https://i.ibb.co/4s0pb9F/screenie.png "Fancy screenie")
 
