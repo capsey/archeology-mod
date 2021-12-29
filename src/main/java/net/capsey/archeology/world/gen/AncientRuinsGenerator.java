@@ -140,7 +140,7 @@ public class AncientRuinsGenerator {
 		}
 
 		private static boolean canReplaceWithExcavationBlock(BlockState state) {
-			return state.isIn(BlockTags.BASE_STONE_OVERWORLD) || state.isIn(BlockTags.DIRT);
+			return state.isIn(BlockTags.LUSH_GROUND_REPLACEABLE) && !state.isOf(net.minecraft.block.Blocks.CLAY) && !state.isIn(BlockTags.FEATURES_CANNOT_REPLACE);
 		}
 
 		private static void tryPlaceExcavationBlock(StructureWorldAccess world, BlockPos pos, Random random) {
@@ -148,11 +148,9 @@ public class AncientRuinsGenerator {
 			
 			if (canReplaceWithExcavationBlock(state)) {
 				boolean exc = random.nextFloat() < 0.5F;
-				BlockState newState;
+				BlockState newState = (exc ? Blocks.EXCAVATION_DIRT : net.minecraft.block.Blocks.COARSE_DIRT).getDefaultState();
 				
-				if (state.isIn(BlockTags.DIRT)) {
-					newState = (exc ? Blocks.EXCAVATION_DIRT : net.minecraft.block.Blocks.COARSE_DIRT).getDefaultState();
-				} else {
+				if (state.isIn(BlockTags.BASE_STONE_OVERWORLD) || state.isOf(net.minecraft.block.Blocks.GRAVEL)) {
 					newState = (exc ? Blocks.EXCAVATION_GRAVEL : net.minecraft.block.Blocks.ANDESITE).getDefaultState();
 				}
 				

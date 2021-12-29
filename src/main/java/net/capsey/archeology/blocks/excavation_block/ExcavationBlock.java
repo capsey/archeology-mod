@@ -82,7 +82,7 @@ public class ExcavationBlock extends BlockWithEntity {
     
                 if (i < MAX_BRUSHING_LEVELS) {
                     if (entity.get().isTime(world.getDifficulty())) {
-                        world.setBlockState(pos, state.with(ExcavationBlock.BRUSHING_LEVEL, i + 1), NOTIFY_LISTENERS);
+                        world.setBlockState(pos, state.with(ExcavationBlock.BRUSHING_LEVEL, i + 1));
                     }
 
                     world.createAndScheduleBlockTick(pos, this, 1);
