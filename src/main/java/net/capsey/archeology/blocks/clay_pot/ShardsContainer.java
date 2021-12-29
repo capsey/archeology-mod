@@ -13,6 +13,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -47,17 +48,26 @@ public abstract class ShardsContainer extends BlockEntity {
 
 	public void setShard(Side direction, CeramicShard shard) {
 		ceramicShards.put(direction, shard);
-		this.markDirty();
+		if (!this.world.isClient && this.world instanceof ServerWorld server) {
+			this.markDirty();
+			server.getChunkManager().markForUpdate(this.pos);
+		}
 	}
 
 	public void removeShard(Side direction) {
 		ceramicShards.remove(direction);
-		this.markDirty();
+		if (!this.world.isClient && this.world instanceof ServerWorld server) {
+			this.markDirty();
+			server.getChunkManager().markForUpdate(this.pos);
+		}
 	}
 
 	public void clearShards() {
 		ceramicShards.clear();
-		this.markDirty();
+		if (!this.world.isClient && this.world instanceof ServerWorld server) {
+			this.markDirty();
+			server.getChunkManager().markForUpdate(this.pos);
+		}
 	}
 
     public boolean hasShards() {
