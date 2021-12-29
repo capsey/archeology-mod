@@ -1,5 +1,7 @@
 package net.capsey.archeology.blocks.clay_pot.client;
 
+import java.util.Map;
+
 import net.capsey.archeology.ArcheologyClientMod;
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer;
@@ -24,17 +26,18 @@ public class ClayPotBlockEntityRenderer<T extends ShardsContainer> extends Shard
 
 	public static final Identifier CLAY_POTS_ATLAS_TEXTURE = new Identifier("textures/atlas/shards.png");
 
-	public static final SpriteIdentifier[] MODEL_TEXTURES = { 
-		new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MODID, "entity/clay_pot")),
-		new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MODID, "entity/raw_clay_pot"))
-	};
+	public static final SpriteIdentifier MODEL_TEXTURE = new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MODID, "entity/clay_pot"));
+	public static final SpriteIdentifier RAW_MODEL_TEXTURE = new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MODID, "entity/raw_clay_pot"));
 	
+	private final SpriteIdentifier modelTexture;
+
 	private final ModelPart base;
 	private final ModelPart neck;
 	private final ModelPart head;
 
-	public ClayPotBlockEntityRenderer(Context ctx, int type) {
-		super(ctx, type);
+	public ClayPotBlockEntityRenderer(Context ctx, Map<Identifier, SpriteIdentifier> spriteIds, SpriteIdentifier modelTexture) {
+		super(ctx, spriteIds);
+		this.modelTexture = modelTexture;
 
 		ModelPart modelPart = ctx.getLayerModelPart(ArcheologyClientMod.CLAY_POT_MODEL_LAYER);
 		this.base = modelPart.getChild("base");
@@ -60,7 +63,7 @@ public class ClayPotBlockEntityRenderer<T extends ShardsContainer> extends Shard
 
 	@Override
 	public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-		VertexConsumer consumer = MODEL_TEXTURES[this.type].getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
+		VertexConsumer consumer = this.modelTexture.getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
 		
 		base.render(matrices, consumer, light, overlay);
 		neck.render(matrices, consumer, light, overlay);

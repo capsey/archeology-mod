@@ -2,12 +2,11 @@ package net.capsey.archeology.items.ceramic_shard;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
+import java.util.Set;
 
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.items.CeramicShardItem;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -53,12 +52,8 @@ public class CeramicShardRegistry {
         return shardItem;
     }
 
-    public static Stream<SpriteIdentifier> getSpriteIds() {
-        return SHARDS.values().stream().map(s -> s.getSpriteId(0));
-    }
-
-    public static Stream<SpriteIdentifier> getRawSpriteIds() {
-        return SHARDS.values().stream().map(s -> s.getSpriteId(1));
+    public static Set<Identifier> getShardIds() {
+        return SHARDS.keySet();
     }
 
     public static CeramicShard getShard(Identifier id) {

@@ -24,18 +24,24 @@ public class ArcheologyClientMod implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        BlockEntityRendererRegistry.register(BlockEntities.EXCAVATION_BLOCK_ENTITY, ExcavationBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.register(BlockEntities.CLAY_POT_BLOCK_ENTITY, ctx -> new ClayPotBlockEntityRenderer<ClayPotBlockEntity>(ctx, 0));
-        BlockEntityRendererRegistry.register(BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY, ctx -> new ClayPotBlockEntityRenderer<RawClayPotBlockEntity>(ctx, 1));
+        // Adding Config
+        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
 
+        // Registering Model Layers
+        EntityModelLayerRegistry.registerModelLayer(CLAY_POT_MODEL_LAYER, ClayPotBlockEntityRenderer::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(CLAY_POT_SHARDS_MODEL_LAYER, ShardsContainerRenderer::getTexturedModelData);
+
+        // Renderers registration
+        BlockEntityRendererRegistry.register(BlockEntities.EXCAVATION_BLOCK_ENTITY, ExcavationBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.register(BlockEntities.CLAY_POT_BLOCK_ENTITY, ctx -> new ClayPotBlockEntityRenderer<ClayPotBlockEntity>(ctx, ShardsContainerRenderer.SHARD_SPRITE_IDS, ClayPotBlockEntityRenderer.MODEL_TEXTURE));
+        BlockEntityRendererRegistry.register(BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY, ctx -> new ClayPotBlockEntityRenderer<RawClayPotBlockEntity>(ctx, ShardsContainerRenderer.RAW_SHARD_SPRITE_IDS, ClayPotBlockEntityRenderer.RAW_MODEL_TEXTURE));
+
+        // Model Predicate for Copper Brush to change texture (oxidization)
         FabricModelPredicateProviderRegistry.register(Items.COPPER_BRUSH, new Identifier("damage"), (itemStack, clientWorld, livingEntity, i) -> {
             return itemStack.getDamage() / itemStack.getMaxDamage();
         });
 
-        EntityModelLayerRegistry.registerModelLayer(CLAY_POT_MODEL_LAYER, ClayPotBlockEntityRenderer::getTexturedModelData);
-        EntityModelLayerRegistry.registerModelLayer(CLAY_POT_SHARDS_MODEL_LAYER, ShardsContainerRenderer::getTexturedModelData);
-        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
-
+        // Network
         ClientPlayNetworking.registerGlobalReceiver(ArcheologyMod.START_BRUSHING, (client, handler, buf, responseSender) -> {
             BlockPos pos = buf.readBlockPos();
 

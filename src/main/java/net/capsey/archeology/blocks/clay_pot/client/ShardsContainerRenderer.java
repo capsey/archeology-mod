@@ -1,5 +1,8 @@
 package net.capsey.archeology.blocks.clay_pot.client;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.capsey.archeology.ArcheologyClientMod;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer.Side;
@@ -19,18 +22,22 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 
 @Environment(EnvType.CLIENT)
 public abstract class ShardsContainerRenderer<T extends ShardsContainer> implements BlockEntityRenderer<T> {
 
-	protected final int type;
+	public static final Map<Identifier, SpriteIdentifier> SHARD_SPRITE_IDS = new HashMap<>();
+	public static final Map<Identifier, SpriteIdentifier> RAW_SHARD_SPRITE_IDS = new HashMap<>();
+
+	protected final Map<Identifier, SpriteIdentifier> spriteIds;
 
     private final ModelPart straight;
 	private final ModelPart[] corners = new ModelPart[2];
 
-	public ShardsContainerRenderer(BlockEntityRendererFactory.Context ctx, int type) {
-		this.type = type;
+	protected ShardsContainerRenderer(BlockEntityRendererFactory.Context ctx, Map<Identifier, SpriteIdentifier> spriteIds) {
+		this.spriteIds = spriteIds;
 
 		ModelPart modelPart = ctx.getLayerModelPart(ArcheologyClientMod.CLAY_POT_SHARDS_MODEL_LAYER);
 		this.straight = modelPart.getChild("straight");
@@ -85,7 +92,7 @@ public abstract class ShardsContainerRenderer<T extends ShardsContainer> impleme
     }
 
 	private void renderShard(CeramicShard shard, Side side, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-		SpriteIdentifier spriteIdentifier = shard.getSpriteId(type);
+		SpriteIdentifier spriteIdentifier = this.spriteIds.get(shard.shardId());
 		VertexConsumer spriteConsumer = spriteIdentifier.getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
 
 		if (side.straight) {
