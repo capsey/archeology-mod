@@ -24,21 +24,27 @@
 
     "text.autoconfig.archeology.title": "Archeology Mod Config",
     
-    "text.autoconfig.archeology.option.mojangExcavationBreaking": "Mojang Excavation Block Breaking",
-    "text.autoconfig.archeology.option.mojangExcavationBreaking.@Tooltip[0]": "If enabled, Excavation Block Breaking will be same as from",
-    "text.autoconfig.archeology.option.mojangExcavationBreaking.@Tooltip[1]": "Minecraft Live 2020, i.e. you should be patient while brushing",
+    "text.autoconfig.archeology.option.disableBrushingAnimation": "Disable Copper Brush brushing animation",
+    "text.autoconfig.archeology.option.disableBrushingAnimation.@Tooltip[0]": "If enabled, bow drawing animation will be used instead.",
+    "text.autoconfig.archeology.option.disableBrushingAnimation.@Tooltip[1]": "For fixing issues with other mods.",
+
+    "text.autoconfig.archeology.option.brushing": "Brushing",
+
+    "text.autoconfig.archeology.option.brushing.mojangExcavationBreaking": "Mojang Excavation Block Breaking",
+    "text.autoconfig.archeology.option.brushing.mojangExcavationBreaking.@Tooltip[0]": "If enabled, Excavation Block Breaking will be same as from",
+    "text.autoconfig.archeology.option.brushing.mojangExcavationBreaking.@Tooltip[1]": "Minecraft Live 2020, i.e. you should be patient while brushing",
     
-    "text.autoconfig.archeology.option.thresholdCoef": "Breaking threshold coefficient",
-    "text.autoconfig.archeology.option.thresholdCoef.@Tooltip[0]": "Specifies sensitivity for movement while brushing.",
-    "text.autoconfig.archeology.option.thresholdCoef.@Tooltip[1]": "In percents, as higher the harder.",
+    "text.autoconfig.archeology.option.brushing.thresholdCoef": "Breaking threshold coefficient",
+    "text.autoconfig.archeology.option.brushing.thresholdCoef.@Tooltip[0]": "Specifies sensitivity for movement while brushing.",
+    "text.autoconfig.archeology.option.brushing.thresholdCoef.@Tooltip[1]": "In percents, as higher the harder.",
 
-    "text.autoconfig.archeology.option.breakingSpeed": "Breaking speed coefficient",
-    "text.autoconfig.archeology.option.breakingSpeed.@Tooltip[0]": "Specifies speed of Excavation Block breaking while brushing.",
-    "text.autoconfig.archeology.option.breakingSpeed.@Tooltip[1]": "In percents, as higher the easier.",
+    "text.autoconfig.archeology.option.brushing.breakingSpeed": "Breaking speed coefficient",
+    "text.autoconfig.archeology.option.brushing.breakingSpeed.@Tooltip[0]": "Specifies speed of Excavation Block breaking while brushing.",
+    "text.autoconfig.archeology.option.brushing.breakingSpeed.@Tooltip[1]": "In percents, as higher the easier.",
 
-    "text.autoconfig.archeology.option.repairingSpeed": "Breaking repairing coefficient",
-    "text.autoconfig.archeology.option.repairingSpeed.@Tooltip[0]": "Specifies speed of Excavation Block repairing while brushing.",
-    "text.autoconfig.archeology.option.repairingSpeed.@Tooltip[1]": "In percents, as higher the harder.",
+    "text.autoconfig.archeology.option.brushing.repairingSpeed": "Breaking repairing coefficient",
+    "text.autoconfig.archeology.option.brushing.repairingSpeed.@Tooltip[0]": "Specifies speed of Excavation Block repairing while brushing.",
+    "text.autoconfig.archeology.option.brushing.repairingSpeed.@Tooltip[1]": "In percents, as higher the harder.",
 
     "stat.archeology.excavated": "Succesfully Excavated Blocks",
 

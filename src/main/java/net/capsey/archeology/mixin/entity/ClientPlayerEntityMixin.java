@@ -64,7 +64,7 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
                     Vec3d prevLookDir = Vec3d.fromPolar(player.prevPitch, player.prevHeadYaw);
                     double change = prevLookDir.squaredDistanceTo(lookDir);
 
-                    breakingProgress += getBreakDelta(change, player.getActiveItem(), config.mojangExcavationBreaking);
+                    breakingProgress += getBreakDelta(change, player.getActiveItem(), config.brushing.mojangExcavationBreaking);
 
                     if (breakingProgress >= 1.0F) {
                         client.world.sendPacket(new ExcavationBreakingC2SPacket(++currentStage));
