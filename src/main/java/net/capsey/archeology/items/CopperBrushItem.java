@@ -67,7 +67,7 @@ public class CopperBrushItem extends Item {
 		if (!world.isClient) {
 			int brushTicks = CopperBrushItem.getBrushTicks(user.getActiveItem());
 
-			if (remainingUseTicks % brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty()) == 0) {
+			if (remainingUseTicks % (brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty())) == 0) {
 				int damage = world.getRandom().nextInt(2);
 				stack.damage(damage, user, p -> 
 					p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
