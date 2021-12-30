@@ -69,6 +69,14 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
             Inventories.writeNbt(nbt, items);
         }
     }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        NbtCompound tag = new NbtCompound();
+        super.writeNbt(tag);
+        
+        return writeShards(tag);
+    }
     
     @Override
     public int size() {
