@@ -22,10 +22,15 @@ import net.minecraft.world.World;
 
 public class CopperBrushItem extends Item {
 
+	private static final int CREATIVE_BRUSH_TICKS = 5;
 	private static final int[] BRUSH_TICKS = { 8, 7, 6, 5 };
 
-	public static int getBrushTicks(ItemStack item) {
-		return BRUSH_TICKS[getOxidizationIndex(item)];
+	public static int getBrushTicks(ItemStack stack, LivingEntity user) {
+		if (user instanceof PlayerEntity player && player.isCreative()) {
+			return CREATIVE_BRUSH_TICKS;
+		}
+
+		return BRUSH_TICKS[getOxidizationIndex(stack)];
 	}
 
 	public static int getOxidizationIndex(ItemStack item) {
@@ -65,7 +70,7 @@ public class CopperBrushItem extends Item {
 	@Override
 	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
 		if (!world.isClient) {
-			int brushTicks = CopperBrushItem.getBrushTicks(user.getActiveItem());
+			int brushTicks = CopperBrushItem.getBrushTicks(stack, user);
 
 			if (remainingUseTicks % (brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty())) == 0) {
 				int damage = world.getRandom().nextInt(2);

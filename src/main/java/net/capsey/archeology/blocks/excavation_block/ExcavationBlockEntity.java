@@ -32,7 +32,7 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
     public void startBrushing(PlayerEntity player, ItemStack stack) {
         if (stack.isOf(Items.COPPER_BRUSH)) {
             this.brushingPlayer = player;
-            this.brushTicks = CopperBrushItem.getBrushTicks(stack);
+            this.brushTicks = CopperBrushItem.getBrushTicks(stack, player);
             generateLoot(player, stack);
         }
     }

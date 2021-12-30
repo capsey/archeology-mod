@@ -12,11 +12,12 @@ import net.capsey.archeology.items.CopperBrushItem;
 import net.capsey.archeology.network.ExcavationBreakingC2SPacket;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 @Mixin(ClientPlayerEntity.class)
@@ -31,13 +32,17 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
 
     private static final double[] BREAK_THRESHOLD = { 5.0E-6, 1.0E-5, 2.0E-5, 5.0E-5 };
 
-    private static float getBreakDelta(double change, ItemStack item, boolean mojang) {
+    private static float getBreakDelta(double change, ClientPlayerEntity player, boolean mojang) {
+        if (player.isCreative()) {
+            return 0;
+        }
+
         ModConfig config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
         float value;
         boolean moved;
 
         if (!mojang) {
-            int i = CopperBrushItem.getOxidizationIndex(item);
+            int i = CopperBrushItem.getOxidizationIndex(player.getActiveItem());
             moved = change > (BREAK_THRESHOLD[i] * config.getThresholdCoef());
             value = (moved ? REGULAR_REPAIR_DELTAS : REGULAR_BREAK_DELTAS)[i];
         } else {
@@ -64,14 +69,12 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
                     Vec3d prevLookDir = Vec3d.fromPolar(player.prevPitch, player.prevHeadYaw);
                     double change = prevLookDir.squaredDistanceTo(lookDir);
 
-                    breakingProgress += getBreakDelta(change, player.getActiveItem(), config.brushing.mojangExcavationBreaking);
+                    breakingProgress += getBreakDelta(change, player, config.brushing.mojangExcavationBreaking);
 
                     if (breakingProgress >= 1.0F) {
-                        client.world.sendPacket(new ExcavationBreakingC2SPacket(++currentStage));
-                        breakingProgress = 0.0F;
+                        this.sendPacket(currentStage + 1, client.world);
                     } else if (breakingProgress <= -1.0F) {
-                        client.world.sendPacket(new ExcavationBreakingC2SPacket(--currentStage));
-                        breakingProgress = 0.0F;
+                        this.sendPacket(currentStage - 1, client.world);
                     }
 
                     client.particleManager.addBlockBreakingParticles(raycast.getBlockPos(), Direction.UP);
@@ -79,10 +82,20 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
                 }
             }
 
-            client.world.sendPacket(new ExcavationBreakingC2SPacket(10));
+            this.sendPacket(10, client.world);
             this.reset();
         }
 	}
+
+    private void sendPacket(int stage, ClientWorld world) {
+        stage = MathHelper.clamp(stage, 0, 10);
+
+        if (stage != this.currentStage) {
+            world.sendPacket(new ExcavationBreakingC2SPacket(stage));
+            this.currentStage = stage;
+            this.breakingProgress = 0.0F;
+        }
+    }
 
     @Override
     public void startBrushing(BlockPos pos) {
