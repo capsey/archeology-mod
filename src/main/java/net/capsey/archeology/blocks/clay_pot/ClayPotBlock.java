@@ -1,7 +1,9 @@
 package net.capsey.archeology.blocks.clay_pot;
 
+import java.util.Optional;
 import java.util.Random;
 
+import net.capsey.archeology.BlockEntities;
 import net.capsey.archeology.blocks.FallingBlockWithEntity;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -93,10 +95,11 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
 	@Override
 	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
 		if (!state.isOf(newState.getBlock())) {
-			BlockEntity blockEntity = world.getBlockEntity(pos);
+			Optional<ClayPotBlockEntity> blockEntity = world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY);
 			
-			if (blockEntity instanceof ClayPotBlockEntity potEntity) {
-				potEntity.onBreak(this);
+			if (blockEntity.isPresent()) {
+				blockEntity.get().onBreak();
+				world.updateComparators(pos, this);
 			}
 
 			super.onStateReplaced(state, world, pos, newState, moved);

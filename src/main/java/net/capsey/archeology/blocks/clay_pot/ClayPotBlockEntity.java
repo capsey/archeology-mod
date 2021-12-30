@@ -5,7 +5,6 @@ import java.util.stream.IntStream;
 
 import net.capsey.archeology.BlockEntities;
 import net.capsey.archeology.items.ceramic_shard.CeramicShard;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
@@ -125,10 +124,9 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
 		}
     }
 
-    public void onBreak(Block block) {
+    public void onBreak() {
         this.generateItems();
         ItemScatterer.spawn(world, pos, this);
-        world.updateComparators(pos, block);
     }
     
     @Override

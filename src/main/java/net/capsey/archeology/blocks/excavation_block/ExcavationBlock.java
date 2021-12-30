@@ -21,6 +21,7 @@ import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -34,6 +35,8 @@ public class ExcavationBlock extends BlockWithEntity {
     
     private static final int[] BRUSH_TICKS_PER_LAYER = { 4, 4, 6, 6 };
 
+    private final UniformIntProvider experienceDropped;
+
     public static int getBrushTicksPerLayer(Difficulty difficulty) {
         switch (difficulty) {
             case PEACEFUL: return BRUSH_TICKS_PER_LAYER[0];
@@ -45,6 +48,7 @@ public class ExcavationBlock extends BlockWithEntity {
 
     public ExcavationBlock(AbstractBlock.Settings settings) {
         super(settings);
+        this.experienceDropped = UniformIntProvider.create(2, 5);
         setDefaultState(getStateManager().getDefaultState().with(BRUSHING_LEVEL, 0));
     }
 
@@ -81,6 +85,7 @@ public class ExcavationBlock extends BlockWithEntity {
             if (entity.isPresent() && entity.get().brushingCheck()) {
     
                 if (i < MAX_BRUSHING_LEVELS) {
+                    // Remove layer
                     if (entity.get().isTime(world.getDifficulty())) {
                         world.setBlockState(pos, state.with(ExcavationBlock.BRUSHING_LEVEL, i + 1));
                     }
@@ -88,6 +93,13 @@ public class ExcavationBlock extends BlockWithEntity {
                     world.createAndScheduleBlockTick(pos, this, 1);
                     return;
                 } else {
+                    // Drop experience
+                    int exp = this.experienceDropped.get(world.random);
+                    if (exp > 0) {
+                        this.dropExperience(world, pos, exp);
+                    }
+
+                    // Drop loot
                     entity.get().successfullyBrushed();
                     entity.get().dropLoot();
                 }
