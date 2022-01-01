@@ -1,15 +1,17 @@
 {
     "type": "archeology:excavation",
     "pools": [{
-        "rolls": 0.2,
-        "bonus_rolls": 0.2,
+        "rolls": 0.8,
+        "bonus_rolls": 0.1,
         "entries": [
             {
                 "type": "minecraft:item",
+                "weight": 1,
                 "name": "minecraft:diamond"
             },
             {
                 "type": "minecraft:item",
+                "weight": 5,
                 "name": "minecraft:emerald",
                 "functions": [{
                     "function": "set_count",
@@ -18,6 +20,7 @@
             },
             {
                 "type": "minecraft:item",
+                "weight": 5,
                 "name": "minecraft:iron_nugget",
                 "functions": [{
                     "function": "set_count",

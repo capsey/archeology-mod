@@ -1,7 +1,7 @@
 {
     "type": "archeology:excavation",
     "pools": [{
-        "rolls": 1.0,
+        "rolls": 0.9,
         "bonus_rolls": 0.1,
         "entries": [
             {

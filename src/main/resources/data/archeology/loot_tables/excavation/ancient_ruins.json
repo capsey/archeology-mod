@@ -24,13 +24,13 @@
             },
             {
                 "type": "minecraft:item",
-                "weight": 5,
+                "weight": 2,
                 "quality": -2,
                 "name": "archeology:overworld_shard"
             },
             {
                 "type": "minecraft:item",
-                "weight": 5,
+                "weight": 2,
                 "quality": -2,
                 "name": "archeology:emerald_shard"
             }

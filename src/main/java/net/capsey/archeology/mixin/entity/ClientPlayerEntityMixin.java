@@ -32,7 +32,8 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
 
     private static final double[] BREAK_THRESHOLD = { 5.0E-6, 1.0E-5, 2.0E-5, 5.0E-5 };
 
-    private static float getBreakDelta(double change, ClientPlayerEntity player, boolean mojang) {
+    private static float getBreakDelta(double change, ClientPlayerEntity player) {
+        // Do not break if creative
         if (player.isCreative()) {
             return 0;
         }
@@ -41,11 +42,13 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
         float value;
         boolean moved;
 
-        if (!mojang) {
+        if (!config.brushing.mojangExcavationBreaking) {
+            // Break/restore value depends on oxidization level
             int i = CopperBrushItem.getOxidizationIndex(player.getActiveItem());
             moved = change > (BREAK_THRESHOLD[i] * config.getThresholdCoef());
             value = (moved ? REGULAR_REPAIR_DELTAS : REGULAR_BREAK_DELTAS)[i];
         } else {
+            // Mojang one do not
             moved = change > 0;
             value = moved ? 0.7F : -0.04F;
         }
@@ -62,21 +65,25 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
                 BlockHitResult raycast = (BlockHitResult) client.crosshairTarget;
                 
                 if (raycast.getBlockPos().equals(brushingPos)) {
-                    ModConfig config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
                     ClientPlayerEntity player = (ClientPlayerEntity)(Object) this;
 
+                    // Calculating break delta (how much block breaks/restores)
                     Vec3d lookDir = Vec3d.fromPolar(player.getPitch(), player.getHeadYaw());
                     Vec3d prevLookDir = Vec3d.fromPolar(player.prevPitch, player.prevHeadYaw);
                     double change = prevLookDir.squaredDistanceTo(lookDir);
 
-                    breakingProgress += getBreakDelta(change, player, config.brushing.mojangExcavationBreaking);
+                    breakingProgress += getBreakDelta(change, player);
 
+                    // Sending break packet
                     if (breakingProgress >= 1.0F) {
                         this.sendPacket(currentStage + 1, client.world);
                     } else if (breakingProgress <= -1.0F) {
                         this.sendPacket(currentStage - 1, client.world);
                     }
 
+                    // Adding brushing particles
+                    client.particleManager.addBlockBreakingParticles(raycast.getBlockPos(), Direction.UP);
+                    client.particleManager.addBlockBreakingParticles(raycast.getBlockPos(), Direction.UP);
                     client.particleManager.addBlockBreakingParticles(raycast.getBlockPos(), Direction.UP);
                     return;
                 }

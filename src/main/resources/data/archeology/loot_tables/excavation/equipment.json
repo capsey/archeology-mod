@@ -1,8 +1,8 @@
 {
     "type": "archeology:excavation",
     "pools": [{
-        "rolls": 1.0,
-        "bonus_rolls": 0.0,
+        "rolls": 0.8,
+        "bonus_rolls": 0.05,
         "entries": [
             {
                 "type": "minecraft:item",
@@ -14,25 +14,7 @@
                     },
                     {
                         "function": "minecraft:enchant_with_levels",
-                        "levels": { "min": 10, "max": 25 },
-                        "conditions": [{
-                            "condition": "minecraft:random_chance",
-                            "chance": 0.7
-                        }]
-                    }
-                ]
-            },
-            {
-                "type": "minecraft:item",
-                "name": "minecraft:chainmail_helmet",
-                "functions": [
-                    {
-                        "function": "set_damage",
-                        "damage": { "min": 0.2, "max": 0.8 }
-                    },
-                    {
-                        "function": "minecraft:enchant_with_levels",
-                        "levels": { "min": 10, "max": 25 },
+                        "levels": { "min": 5, "max": 18 },
                         "conditions": [{
                             "condition": "minecraft:random_chance",
                             "chance": 0.7
@@ -50,7 +32,7 @@
                     },
                     {
                         "function": "minecraft:enchant_with_levels",
-                        "levels": { "min": 10, "max": 25 },
+                        "levels": { "min": 5, "max": 18 },
                         "conditions": [{
                             "condition": "minecraft:random_chance",
                             "chance": 0.7
@@ -68,28 +50,10 @@
                     },
                     {
                         "function": "minecraft:enchant_with_levels",
-                        "levels": { "min": 10, "max": 25 },
+                        "levels": { "min": 5, "max": 18 },
                         "conditions": [{
                             "condition": "minecraft:random_chance",
                             "chance": 0.7
-                        }]
-                    }
-                ]
-            },
-            {
-                "type": "minecraft:item",
-                "name": "minecraft:iron_chestplate",
-                "functions": [
-                    {
-                        "function": "set_damage",
-                        "damage": { "min": 0.2, "max": 0.8 }
-                    },
-                    {
-                        "function": "minecraft:enchant_with_levels",
-                        "levels": { "min": 10, "max": 25 },
-                        "conditions": [{
-                            "condition": "minecraft:random_chance",
-                            "chance": 0.5
                         }]
                     }
                 ]
@@ -100,7 +64,7 @@
                 "functions": [
                     {
                         "function": "set_damage",
-                        "damage": { "min": 0.1, "max": 0.3 }
+                        "damage": { "min": 0.01, "max": 0.1 }
                     },
                     {
                         "function": "minecraft:enchant_with_levels",
@@ -122,7 +86,7 @@
                     },
                     {
                         "function": "minecraft:enchant_with_levels",
-                        "levels": { "min": 10, "max": 25 },
+                        "levels": { "min": 5, "max": 18 },
                         "conditions": [{
                             "condition": "minecraft:random_chance",
                             "chance": 0.7
@@ -140,7 +104,7 @@
                     },
                     {
                         "function": "minecraft:enchant_with_levels",
-                        "levels": { "min": 10, "max": 25 },
+                        "levels": { "min": 5, "max": 18 },
                         "conditions": [{
                             "condition": "minecraft:random_chance",
                             "chance": 0.7
@@ -148,24 +112,7 @@
                     }
                 ]
             },
-            {
-                "type": "minecraft:item",
-                "name": "minecraft:iron_shovel",
-                "functions": [
-                    {
-                        "function": "set_damage",
-                        "damage": { "min": 0.2, "max": 0.8 }
-                    },
-                    {
-                        "function": "minecraft:enchant_with_levels",
-                        "levels": { "min": 10, "max": 25 },
-                        "conditions": [{
-                            "condition": "minecraft:random_chance",
-                            "chance": 0.7
-                        }]
-                    }
-                ]
-            },
+
             {
                 "type": "minecraft:item",
                 "name": "minecraft:iron_pickaxe",
@@ -176,7 +123,7 @@
                     },
                     {
                         "function": "minecraft:enchant_with_levels",
-                        "levels": { "min": 10, "max": 25 },
+                        "levels": { "min": 5, "max": 18 },
                         "conditions": [{
                             "condition": "minecraft:random_chance",
                             "chance": 0.7
@@ -194,25 +141,7 @@
                     },
                     {
                         "function": "minecraft:enchant_with_levels",
-                        "levels": { "min": 10, "max": 25 },
-                        "conditions": [{
-                            "condition": "minecraft:random_chance",
-                            "chance": 0.7
-                        }]
-                    }
-                ]
-            },
-            {
-                "type": "minecraft:item",
-                "name": "minecraft:iron_hoe",
-                "functions": [
-                    {
-                        "function": "set_damage",
-                        "damage": { "min": 0.2, "max": 0.8 }
-                    },
-                    {
-                        "function": "minecraft:enchant_with_levels",
-                        "levels": { "min": 10, "max": 25 },
+                        "levels": { "min": 5, "max": 18 },
                         "conditions": [{
                             "condition": "minecraft:random_chance",
                             "chance": 0.7
@@ -240,7 +169,7 @@
                     },
                     {
                         "function": "minecraft:enchant_with_levels",
-                        "levels": { "min": 10, "max": 25 },
+                        "levels": { "min": 5, "max": 18 },
                         "conditions": [{
                             "condition": "minecraft:random_chance",
                             "chance": 0.7
@@ -251,6 +180,26 @@
             {
                 "type": "minecraft:item",
                 "name": "minecraft:shield",
+                "functions": [
+                    {
+                        "function": "set_damage",
+                        "damage": { "min": 0.2, "max": 0.8 }
+                    }
+                ]
+            },
+            {
+                "type": "minecraft:item",
+                "name": "minecraft:fishing_rod",
+                "functions": [
+                    {
+                        "function": "set_damage",
+                        "damage": { "min": 0.2, "max": 0.8 }
+                    }
+                ]
+            },
+            {
+                "type": "minecraft:item",
+                "name": "minecraft:carrot_on_a_stick",
                 "functions": [
                     {
                         "function": "set_damage",
