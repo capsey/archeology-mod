@@ -9,7 +9,6 @@
         "block.MushroomPlantBlockMixin",
         "block.PlantBlockMixin",
         "block.SaplingBlockMixin",
-        "entity.ClientPlayerEntityMixin",
         "entity.FallingBlockEntityMixin",
         "entity.ServerPlayerEntityMixin",
         "item.BoneMealItemMixin",
@@ -24,7 +23,8 @@
         "render.FallingBlockEntityRendererMixin",
         "render.HeldItemRendererMixin",
         "render.PlayerEntityRendererMixin",
-        "render.TexturedRenderLayersMixin"
+        "render.TexturedRenderLayersMixin",
+        "entity.ClientPlayerEntityMixin"
     ],
     "injectors": {
         "defaultRequire": 1
