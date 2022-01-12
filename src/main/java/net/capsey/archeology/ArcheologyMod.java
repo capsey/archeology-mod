@@ -21,7 +21,7 @@ public class ArcheologyMod implements ModInitializer {
 
 	// Loot context type for Fossil Container
 	public static final LootContextType EXCAVATION_LOOT_CONTEXT_TYPE = createLootContextType(builder ->
-		builder.require(LootContextParameters.TOOL)
+		builder.allow(LootContextParameters.TOOL)
 				.allow(LootContextParameters.THIS_ENTITY)
 				.allow(LootContextParameters.BLOCK_ENTITY)
 	);

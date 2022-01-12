@@ -22,7 +22,7 @@ public class ExcavationBlockEntityRenderer implements BlockEntityRenderer<Excava
             matrices.push();
 
             matrices.translate(0.5, 0.4, 0.5);
-            MinecraftClient.getInstance().getItemRenderer().renderItem(blockEntity.getOneLootItem(), ModelTransformation.Mode.GROUND, light, overlay, matrices, vertexConsumers, overlay);
+            MinecraftClient.getInstance().getItemRenderer().renderItem(blockEntity.getDisplayLootItem(), ModelTransformation.Mode.GROUND, light, overlay, matrices, vertexConsumers, overlay);
 
             matrices.pop();
         }

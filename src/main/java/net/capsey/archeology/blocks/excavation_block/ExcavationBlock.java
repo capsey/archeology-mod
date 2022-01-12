@@ -5,6 +5,7 @@ import java.util.Random;
 
 import net.capsey.archeology.BlockEntities;
 import net.capsey.archeology.Items;
+import net.capsey.archeology.blocks.clay_pot.ClayPotBlockEntity;
 import net.capsey.archeology.entity.ExcavatorPlayerEntity;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -108,6 +109,48 @@ public class ExcavationBlock extends BlockWithEntity {
             world.breakBlock(pos, true);
         }
 	}
+
+    @Override
+    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        // Chance 33.3%
+        if (random.nextInt(3) != 0) return;
+
+        Optional<ClayPotBlockEntity> under = world.getBlockEntity(pos.down(), BlockEntities.CLAY_POT_BLOCK_ENTITY);
+        Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, BlockEntities.EXCAVATION_BLOCK_ENTITY);
+
+        if (under.isPresent() && entity.isPresent()) {
+            // Generating item to insert
+            ItemStack loot = entity.get().generateItem();
+
+            // Trying to place into not fully filled stacks
+            for (int i = 0; i < under.get().size(); i++) {
+                ItemStack stack = under.get().getStack(i).copy();
+
+                if (ItemStack.canCombine(loot, stack)) {
+                    while (stack.getCount() < stack.getMaxCount() && !loot.isEmpty()) {
+                        loot.decrement(1);
+                        stack.increment(1);
+                    }
+
+                    under.get().setStack(i, stack);
+                    if (loot.isEmpty()) break;
+                }
+            }
+
+            // If didn't filled everything, try to fill empty slots
+            if (!loot.isEmpty()) {
+                for (int i = 0; i < under.get().size(); i++) {
+                    if (under.get().getStack(i).isEmpty()) {
+                        under.get().setStack(i, loot);
+                        break;
+                    }
+                }
+            }
+
+            // Update comparators
+            world.updateComparators(pos.down(), under.get().getCachedState().getBlock());
+        }
+    }
 
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {

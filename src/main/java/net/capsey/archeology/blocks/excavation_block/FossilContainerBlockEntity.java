@@ -89,6 +89,20 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
         return tag;
     }
 
+    /***
+     * Check world.isClient to be false before using!!
+     */
+    public ItemStack generateItem() {
+        LootContext.Builder builder = (new LootContext.Builder((ServerWorld)this.world))
+                .parameter(LootContextParameters.BLOCK_ENTITY, this)
+                .random(this.world.getRandom());
+        
+        LootTable lootTable = this.world.getServer().getLootManager().getTable(lootTableId);
+        List<ItemStack> list = lootTable.generateLoot(builder.build(ArcheologyMod.EXCAVATION_LOOT_CONTEXT_TYPE));
+        
+        return list.isEmpty() ? ItemStack.EMPTY : list.get(0);
+    }
+
     public void generateLoot(PlayerEntity player, ItemStack stack) {
         if (!world.isClient) {
             LootContext.Builder builder = (new LootContext.Builder((ServerWorld)this.world))
@@ -115,7 +129,7 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
         return !loot.isEmpty();
     }
 
-    public ItemStack getOneLootItem() {
+    public ItemStack getDisplayLootItem() {
         return loot.get(0);
     }
 
