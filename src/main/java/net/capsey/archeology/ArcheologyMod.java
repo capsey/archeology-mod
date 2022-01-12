@@ -16,39 +16,41 @@ import net.minecraft.util.registry.Registry;
 
 public class ArcheologyMod implements ModInitializer {
 
-    public static final String MODID = "archeology";
-    public static final Logger LOGGER = LogManager.getLogger(MODID);
+	public static final String MODID = "archeology";
+	public static final Logger LOGGER = LogManager.getLogger(MODID);
 
-    // Loot context type for Fossil Container
-    public static final LootContextType EXCAVATION_LOOT_CONTEXT_TYPE = createLootContextType(builder ->
+	// Loot context type for Fossil Container
+	public static final LootContextType EXCAVATION_LOOT_CONTEXT_TYPE = createLootContextType(builder ->
 		builder.require(LootContextParameters.TOOL)
-                .allow(LootContextParameters.THIS_ENTITY)
-                .allow(LootContextParameters.BLOCK_ENTITY)
+				.allow(LootContextParameters.THIS_ENTITY)
+				.allow(LootContextParameters.BLOCK_ENTITY)
 	);
 
-    // Player Statistics
-    public static final Identifier EXCAVATED = new Identifier(MODID, "excavated");
+	// Player Statistics
+	public static final Identifier EXCAVATED = new Identifier(MODID, "excavated");
 
-    // S2C Network Packet ID
-    public static final Identifier START_BRUSHING = new Identifier(MODID, "start_brushing");
+	// S2C Network Packet ID
+	public static final Identifier START_BRUSHING = new Identifier(MODID, "start_brushing");
 
-    @Override
-    public void onInitialize() {
-        // It seems that these ones need to be registered non-statically.
-        // Not sure about Items, Blocks, etc. BTW, maybe they shouldn't
-        // be neither, but I don't see any issues yet
-        CeramicShards.registerDefaultShards();
-        Features.registerDefaultFeatures();
+	@Override
+	public void onInitialize() {
+		// Registering all stuff
+		Blocks.onInitialize();
+		BlockEntities.onInitialize();
+		Items.onInitialize();
+		CeramicShards.registerDefaultShards();
+		Features.onInitialize();
 
-        Registry.register(Registry.SOUND_EVENT, Sounds.BRUSHING_SOUND_ID, Sounds.BRUSHING_SOUND_EVENT);
-        Registry.register(Registry.CUSTOM_STAT, "excavated", EXCAVATED);
-        Stats.CUSTOM.getOrCreateStat(EXCAVATED, StatFormatter.DEFAULT);
-    }
+		// Registering other stuff
+		Registry.register(Registry.SOUND_EVENT, Sounds.BRUSHING_SOUND_ID, Sounds.BRUSHING_SOUND_EVENT);
+		Registry.register(Registry.CUSTOM_STAT, "excavated", EXCAVATED);
+		Stats.CUSTOM.getOrCreateStat(EXCAVATED, StatFormatter.DEFAULT);
+	}
 
-    private static LootContextType createLootContextType(Consumer<LootContextType.Builder> type) {
+	private static LootContextType createLootContextType(Consumer<LootContextType.Builder> type) {
 		LootContextType.Builder builder = new LootContextType.Builder();
 		type.accept(builder);
 		return builder.build();
 	}
-    
+	
 }

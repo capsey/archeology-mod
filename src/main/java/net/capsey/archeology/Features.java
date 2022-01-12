@@ -31,7 +31,7 @@ public class Features {
 
 	private static final List<RegistryKey<Biome>> ANCIENT_RUINS_BIOMES = List.of(BiomeKeys.PLAINS, BiomeKeys.SAVANNA, BiomeKeys.DESERT, BiomeKeys.FOREST, BiomeKeys.BIRCH_FOREST, BiomeKeys.TAIGA);
 
-	public static void registerDefaultFeatures() {
+	public static void onInitialize() {
 		// Registering a Surface Structure
 		FabricStructureBuilder.create(new Identifier(ArcheologyMod.MODID, "ancient_ruins"), ANCIENT_RUINS)
 				.step(GenerationStep.Feature.SURFACE_STRUCTURES)
