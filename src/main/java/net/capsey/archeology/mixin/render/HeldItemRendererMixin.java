@@ -41,15 +41,15 @@ public abstract class HeldItemRendererMixin {
                 boolean bl = arm == Arm.RIGHT;
 
                 int side = bl ? 1 : -1;
-                int max = CopperBrushItem.getBrushTicks(item, player) * ExcavationBlock.MAX_BRUSHING_LEVELS;
+                int max = CopperBrushItem.getBrushTicks(item) * ExcavationBlock.MAX_BRUSHING_LEVELS;
                 float progress = (float) player.getItemUseTime() / max;
-                float angle_coef = MathHelper.sin(ExcavationBlock.MAX_BRUSHING_LEVELS * progress * 3.1415927F);
+                float angleCoef = MathHelper.sin(ExcavationBlock.MAX_BRUSHING_LEVELS * progress * 3.1415927F);
 
                 matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-60.0F));
                 matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(-45.0F));
 
                 matrices.translate(-0.3D, 0.3D, -1.0D);
-                matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(side * 40.0F * angle_coef));
+                matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(side * 40.0F * angleCoef));
                 matrices.translate(-0.2D, 0.2D, 0.0D);
 
                 ((HeldItemRenderer)(Object) this).renderItem(player, item, ModelTransformation.Mode.FIXED, !bl, matrices, vertexConsumers, light);
