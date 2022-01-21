@@ -9,6 +9,7 @@ import net.capsey.archeology.items.CopperBrushItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stat.Stats;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
@@ -56,6 +57,7 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
     public void successfullyBrushed() {
         if (brushingPlayer != null) {
             brushingPlayer.incrementStat(ArcheologyMod.EXCAVATED);
+            brushingPlayer.incrementStat(Stats.MINED.getOrCreateStat(getCachedState().getBlock()));
         }
     }
 

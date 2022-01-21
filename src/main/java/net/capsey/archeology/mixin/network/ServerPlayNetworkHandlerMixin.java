@@ -20,16 +20,20 @@ public class ServerPlayNetworkHandlerMixin implements ServerPlayPacketListenerMi
         NetworkThreadUtils.forceMainThread(packet, self, self.getPlayer().getWorld());
 
         ServerPlayerEntity player = self.getPlayer();
-        ServerWorld world = player.getWorld();
         ExcavationBlockEntity entity = ((ExcavatorPlayerEntity) player).getExcavatingBlock();
-        
-        if (entity != null && !entity.isRemoved() && entity.isCorrectPlayer(player)) {
-            int newStage = packet.getNewStage();
 
-            if (newStage < 9) {
-                world.setBlockBreakingInfo(0, entity.getPos(), newStage);
-            } else {
-                world.breakBlock(entity.getPos(), false);
+        if (entity != null){
+            ServerWorld world = (ServerWorld) entity.getWorld();
+            
+            if (!entity.isRemoved() && entity.isCorrectPlayer(player)) {
+                int newStage = packet.getNewStage();
+    
+                if (newStage < 9) {
+                    world.setBlockBreakingInfo(0, entity.getPos(), newStage);
+                } else {
+                    // world.breakBlock(entity.getPos(), false);
+                    player.stopUsingItem();
+                }
             }
         }
     }

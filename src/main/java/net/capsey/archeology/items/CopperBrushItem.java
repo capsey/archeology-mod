@@ -4,7 +4,6 @@ import me.shedaniel.autoconfig.AutoConfig;
 import net.capsey.archeology.ModConfig;
 import net.capsey.archeology.Sounds;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
-import net.capsey.archeology.entity.ExcavatorPlayerEntity;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -51,15 +50,11 @@ public class CopperBrushItem extends Item {
 			Block block = world.getBlockState(pos).getBlock();
 
 			if (block instanceof ExcavationBlock excBlock) {
-				float cooldown = ((ExcavatorPlayerEntity) player).getBrushCooldownProgress();
+				ItemStack stack = context.getStack();
 
-				if (cooldown >= 1.0F) {
-					ItemStack stack = context.getStack();
-
-					if (excBlock.startBrushing(world, pos, player, stack)) {
-						player.setCurrentHand(context.getHand());
-						return ActionResult.CONSUME;
-					}
+				if (excBlock.startBrushing(world, pos, player, stack)) {
+					player.setCurrentHand(context.getHand());
+					return ActionResult.CONSUME;
 				}
 			}
 		}
@@ -82,13 +77,6 @@ public class CopperBrushItem extends Item {
 			if (remainingUseTicks % brushTicks == 0) {
 				world.playSound(null, user.getBlockPos(), Sounds.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1f, 1f);
 			}
-		}
-	}
-
-	@Override
-	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-		if (user instanceof ExcavatorPlayerEntity player) {
-			player.resetLastBrushedTicks();
 		}
 	}
 

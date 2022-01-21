@@ -1,7 +1,5 @@
 package net.capsey.archeology;
 
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlockEntity;
 import net.capsey.archeology.blocks.clay_pot.RawClayPotBlockEntity;
 import net.capsey.archeology.blocks.clay_pot.client.ClayPotBlockEntityRenderer;
@@ -24,9 +22,6 @@ public class ArcheologyClientMod implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        // Adding Config
-        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
-
         // Registering Model Layers
         EntityModelLayerRegistry.registerModelLayer(CLAY_POT_MODEL_LAYER, ClayPotBlockEntityRenderer::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(CLAY_POT_SHARDS_MODEL_LAYER, ShardsContainerRenderer::getTexturedModelData);

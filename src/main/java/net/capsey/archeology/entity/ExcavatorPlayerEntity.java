@@ -11,8 +11,4 @@ public interface ExcavatorPlayerEntity {
     @Nullable
     public ExcavationBlockEntity getExcavatingBlock();
 
-    public void resetLastBrushedTicks();
-
-    public float getBrushCooldownProgress();
-
 }

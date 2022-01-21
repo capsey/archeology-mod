@@ -5,6 +5,8 @@ import java.util.function.Consumer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.capsey.archeology.items.ceramic_shard.CeramicShards;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.loot.context.LootContextParameters;
@@ -34,6 +36,10 @@ public class ArcheologyMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		// Adding Config
+		// TODO: Separate configs for server and client
+		AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
+
 		// Registering all stuff
 		Blocks.onInitialize();
 		BlockEntities.onInitialize();
