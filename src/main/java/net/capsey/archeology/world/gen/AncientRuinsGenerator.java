@@ -28,6 +28,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.StructureAccessor;
+import net.minecraft.world.gen.StructureWeightType;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 public class AncientRuinsGenerator {
@@ -39,30 +40,42 @@ public class AncientRuinsGenerator {
 		new Identifier(ArcheologyMod.MODID, "ancient_ruins/ancient_ruins_pool")
 	};
 
-	static final int UP_SCAN_LIMIT = 20;
-	static final BlockPos STRUCTURE_OFFSET = new BlockPos(0, -16, 0);
+	static final int UP_SCAN_LIMIT = 16;
+	static final BlockPos STRUCTURE_OFFSET = new BlockPos(0, -12, 0);
 
 	public static void addPieces(StructureManager manager, BlockPos pos, BlockRotation rotation, StructurePiecesHolder pieces, Random random) {
 		// Selecting random underground part and randomly offsetting
 		int i = random.nextInt(STRUCTURE_IDS.length);
 		BlockPos sOffset = STRUCTURE_OFFSET.add(0, random.nextInt(4), 0);
-		pieces.addPiece(new AncientRuinsGenerator.Piece(manager, STRUCTURE_IDS[i], pos.add(sOffset), rotation));
+		pieces.addPiece(new AncientRuinsGenerator.Piece(manager, STRUCTURE_IDS[i], pos.add(sOffset), rotation, true));
 
 		// Offsetting top part randomly for variation
 		BlockPos tOffset = new BlockPos(random.nextInt(3) - 1, 0, random.nextInt(3) - 1);
-		pieces.addPiece(new AncientRuinsGenerator.Piece(manager, STRUCTURE_TOP_ID, pos.add(tOffset), rotation));
+		pieces.addPiece(new AncientRuinsGenerator.Piece(manager, STRUCTURE_TOP_ID, pos.add(tOffset), rotation, false));
 	}
 
 	public static class Piece extends SimpleStructurePiece {
 
-		public Piece(StructureManager manager, Identifier identifier, BlockPos pos, BlockRotation rotation) {
+		private static final String ROTATION_KEY = "Rot";
+		private static final String BURIED_KEY = "Buried";
+
+		private final boolean buried;
+
+		public Piece(StructureManager manager, Identifier identifier, BlockPos pos, BlockRotation rotation, boolean buried) {
 			super(Features.ANCIENT_RUINS_PIECE, 0, manager, identifier, identifier.toString(), createPlacementData(rotation), pos);
+			this.buried = buried;
 		}
 
 		public Piece(StructureManager manager, NbtCompound nbt) {
 			super(Features.ANCIENT_RUINS_PIECE, nbt, manager, identifier ->
-				createPlacementData(BlockRotation.valueOf(nbt.getString("Rot")))
+				createPlacementData(BlockRotation.valueOf(nbt.getString(ROTATION_KEY)))
 			);
+			this.buried = nbt.getBoolean(BURIED_KEY);
+		}
+
+		@Override
+		public StructureWeightType getWeightType() {
+			return buried ? StructureWeightType.NONE : StructureWeightType.BEARD;
 		}
 
 		private static StructurePlacementData createPlacementData(BlockRotation rotation) {
@@ -75,7 +88,8 @@ public class AncientRuinsGenerator {
 		@Override
 		protected void writeNbt(StructureContext context, NbtCompound nbt) {
 			super.writeNbt(context, nbt);
-			nbt.putString("Rot", this.placementData.getRotation().name());
+			nbt.putString(ROTATION_KEY, this.placementData.getRotation().name());
+			nbt.putBoolean(BURIED_KEY, buried);
 		}
 
 		@Override
@@ -133,7 +147,7 @@ public class AncientRuinsGenerator {
 			for (int i = 0; i <= n; i++) {
 				float chance = (i == n) ? 1 : Math.abs((i - hn) / hn);
 
-				if (random.nextFloat() < chance * 0.6F) {
+				if (random.nextFloat() < chance * 0.4F) {
 					tryPlaceExcavationBlock(world, pos.add(0, i, 0), random);
 				}
 			}
