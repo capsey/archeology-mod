@@ -88,8 +88,7 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
                     return;
                 }
             }
-
-            ArcheologyMod.LOGGER.info("Sending break packet!");
+            
             this.sendBreakPacket();
         }
 	}

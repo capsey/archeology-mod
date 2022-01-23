@@ -73,9 +73,7 @@ public class ArcheologyMod implements ModInitializer {
 		});
 
 		ServerPlayNetworking.registerGlobalReceiver(ArcheologyMod.EXCAVATION_STOP_BRUSHING, (server, player, handler, buf, sender) -> {	
-			LOGGER.info("Receiver got a packet!");
 			server.execute(() -> {
-				LOGGER.info("Server starts executing...");
 				ExcavationBlockEntity entity = ((ExcavatorPlayerEntity) player).getExcavatingBlock();
 				
 				if (entity != null && !entity.isRemoved() && entity.isCorrectPlayer(player)) {
