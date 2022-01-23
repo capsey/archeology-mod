@@ -39,10 +39,7 @@ public class ArcheologyClientMod implements ClientModInitializer {
         // Network
         ClientPlayNetworking.registerGlobalReceiver(ArcheologyMod.START_BRUSHING, (client, handler, buf, responseSender) -> {
             BlockPos pos = buf.readBlockPos();
-
-            client.execute(() -> {
-                ((BrushingPlayerEntity) client.player).startBrushing(pos);
-            });
+            client.execute(() -> ((BrushingPlayerEntity) client.player).startBrushing(pos));
         });
     }
 

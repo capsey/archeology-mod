@@ -13,18 +13,16 @@
         "entity.ServerPlayerEntityMixin",
         "item.BoneMealItemMixin",
         "item.PickaxeItemMixin",
-        "item.UseActionMixin",
-        "network.ServerPlayNetworkHandlerMixin",
-        "network.ServerPlayPacketListenerMixin"
+        "item.UseActionMixin"
     ],
     "client": [
+        "entity.ClientPlayerEntityMixin",
         "render.BuiltinModelItemRendererAccessor",
         "render.BuiltinModelItemRendererMixin",
         "render.FallingBlockEntityRendererMixin",
         "render.HeldItemRendererMixin",
         "render.PlayerEntityRendererMixin",
-        "render.TexturedRenderLayersMixin",
-        "entity.ClientPlayerEntityMixin"
+        "render.TexturedRenderLayersMixin"
     ],
     "injectors": {
         "defaultRequire": 1

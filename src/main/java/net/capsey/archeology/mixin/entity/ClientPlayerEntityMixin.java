@@ -6,18 +6,19 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import me.shedaniel.autoconfig.AutoConfig;
+import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.ModConfig;
 import net.capsey.archeology.entity.BrushingPlayerEntity;
 import net.capsey.archeology.items.CopperBrushItem;
-import net.capsey.archeology.network.ExcavationBreakingC2SPacket;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 @Mixin(ClientPlayerEntity.class)
@@ -60,13 +61,12 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
     public void tick(CallbackInfo info) {
         if (brushingPos != null) {
             MinecraftClient client = MinecraftClient.getInstance();
+            ClientPlayerEntity player = (ClientPlayerEntity)(Object) this;
             
             if (client.crosshairTarget.getType() == HitResult.Type.BLOCK) {
                 BlockHitResult raycast = (BlockHitResult) client.crosshairTarget;
                 
                 if (raycast.getBlockPos().equals(brushingPos)) {
-                    ClientPlayerEntity player = (ClientPlayerEntity)(Object) this;
-
                     // Calculating break delta (how much block breaks/restores)
                     Vec3d lookDir = Vec3d.fromPolar(player.getPitch(), player.getHeadYaw());
                     Vec3d prevLookDir = Vec3d.fromPolar(player.prevPitch, player.prevHeadYaw);
@@ -76,9 +76,9 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
 
                     // Sending break packet
                     if (breakingProgress >= 1.0F) {
-                        this.sendPacket(currentStage + 1, client.world);
+                        this.sendInfoPacket(currentStage + 1);
                     } else if (breakingProgress <= -1.0F) {
-                        this.sendPacket(currentStage - 1, client.world);
+                        this.sendInfoPacket(currentStage - 1);
                     }
 
                     // Adding brushing particles
@@ -89,19 +89,32 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
                 }
             }
 
-            this.sendPacket(10, client.world);
-            this.reset();
+            ArcheologyMod.LOGGER.info("Sending break packet!");
+            this.sendBreakPacket();
         }
 	}
 
-    private void sendPacket(int stage, ClientWorld world) {
-        stage = MathHelper.clamp(stage, 0, 10);
+    private void sendInfoPacket(int stage) {
+        stage = Math.max(stage, 0);
 
-        if (stage != this.currentStage) {
-            world.sendPacket(new ExcavationBreakingC2SPacket(stage));
+        if (stage > 9) {
+            this.sendBreakPacket();
+        }
+        else if (stage != this.currentStage) {
+            // Sending packet to the server
+            PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeInt(stage);
+            ClientPlayNetworking.send(ArcheologyMod.EXCAVATION_BREAKING_INFO, buf);
+
+            // Updating values
             this.currentStage = stage;
             this.breakingProgress = 0.0F;
         }
+    }
+
+    private void sendBreakPacket() {
+        ClientPlayNetworking.send(ArcheologyMod.EXCAVATION_STOP_BRUSHING, PacketByteBufs.empty());
+        this.reset();
     }
 
     @Override
