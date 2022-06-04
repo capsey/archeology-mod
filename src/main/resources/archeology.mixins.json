@@ -13,7 +13,8 @@
         "entity.ServerPlayerEntityMixin",
         "item.BoneMealItemMixin",
         "item.PickaxeItemMixin",
-        "item.UseActionMixin"
+        "item.UseActionMixin",
+        "world.StructureFeatureAccessor"
     ],
     "client": [
         "entity.ClientPlayerEntityMixin",

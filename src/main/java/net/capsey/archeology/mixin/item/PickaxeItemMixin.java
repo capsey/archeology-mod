@@ -1,5 +1,6 @@
 package net.capsey.archeology.mixin.item;
 
+import net.minecraft.tag.TagKey;
 import org.spongepowered.asm.mixin.Mixin;
 
 import net.capsey.archeology.Blocks;
@@ -9,12 +10,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.MiningToolItem;
 import net.minecraft.item.PickaxeItem;
 import net.minecraft.item.ToolMaterial;
-import net.minecraft.tag.Tag;
 
 @Mixin(PickaxeItem.class)
 public abstract class PickaxeItemMixin extends MiningToolItem {
     
-    protected PickaxeItemMixin(float attackDamage, float attackSpeed, ToolMaterial material, Tag<Block> effectiveBlocks, Settings settings) {
+    protected PickaxeItemMixin(float attackDamage, float attackSpeed, ToolMaterial material, TagKey<Block> effectiveBlocks, Settings settings) {
         super(attackDamage, attackSpeed, material, effectiveBlocks, settings);
     }
 

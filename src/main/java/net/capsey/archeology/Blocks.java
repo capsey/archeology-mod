@@ -4,11 +4,10 @@ import net.capsey.archeology.blocks.clay_pot.ClayPotBlock;
 import net.capsey.archeology.blocks.clay_pot.RawClayPotBlock;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
 import net.capsey.archeology.blocks.excavation_block.FallingExcavationBlock;
-import net.fabricmc.fabric.api.tag.TagFactory;
+import net.minecraft.tag.TagKey;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.FallingBlock;
-import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -22,10 +21,10 @@ public class Blocks {
 	public static Block CLAY_POT;
 
 	// Block Tags
-	public static final Tag<Block> EXCAVATION_BLOCKS_TAG = TagFactory.BLOCK.create(new Identifier(ArcheologyMod.MODID, "excavation_blocks"));
+	public static final TagKey<Block> EXCAVATION_BLOCKS_TAG = TagKey.of(Registry.BLOCK_KEY, new Identifier(ArcheologyMod.MODID, "excavation_blocks"));
 
-	public static final Tag<Block> CLAY_POTS_TAG = TagFactory.BLOCK.create(new Identifier(ArcheologyMod.MODID, "clay_pots"));
-	public static final Tag<Block> CLAY_POT_PLANTABLE_TAG = TagFactory.BLOCK.create(new Identifier(ArcheologyMod.MODID, "clay_pot_plantable"));
+	public static final TagKey<Block> CLAY_POTS_TAG = TagKey.of(Registry.BLOCK_KEY, new Identifier(ArcheologyMod.MODID, "clay_pots"));
+	public static final TagKey<Block> CLAY_POT_PLANTABLE_TAG = TagKey.of(Registry.BLOCK_KEY, new Identifier(ArcheologyMod.MODID, "clay_pot_plantable"));
 
 	public static void onInitialize() {
 		EXCAVATION_DIRT = register("excavation_dirt", new ExcavationBlock(AbstractBlock.Settings.copy(net.minecraft.block.Blocks.DIRT).hardness(1.0F)));

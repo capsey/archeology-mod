@@ -41,7 +41,7 @@ public interface FallingBlockWithEntity {
 
 	default void trySpawnFallingBlock(BlockState state, World world, BlockPos pos, boolean dropItem) {
 		if (!world.isClient && canFallThrough(world, pos)) {
-            FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, state);
+            FallingBlockEntity fallingBlockEntity = FallingBlockEntity.spawnFromBlock(world, pos, state);
             fallingBlockEntity.dropItem = dropItem;
             
             BlockEntity entity = world.getBlockEntity(pos);

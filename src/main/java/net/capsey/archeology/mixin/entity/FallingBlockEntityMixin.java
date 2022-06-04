@@ -53,7 +53,7 @@ public abstract class FallingBlockEntityMixin extends Entity implements FallingB
 	}
 
     static {
-		CLIENT_BLOCK_ENTITY_DATA = DataTracker.registerData(FallingBlockEntity.class, TrackedDataHandlerRegistry.TAG_COMPOUND);
+		CLIENT_BLOCK_ENTITY_DATA = DataTracker.registerData(FallingBlockEntity.class, TrackedDataHandlerRegistry.NBT_COMPOUND);
 	}
 
 }
