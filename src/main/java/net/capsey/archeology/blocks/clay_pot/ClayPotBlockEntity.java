@@ -1,8 +1,5 @@
 package net.capsey.archeology.blocks.clay_pot;
 
-import java.util.Map;
-import java.util.stream.IntStream;
-
 import net.capsey.archeology.BlockEntities;
 import net.capsey.archeology.items.ceramic_shard.CeramicShard;
 import net.minecraft.block.BlockState;
@@ -24,14 +21,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
+import java.util.Map;
+import java.util.stream.IntStream;
+
 public class ClayPotBlockEntity extends ShardsContainer implements SidedInventory {
 
     private static final String LOOT_TABLE_TAG = "LootTable";
     private static final int[] AVAILABLE_SLOTS = IntStream.range(0, 9).toArray();
-
+    private final DefaultedList<ItemStack> items = DefaultedList.ofSize(9, ItemStack.EMPTY);
     private Identifier lootTableId;
     private long lootTableSeed;
-    private final DefaultedList<ItemStack> items = DefaultedList.ofSize(9, ItemStack.EMPTY);
 
     public ClayPotBlockEntity(BlockPos pos, BlockState state, Map<Side, CeramicShard> shards) {
         super(BlockEntities.CLAY_POT_BLOCK_ENTITY, pos, state);
@@ -62,7 +61,7 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
     @Override
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        
+
         if (lootTableId != null) {
             nbt.putString(LOOT_TABLE_TAG, lootTableId.toString());
         } else {
@@ -74,16 +73,16 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
     public NbtCompound toInitialChunkDataNbt() {
         NbtCompound tag = new NbtCompound();
         super.writeNbt(tag);
-        
+
         return writeShards(tag);
     }
-    
+
     @Override
     public int size() {
         this.generateItems();
         return items.size();
     }
-    
+
     @Override
     public boolean isEmpty() {
         for (int i = 0; i < size(); i++) {
@@ -94,23 +93,23 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
 
         return true;
     }
-    
+
     @Override
     public ItemStack getStack(int slot) {
         this.generateItems();
         return items.get(slot);
     }
-    
+
     @Override
     public ItemStack removeStack(int slot, int count) {
         return ItemStack.EMPTY;
     }
-    
+
     @Override
     public ItemStack removeStack(int slot) {
         return ItemStack.EMPTY;
     }
-    
+
     @Override
     public void setStack(int slot, ItemStack stack) {
         this.generateItems();
@@ -122,21 +121,21 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
 
     private void generateItems() {
         if (!this.world.isClient && this.lootTableId != null) {
-			LootTable lootTable = this.world.getServer().getLootManager().getTable(this.lootTableId);
-			LootContext.Builder builder = (new LootContext.Builder((ServerWorld)this.world))
+            LootTable lootTable = this.world.getServer().getLootManager().getTable(this.lootTableId);
+            LootContext.Builder builder = (new LootContext.Builder((ServerWorld) this.world))
                     .parameter(LootContextParameters.ORIGIN, Vec3d.ofCenter(this.pos))
                     .random(this.lootTableSeed);
-            
+
             this.lootTableId = null;
-			lootTable.supplyInventory(this, builder.build(LootContextTypes.CHEST));
-		}
+            lootTable.supplyInventory(this, builder.build(LootContextTypes.CHEST));
+        }
     }
 
     public void onBreak() {
         this.generateItems();
         ItemScatterer.spawn(world, pos, this);
     }
-    
+
     @Override
     public void clear() {
         this.generateItems();

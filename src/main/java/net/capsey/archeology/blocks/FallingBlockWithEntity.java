@@ -14,8 +14,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
 public interface FallingBlockWithEntity {
-    
-    public static final int FALL_DELAY = 2;
+
+    int FALL_DELAY = 2;
 
     default ItemEntity dropItem(FallingBlockEntity entity, ItemConvertible item) {
         return entity.dropItem(item);
@@ -33,17 +33,17 @@ public interface FallingBlockWithEntity {
         return FallingBlock.canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= world.getBottomY();
     }
 
-	default void tryScheduleTick(WorldAccess world, BlockPos pos, Block block) {
-		if (canFallThrough(world, pos)) {
+    default void tryScheduleTick(WorldAccess world, BlockPos pos, Block block) {
+        if (canFallThrough(world, pos)) {
             world.createAndScheduleBlockTick(pos, block, FALL_DELAY);
-		}
-	}
+        }
+    }
 
-	default void trySpawnFallingBlock(BlockState state, World world, BlockPos pos, boolean dropItem) {
-		if (!world.isClient && canFallThrough(world, pos)) {
+    default void trySpawnFallingBlock(BlockState state, World world, BlockPos pos, boolean dropItem) {
+        if (!world.isClient && canFallThrough(world, pos)) {
             FallingBlockEntity fallingBlockEntity = FallingBlockEntity.spawnFromBlock(world, pos, state);
             fallingBlockEntity.dropItem = dropItem;
-            
+
             BlockEntity entity = world.getBlockEntity(pos);
 
             if (entity != null) {
@@ -52,7 +52,7 @@ public interface FallingBlockWithEntity {
             }
 
             world.spawnEntity(fallingBlockEntity);
-		}
-	}
+        }
+    }
 
 }

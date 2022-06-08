@@ -1,20 +1,19 @@
 package net.capsey.archeology.mixin.render;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
-
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import net.capsey.archeology.blocks.clay_pot.client.ClayPotBlockEntityRenderer;
 import net.capsey.archeology.blocks.clay_pot.client.ShardsContainerRenderer;
 import net.capsey.archeology.items.ceramic_shard.CeramicShardRegistry;
 import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 
 @Mixin(TexturedRenderLayers.class)
 public class TexturedRenderLayersMixin {
@@ -39,7 +38,7 @@ public class TexturedRenderLayersMixin {
         // Putting them into map for renderer to use
         ShardsContainerRenderer.SHARD_SPRITE_IDS.putAll(shardIds);
         ShardsContainerRenderer.RAW_SHARD_SPRITE_IDS.putAll(rawShardIds);
-	}
+    }
 
     private static Map<Identifier, SpriteIdentifier> getSpriteIds(Identifier atlas, String directory) {
         Map<Identifier, SpriteIdentifier> result = new HashMap<>();

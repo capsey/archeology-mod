@@ -1,7 +1,5 @@
 package net.capsey.archeology.blocks.excavation_block;
 
-import java.util.Objects;
-
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.BlockEntities;
 import net.capsey.archeology.Items;
@@ -12,6 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
+
+import java.util.Objects;
 
 public class ExcavationBlockEntity extends FossilContainerBlockEntity {
 
@@ -44,12 +44,10 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
     public boolean brushingCheck() {
         if (brushingPlayer != null && brushingPlayer.isUsingItem() && brushingPlayer.getItemUseTimeLeft() > 0) {
             ItemStack activeStack = brushingPlayer.getActiveItem();
-            
-            if (!activeStack.isEmpty() && activeStack.isOf(Items.COPPER_BRUSH)) {
-                return true;
-            }
+
+            return !activeStack.isEmpty() && activeStack.isOf(Items.COPPER_BRUSH);
         }
-            
+
         return false;
     }
 

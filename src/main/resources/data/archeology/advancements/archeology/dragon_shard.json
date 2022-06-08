@@ -1,37 +1,37 @@
 {
-	"parent": "archeology:archeology/find_ruins",
-	"display": {
-		"icon": {
-			"item": "archeology:ender_dragon_shard"
-		},
-		"title": {
-			"translate": "advancements.archeology.dragon_shard.title"
-		},
-		"description": {
-			"translate": "advancements.archeology.dragon_shard.description"
-		},
-		"frame": "task",
-		"show_toast": true,
-		"announce_to_chat": true,
-		"hidden": false
-	},
-	"criteria": {
-		"dragon_egg": {
-			"trigger": "minecraft:inventory_changed",
-			"conditions": {
-				"items": [
-					{
-						"items": [
-							"minecraft:dragon_egg"
-						]
-					}
-				]
-			}
-		}
-	},
-	"requirements": [
-		[
-			"dragon_egg"
-		]
-	]
+  "parent": "archeology:archeology/find_ruins",
+  "display": {
+    "icon": {
+      "item": "archeology:ender_dragon_shard"
+    },
+    "title": {
+      "translate": "advancements.archeology.dragon_shard.title"
+    },
+    "description": {
+      "translate": "advancements.archeology.dragon_shard.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "dragon_egg": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:dragon_egg"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "dragon_egg"
+    ]
+  ]
 }

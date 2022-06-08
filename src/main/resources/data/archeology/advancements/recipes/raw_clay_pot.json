@@ -1,34 +1,34 @@
 {
-    "parent": "minecraft:recipes/root",
-    "rewards": {
-      "recipes": [
-        "archeology:raw_clay_pot"
-      ]
-    },
-    "criteria": {
-      "clay_ball": {
-        "trigger": "minecraft:inventory_changed",
-        "conditions": {
-          "items": [
-            {
-              "items": [
-                "minecraft:clay_ball"
-              ]
-            }
-          ]
-        }
-      },
-      "has_the_recipe": {
-        "trigger": "minecraft:recipe_unlocked",
-        "conditions": {
-          "recipe": "archeology:raw_clay_pot"
-        }
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "archeology:raw_clay_pot"
+    ]
+  },
+  "criteria": {
+    "clay_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:clay_ball"
+            ]
+          }
+        ]
       }
     },
-    "requirements": [
-      [
-        "clay_ball",
-        "has_the_recipe"
-      ]
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "archeology:raw_clay_pot"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "clay_ball",
+      "has_the_recipe"
     ]
-  }
+  ]
+}

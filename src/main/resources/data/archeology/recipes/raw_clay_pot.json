@@ -1,17 +1,17 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "pattern": [
-        " # ",
-        "# #",
-        "###"
-    ],
-    "key": {
-        "#": {
-            "item": "minecraft:clay_ball"
-        }
-    },
-    "result": {
-        "item": "archeology:raw_clay_pot",
-        "count": 1
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " # ",
+    "# #",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:clay_ball"
     }
+  },
+  "result": {
+    "item": "archeology:raw_clay_pot",
+    "count": 1
+  }
 }

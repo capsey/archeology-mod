@@ -1,37 +1,37 @@
 {
-	"display": {
-		"icon": {
-			"item": "archeology:excavation_dirt"
-		},
-		"title": {
-			"translate": "advancements.archeology.root.title"
-		},
-		"description": {
-			"translate": "advancements.archeology.root.description"
-		},
-		"frame": "task",
-		"show_toast": false,
-		"announce_to_chat": false,
-		"hidden": false,
-		"background": "minecraft:textures/block/dirt.png"
-	},
-	"criteria": {
-		"copper_brush": {
-			"trigger": "minecraft:inventory_changed",
-			"conditions": {
-				"items": [
-					{
-						"items": [
-							"archeology:copper_brush"
-						]
-					}
-				]
-			}
-		}
-	},
-	"requirements": [
-		[
-			"copper_brush"
-		]
-	]
+  "display": {
+    "icon": {
+      "item": "archeology:excavation_dirt"
+    },
+    "title": {
+      "translate": "advancements.archeology.root.title"
+    },
+    "description": {
+      "translate": "advancements.archeology.root.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false,
+    "background": "minecraft:textures/block/dirt.png"
+  },
+  "criteria": {
+    "copper_brush": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "archeology:copper_brush"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "copper_brush"
+    ]
+  ]
 }

@@ -14,7 +14,7 @@ import net.minecraft.client.util.math.MatrixStack;
 public class ExcavationBlockEntityRenderer implements BlockEntityRenderer<ExcavationBlockEntity> {
 
     public ExcavationBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
-	}
+    }
 
     @Override
     public void render(ExcavationBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {

@@ -1,59 +1,41 @@
 {
-    "item.archeology.copper_brush": "Медная щетка",
-
-    "item.archeology.ender_dragon_shard": "Керамический осколок",
-    "item.archeology.ender_dragon_shard.desc": "Дракон Края",
-
-    "item.archeology.overworld_shard": "Керамический осколок",
-    "item.archeology.overworld_shard.desc": "Берёза под Солнцем",
-
-    "item.archeology.diamond_shard": "Керамический осколок",
-    "item.archeology.diamond_shard.desc": "Алмаз",
-
-    "item.archeology.emerald_shard": "Керамический осколок",
-    "item.archeology.emerald_shard.desc": "Изумруд",
-
-    "itemGroup.archeology.shards": "Керамические осколки",
-    
-    "block.archeology.excavation_dirt": "Раскопки земли",
-    "block.archeology.excavation_gravel": "Раскопки гравия",
-    "block.archeology.raw_clay_pot": "Сырой глиняный горшок",
-    "block.archeology.clay_pot": "Глиняный горшок",
-
-    "subtitles.archeology.item.copper_brush.brushing": "Блок раскапывается",
-
-    "text.autoconfig.archeology.title": "Конфиг Archeology Mod",
-
-    "text.autoconfig.archeology.option.disableBrushingAnimation": "Выключить анимацию использования Медной кисти",
-    "text.autoconfig.archeology.option.disableBrushingAnimation.@Tooltip[0]": "Если включен, вместо стандартной анимации будет использоваться анимация натягивания лука.",
-    "text.autoconfig.archeology.option.disableBrushingAnimation.@Tooltip[1]": "Для исправления проблем с другими модами.",
-
-    "text.autoconfig.archeology.option.brushing": "Раскопки",
-
-    "text.autoconfig.archeology.option.brushing.mojangExcavationBreaking": "Разрушение блока раскопок от Mojang",
-    "text.autoconfig.archeology.option.brushing.mojangExcavationBreaking.@Tooltip[0]": "Если включен, разрушение блока раскопок будет таким же, как и на",
-    "text.autoconfig.archeology.option.brushing.mojangExcavationBreaking.@Tooltip[1]": "Minecraft Live 2020, т.е. нужно будет быть терпеливым во время раскопки.",
-
-    "text.autoconfig.archeology.option.brushing.thresholdCoef": "Коэффициент порога разрушения",
-    "text.autoconfig.archeology.option.brushing.thresholdCoef.@Tooltip[0]": "Определяет чувствительность к движению камеры во время раскопки щеткой.",
-    "text.autoconfig.archeology.option.brushing.thresholdCoef.@Tooltip[1]": "В процентах, чем больше тем сложнее.",
-
-    "text.autoconfig.archeology.option.brushing.breakingSpeed": "Коэффициент скорости разрушение",
-    "text.autoconfig.archeology.option.brushing.breakingSpeed.@Tooltip[0]": "Определяет скорость разрушения Блока Раскопок во время раскопки щеткой.",
-    "text.autoconfig.archeology.option.brushing.breakingSpeed.@Tooltip[1]": "В процентах, чем больше тем сложнее.",
-
-    "text.autoconfig.archeology.option.brushing.repairingSpeed": "Коэффициент скорости восстановления",
-    "text.autoconfig.archeology.option.brushing.repairingSpeed.@Tooltip[0]": "Определяет скорость восстановления Блока Раскопок во время раскопки щеткой.",
-    "text.autoconfig.archeology.option.brushing.repairingSpeed.@Tooltip[1]": "В процентах, чем больше тем проще.",
-
-    "stat.archeology.excavated": "Успешно очищенных блоков",
-
-    "advancements.archeology.root.title": "Археология",
-    "advancements.archeology.root.description": "Археология и раскопки",
-
-    "advancements.archeology.find_ruins.title": "Забытое наследие",
-    "advancements.archeology.find_ruins.description": "Найти Древние Руины",
-
-    "advancements.archeology.dragon_shard.title": "Предзнаменование",
-    "advancements.archeology.dragon_shard.description": "Подозрительный рисунок огромного существа"
+  "item.archeology.copper_brush": "Медная щетка",
+  "item.archeology.ender_dragon_shard": "Керамический осколок",
+  "item.archeology.ender_dragon_shard.desc": "Дракон Края",
+  "item.archeology.overworld_shard": "Керамический осколок",
+  "item.archeology.overworld_shard.desc": "Берёза под Солнцем",
+  "item.archeology.diamond_shard": "Керамический осколок",
+  "item.archeology.diamond_shard.desc": "Алмаз",
+  "item.archeology.emerald_shard": "Керамический осколок",
+  "item.archeology.emerald_shard.desc": "Изумруд",
+  "itemGroup.archeology.shards": "Керамические осколки",
+  "block.archeology.excavation_dirt": "Раскопки земли",
+  "block.archeology.excavation_gravel": "Раскопки гравия",
+  "block.archeology.raw_clay_pot": "Сырой глиняный горшок",
+  "block.archeology.clay_pot": "Глиняный горшок",
+  "subtitles.archeology.item.copper_brush.brushing": "Блок раскапывается",
+  "text.autoconfig.archeology.title": "Конфиг Archeology Mod",
+  "text.autoconfig.archeology.option.disableBrushingAnimation": "Выключить анимацию использования Медной кисти",
+  "text.autoconfig.archeology.option.disableBrushingAnimation.@Tooltip[0]": "Если включен, вместо стандартной анимации будет использоваться анимация натягивания лука.",
+  "text.autoconfig.archeology.option.disableBrushingAnimation.@Tooltip[1]": "Для исправления проблем с другими модами.",
+  "text.autoconfig.archeology.option.brushing": "Раскопки",
+  "text.autoconfig.archeology.option.brushing.mojangExcavationBreaking": "Разрушение блока раскопок от Mojang",
+  "text.autoconfig.archeology.option.brushing.mojangExcavationBreaking.@Tooltip[0]": "Если включен, разрушение блока раскопок будет таким же, как и на",
+  "text.autoconfig.archeology.option.brushing.mojangExcavationBreaking.@Tooltip[1]": "Minecraft Live 2020, т.е. нужно будет быть терпеливым во время раскопки.",
+  "text.autoconfig.archeology.option.brushing.thresholdCoef": "Коэффициент порога разрушения",
+  "text.autoconfig.archeology.option.brushing.thresholdCoef.@Tooltip[0]": "Определяет чувствительность к движению камеры во время раскопки щеткой.",
+  "text.autoconfig.archeology.option.brushing.thresholdCoef.@Tooltip[1]": "В процентах, чем больше тем сложнее.",
+  "text.autoconfig.archeology.option.brushing.breakingSpeed": "Коэффициент скорости разрушение",
+  "text.autoconfig.archeology.option.brushing.breakingSpeed.@Tooltip[0]": "Определяет скорость разрушения Блока Раскопок во время раскопки щеткой.",
+  "text.autoconfig.archeology.option.brushing.breakingSpeed.@Tooltip[1]": "В процентах, чем больше тем сложнее.",
+  "text.autoconfig.archeology.option.brushing.repairingSpeed": "Коэффициент скорости восстановления",
+  "text.autoconfig.archeology.option.brushing.repairingSpeed.@Tooltip[0]": "Определяет скорость восстановления Блока Раскопок во время раскопки щеткой.",
+  "text.autoconfig.archeology.option.brushing.repairingSpeed.@Tooltip[1]": "В процентах, чем больше тем проще.",
+  "stat.archeology.excavated": "Успешно очищенных блоков",
+  "advancements.archeology.root.title": "Археология",
+  "advancements.archeology.root.description": "Археология и раскопки",
+  "advancements.archeology.find_ruins.title": "Забытое наследие",
+  "advancements.archeology.find_ruins.description": "Найти Древние Руины",
+  "advancements.archeology.dragon_shard.title": "Предзнаменование",
+  "advancements.archeology.dragon_shard.description": "Подозрительный рисунок огромного существа"
 }

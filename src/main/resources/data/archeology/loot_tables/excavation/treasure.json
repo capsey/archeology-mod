@@ -1,32 +1,38 @@
 {
-    "type": "archeology:excavation",
-    "pools": [{
-        "rolls": 0.8,
-        "bonus_rolls": 0.1,
-        "entries": [
+  "type": "archeology:excavation",
+  "pools": [
+    {
+      "rolls": 0.8,
+      "bonus_rolls": 0.1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "name": "minecraft:diamond"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 5,
+          "name": "minecraft:emerald",
+          "functions": [
             {
-                "type": "minecraft:item",
-                "weight": 1,
-                "name": "minecraft:diamond"
-            },
-            {
-                "type": "minecraft:item",
-                "weight": 5,
-                "name": "minecraft:emerald",
-                "functions": [{
-                    "function": "set_count",
-                    "count": { "min": 2, "max": 6 }
-                }]
-            },
-            {
-                "type": "minecraft:item",
-                "weight": 5,
-                "name": "minecraft:iron_nugget",
-                "functions": [{
-                    "function": "set_count",
-                    "count": { "min": 4, "max": 12 }
-                }]
+              "function": "set_count",
+              "count": { "min": 2, "max": 6 }
             }
-        ]
-    }]
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 5,
+          "name": "minecraft:iron_nugget",
+          "functions": [
+            {
+              "function": "set_count",
+              "count": { "min": 4, "max": 12 }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

@@ -1,9 +1,5 @@
 package net.capsey.archeology.items.ceramic_shard;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.items.CeramicShardItem;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -14,11 +10,15 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 public class CeramicShardRegistry {
-    
+
     public static final ItemGroup SHARDS_ITEM_GROUP = FabricItemGroupBuilder.build(
-		new Identifier(ArcheologyMod.MOD_ID, "shards"),
-		() -> new ItemStack(CeramicShards.ENDER_DRAGON)
+            new Identifier(ArcheologyMod.MOD_ID, "shards"),
+            () -> new ItemStack(CeramicShards.ENDER_DRAGON)
     );
 
     private static final Map<Identifier, CeramicShard> SHARDS = new HashMap<>();
@@ -32,10 +32,9 @@ public class CeramicShardRegistry {
      * Registering Ceramic Shard item to special Creative Menu {@link net.minecraft.item.ItemGroup ItemGroup}
      * and pattern for {@link net.capsey.archeology.blocks.clay_pot.ShardsContainer ShardsContainer}.
      * Items are added to ItemGroup in order of registering!
-     * 
-     * @param itemId is Identifier of shard item
+     *
+     * @param itemId  is Identifier of shard item
      * @param shardId is Identifier of shard texture for the Clay Pot (e.g. "archeology:ender_dragon")
-     * 
      * @return Returns registered {@link Item} object of the shard
      */
     public static Item registerShard(Identifier itemId, Identifier shardId) {

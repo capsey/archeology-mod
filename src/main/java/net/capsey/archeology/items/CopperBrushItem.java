@@ -21,75 +21,75 @@ import net.minecraft.world.World;
 
 public class CopperBrushItem extends Item {
 
-	private static final int[] BRUSH_TICKS = { 8, 7, 6, 5 };
-
-	public static int getBrushTicks(ItemStack stack) {
-		return BRUSH_TICKS[getOxidizationIndex(stack)];
-	}
-
-	public static int getOxidizationIndex(ItemStack item) {
-		return item.isDamaged() ? (4 * item.getDamage() / item.getMaxDamage()) % 4 : 0;
-	}
+    private static final int[] BRUSH_TICKS = {8, 7, 6, 5};
 
     public CopperBrushItem(Settings settings) {
         super(settings);
     }
 
-	@Override
-	public ActionResult useOnBlock(ItemUsageContext context) {
-		World world = context.getWorld();
-		PlayerEntity player = context.getPlayer();
+    public static int getBrushTicks(ItemStack stack) {
+        return BRUSH_TICKS[getOxidizationIndex(stack)];
+    }
 
-		if (!world.isClient && player.getAbilities().allowModifyWorld) {
-			BlockPos pos = context.getBlockPos();
-			Block block = world.getBlockState(pos).getBlock();
+    public static int getOxidizationIndex(ItemStack item) {
+        return item.isDamaged() ? (4 * item.getDamage() / item.getMaxDamage()) % 4 : 0;
+    }
 
-			if (block instanceof ExcavationBlock excBlock) {
-				ItemStack stack = context.getStack();
+    @Override
+    public ActionResult useOnBlock(ItemUsageContext context) {
+        World world = context.getWorld();
+        PlayerEntity player = context.getPlayer();
 
-				if (excBlock.startBrushing(world, pos, player, stack)) {
-					player.setCurrentHand(context.getHand());
-					return ActionResult.CONSUME;
-				}
-			}
-		}
+        if (!world.isClient && player.getAbilities().allowModifyWorld) {
+            BlockPos pos = context.getBlockPos();
+            Block block = world.getBlockState(pos).getBlock();
 
-		return ActionResult.PASS;
-	}
+            if (block instanceof ExcavationBlock excBlock) {
+                ItemStack stack = context.getStack();
 
-	@Override
-	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-		if (!world.isClient) {
-			int brushTicks = CopperBrushItem.getBrushTicks(stack);
+                if (excBlock.startBrushing(world, pos, player, stack)) {
+                    player.setCurrentHand(context.getHand());
+                    return ActionResult.CONSUME;
+                }
+            }
+        }
 
-			if (remainingUseTicks % (brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty())) == 0) {
-				int damage = world.getRandom().nextInt(2);
-				stack.damage(damage, user, p -> 
-					p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
-				);
-			}
+        return ActionResult.PASS;
+    }
 
-			if (remainingUseTicks % brushTicks == 0) {
-				world.playSound(null, user.getBlockPos(), Sounds.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1f, 1f);
-			}
-		}
-	}
+    @Override
+    public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
+        if (!world.isClient) {
+            int brushTicks = CopperBrushItem.getBrushTicks(stack);
 
-	@Override
-	public int getMaxUseTime(ItemStack stack) {
-		return 6000;
-	}
+            if (remainingUseTicks % (brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty())) == 0) {
+                int damage = world.getRandom().nextInt(2);
+                stack.damage(damage, user, p ->
+                        p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
+                );
+            }
 
-	@Override
-	public UseAction getUseAction(ItemStack stack) {
-		// Temporary solution?
-		ModConfig config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
-		return config.disableBrushingAnimation ? UseAction.BOW : CustomUseAction.BRUSH;
-	}
+            if (remainingUseTicks % brushTicks == 0) {
+                world.playSound(null, user.getBlockPos(), Sounds.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1f, 1f);
+            }
+        }
+    }
 
-	@Override
+    @Override
+    public int getMaxUseTime(ItemStack stack) {
+        return 6000;
+    }
+
+    @Override
+    public UseAction getUseAction(ItemStack stack) {
+        // Temporary solution?
+        ModConfig config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+        return config.disableBrushingAnimation ? UseAction.BOW : CustomUseAction.BRUSH;
+    }
+
+    @Override
     public boolean canRepair(ItemStack stack, ItemStack ingredient) {
-		return ingredient.getItem() == Items.COPPER_INGOT;
-	}
+        return ingredient.getItem() == Items.COPPER_INGOT;
+    }
 
 }

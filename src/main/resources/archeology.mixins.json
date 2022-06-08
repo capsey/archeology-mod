@@ -1,31 +1,31 @@
 {
-    "required": true,
-    "minVersion": "0.8",
-    "package": "net.capsey.archeology.mixin",
-    "compatibilityLevel": "JAVA_16",
-    "mixins": [
-        "block.BigDripleafBlockMixin",
-        "block.BigDripleafStemBlockMixin",
-        "block.MushroomPlantBlockMixin",
-        "block.PlantBlockMixin",
-        "block.SaplingBlockMixin",
-        "entity.FallingBlockEntityMixin",
-        "entity.ServerPlayerEntityMixin",
-        "item.BoneMealItemMixin",
-        "item.PickaxeItemMixin",
-        "item.UseActionMixin",
-        "world.StructureFeatureAccessor"
-    ],
-    "client": [
-        "entity.ClientPlayerEntityMixin",
-        "render.BuiltinModelItemRendererAccessor",
-        "render.BuiltinModelItemRendererMixin",
-        "render.FallingBlockEntityRendererMixin",
-        "render.HeldItemRendererMixin",
-        "render.PlayerEntityRendererMixin",
-        "render.TexturedRenderLayersMixin"
-    ],
-    "injectors": {
-        "defaultRequire": 1
-    }
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.capsey.archeology.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "block.BigDripleafBlockMixin",
+    "block.BigDripleafStemBlockMixin",
+    "block.MushroomPlantBlockMixin",
+    "block.PlantBlockMixin",
+    "block.SaplingBlockMixin",
+    "entity.FallingBlockEntityMixin",
+    "entity.ServerPlayerEntityMixin",
+    "item.BoneMealItemMixin",
+    "item.PickaxeItemMixin",
+    "item.UseActionMixin",
+    "world.StructureFeatureAccessor"
+  ],
+  "client": [
+    "entity.ClientPlayerEntityMixin",
+    "render.BuiltinModelItemRendererAccessor",
+    "render.BuiltinModelItemRendererMixin",
+    "render.FallingBlockEntityRendererMixin",
+    "render.HeldItemRendererMixin",
+    "render.PlayerEntityRendererMixin",
+    "render.TexturedRenderLayersMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

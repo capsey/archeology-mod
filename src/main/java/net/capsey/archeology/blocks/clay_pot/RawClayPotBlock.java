@@ -1,9 +1,5 @@
 package net.capsey.archeology.blocks.clay_pot;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
-
 import net.capsey.archeology.BlockEntities;
 import net.capsey.archeology.Blocks;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer.Side;
@@ -29,6 +25,10 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
+
 public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntityProvider {
 
     public static final IntProperty HARDENING_PROGRESS = IntProperty.of("hardening_progress", 0, 5);
@@ -39,7 +39,7 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {        
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (Side.validHit(hit)) {
             Optional<RawClayPotBlockEntity> entity = world.getBlockEntity(pos, BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
 
@@ -49,7 +49,7 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
 
                 if (item.isEmpty() && hand == Hand.MAIN_HAND) {
                     CeramicShard shard = entity.get().getShard(side);
-                    
+
                     if (shard != null) {
                         if (!world.isClient) {
                             player.setStackInHand(hand, shard.getStack());
@@ -58,14 +58,14 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
 
                         return ActionResult.success(!world.isClient);
                     }
-                } else if (!entity.get().hasShard(side) && item.getItem() instanceof CeramicShardItem shard) {            
+                } else if (!entity.get().hasShard(side) && item.getItem() instanceof CeramicShardItem shard) {
                     if (!world.isClient) {
                         entity.get().setShard(side, shard.getShard());
                         if (!player.isCreative()) {
                             item.decrement(1);
                         }
                     }
-                    
+
                     return ActionResult.success(!world.isClient);
                 }
             }
@@ -83,8 +83,8 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
 
     @Override
     public boolean hasRandomTicks(BlockState state) {
-		return state.get(HARDENING_PROGRESS) != 0;
-	}
+        return state.get(HARDENING_PROGRESS) != 0;
+    }
 
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
@@ -92,31 +92,31 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
             int i = state.get(HARDENING_PROGRESS);
 
             if (i > 0) {
-                world.setBlockState(pos, state.with(HARDENING_PROGRESS, i  - 1), Block.NOTIFY_LISTENERS);
+                world.setBlockState(pos, state.with(HARDENING_PROGRESS, i - 1), Block.NOTIFY_LISTENERS);
                 world.updateComparators(pos, this);
             }
         }
-	}
+    }
 
     @Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         if (canHarden(state, world.getBlockState(pos.down())) && !world.isClient && !world.getBlockTickScheduler().isQueued(pos, this)) {
             world.createAndScheduleBlockTick(pos, this, 10);
-		}
-	}
+        }
+    }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {                
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (direction == Direction.DOWN && canHarden(state, neighborState) && !world.isClient() && !world.getBlockTickScheduler().isQueued(pos, this)) {
             world.createAndScheduleBlockTick(pos, this, 10);
-		}
+        }
 
-		return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
-	}
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    }
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-		if (canHarden(state, world.getBlockState(pos.down()))) {
+        if (canHarden(state, world.getBlockState(pos.down()))) {
             if (random.nextInt(2) == 0) {
                 int i = state.get(HARDENING_PROGRESS) + 1;
 
@@ -130,7 +130,7 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
 
             world.createAndScheduleBlockTick(pos, this, 10);
         }
-	}
+    }
 
     public void harden(World world, BlockPos pos) {
         Optional<RawClayPotBlockEntity> entity = world.getBlockEntity(pos, BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
@@ -145,22 +145,22 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
         }
     }
 
-	@Override
-	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.isOf(newState.getBlock())) {
-			Optional<RawClayPotBlockEntity> blockEntity = world.getBlockEntity(pos, BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
-			
-			if (blockEntity.isPresent()) {
-				blockEntity.get().getShards().values().forEach(item -> 
-                    ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), item.getStack())
+            Optional<RawClayPotBlockEntity> blockEntity = world.getBlockEntity(pos, BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
+
+            if (blockEntity.isPresent()) {
+                blockEntity.get().getShards().values().forEach(item ->
+                        ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), item.getStack())
                 );
 
-				world.updateComparators(pos, this);
-			}
+                world.updateComparators(pos, this);
+            }
 
             super.onStateReplaced(state, world, pos, newState, moved);
-		}
-	}
+        }
+    }
 
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
@@ -170,18 +170,18 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
             clayPot.clearShards();
         }
 
-		super.onBreak(world, pos, state, player);
-	}
+        super.onBreak(world, pos, state, player);
+    }
 
     @Override
-	public boolean hasComparatorOutput(BlockState state) {
-		return true;
-	}
+    public boolean hasComparatorOutput(BlockState state) {
+        return true;
+    }
 
-	@Override
-	public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-		return state.get(HARDENING_PROGRESS);
-	}
+    @Override
+    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
+        return state.get(HARDENING_PROGRESS);
+    }
 
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {

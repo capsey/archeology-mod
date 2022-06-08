@@ -1,8 +1,5 @@
 package net.capsey.archeology.blocks.clay_pot;
 
-import java.util.Optional;
-import java.util.Random;
-
 import net.capsey.archeology.BlockEntities;
 import net.capsey.archeology.blocks.FallingBlockWithEntity;
 import net.minecraft.block.BlockEntityProvider;
@@ -26,6 +23,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
+import java.util.Optional;
+import java.util.Random;
+
 public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityProvider, FallingBlockWithEntity, LandingBlock {
 
     public static final BlockSoundGroup SOUND_GROUP = new BlockSoundGroup(1.0F, 1.0F, SoundEvents.BLOCK_GLASS_BREAK, SoundEvents.BLOCK_STONE_STEP, SoundEvents.BLOCK_STONE_PLACE, SoundEvents.BLOCK_STONE_HIT, SoundEvents.BLOCK_STONE_FALL);
@@ -39,81 +39,81 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
         return new ClayPotBlockEntity(pos, state);
     }
 
-	@Override
-	public NbtCompound writeFallingBlockNbt(BlockEntity entity) {
-		NbtCompound nbt = entity.createNbt();
+    @Override
+    public NbtCompound writeFallingBlockNbt(BlockEntity entity) {
+        NbtCompound nbt = entity.createNbt();
 
-		if (entity instanceof ClayPotBlockEntity potEntity) {
-			potEntity.clear();
-		}
-
-        return nbt;
-    }
-
-	@Override
-	public NbtCompound writeClientData(NbtCompound nbt, BlockEntity entity) {
-		if (entity instanceof ClayPotBlockEntity) {
-			((ClayPotBlockEntity) entity).writeShards(nbt);
-		}
+        if (entity instanceof ClayPotBlockEntity potEntity) {
+            potEntity.clear();
+        }
 
         return nbt;
     }
 
-	@Override
-	public ItemEntity dropItem(FallingBlockEntity entity, ItemConvertible item) {
-		DefaultedList<ItemStack> items = DefaultedList.ofSize(9, ItemStack.EMPTY);
+    @Override
+    public NbtCompound writeClientData(NbtCompound nbt, BlockEntity entity) {
+        if (entity instanceof ClayPotBlockEntity) {
+            ((ClayPotBlockEntity) entity).writeShards(nbt);
+        }
 
-		if (entity.blockEntityData != null) {
-			Inventories.readNbt(entity.blockEntityData, items);
-			items.forEach(entity::dropStack);
-		}
+        return nbt;
+    }
+
+    @Override
+    public ItemEntity dropItem(FallingBlockEntity entity, ItemConvertible item) {
+        DefaultedList<ItemStack> items = DefaultedList.ofSize(9, ItemStack.EMPTY);
+
+        if (entity.blockEntityData != null) {
+            Inventories.readNbt(entity.blockEntityData, items);
+            items.forEach(entity::dropStack);
+        }
 
         return null;
     }
-	
-	@Override
-	public void onDestroyedOnLanding(World world, BlockPos pos, FallingBlockEntity entity) {
-		world.playSound(null, pos, getSoundGroup(entity.getBlockState()).getBreakSound(), SoundCategory.NEUTRAL, 1.0F, 1.0F);
-	}
 
-	@Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-		this.tryScheduleTick(world, pos, this);
-	}
+    @Override
+    public void onDestroyedOnLanding(World world, BlockPos pos, FallingBlockEntity entity) {
+        world.playSound(null, pos, getSoundGroup(entity.getBlockState()).getBreakSound(), SoundCategory.NEUTRAL, 1.0F, 1.0F);
+    }
 
-	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-		this.tryScheduleTick(world, pos, this);
-		return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
-	}
+    @Override
+    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+        this.tryScheduleTick(world, pos, this);
+    }
 
-	@Override
-	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-		this.trySpawnFallingBlock(state, world, pos, true);
-	}
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        this.tryScheduleTick(world, pos, this);
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    }
 
-	@Override
-	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-		if (!state.isOf(newState.getBlock())) {
-			Optional<ClayPotBlockEntity> blockEntity = world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY);
-			
-			if (blockEntity.isPresent()) {
-				blockEntity.get().onBreak();
-				world.updateComparators(pos, this);
-			}
+    @Override
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        this.trySpawnFallingBlock(state, world, pos, true);
+    }
 
-			super.onStateReplaced(state, world, pos, newState, moved);
-		}
-	}
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (!state.isOf(newState.getBlock())) {
+            Optional<ClayPotBlockEntity> blockEntity = world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY);
 
-	@Override
-	public boolean hasComparatorOutput(BlockState state) {
-		return true;
-	}
+            if (blockEntity.isPresent()) {
+                blockEntity.get().onBreak();
+                world.updateComparators(pos, this);
+            }
 
-	@Override
-	public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-		return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
-	}
+            super.onStateReplaced(state, world, pos, newState, moved);
+        }
+    }
+
+    @Override
+    public boolean hasComparatorOutput(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
+        return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
+    }
 
 }

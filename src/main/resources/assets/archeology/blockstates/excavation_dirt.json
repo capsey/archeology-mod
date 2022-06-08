@@ -1,40 +1,40 @@
 {
-	"variants": {
-		"brushing_level=0": [
-			{ "model": "archeology:block/excavation_dirt" },
-			{ "model": "archeology:block/excavation_dirt", "y": 90 },
-			{ "model": "archeology:block/excavation_dirt", "y": 180 },
-			{ "model": "archeology:block/excavation_dirt", "y": 270 }
-		],
-		"brushing_level=1": [
-			{ "model": "archeology:block/excavation_dirt_1", "y": 180 },
-			{ "model": "archeology:block/excavation_dirt_1", "y": 270 },
-			{ "model": "archeology:block/excavation_dirt_1", "y": 90 },
-			{ "model": "archeology:block/excavation_dirt_1" }
-		],
-		"brushing_level=2": [
-			{ "model": "archeology:block/excavation_dirt_2" },
-			{ "model": "archeology:block/excavation_dirt_2", "y": 90 },
-			{ "model": "archeology:block/excavation_dirt_2", "y": 180 },
-			{ "model": "archeology:block/excavation_dirt_2", "y": 270 }
-		],
-		"brushing_level=3": [
-			{ "model": "archeology:block/excavation_dirt_3", "y": 180 },
-			{ "model": "archeology:block/excavation_dirt_3", "y": 270 },
-			{ "model": "archeology:block/excavation_dirt_3" },
-			{ "model": "archeology:block/excavation_dirt_3", "y": 90 }
-		],
-		"brushing_level=4": [
-			{ "model": "archeology:block/excavation_dirt_4", "y": 90 },
-			{ "model": "archeology:block/excavation_dirt_4", "y": 180 },
-			{ "model": "archeology:block/excavation_dirt_4", "y": 270 },
-			{ "model": "archeology:block/excavation_dirt_4" }
-		],
-		"brushing_level=5": [
-			{ "model": "archeology:block/excavation_dirt_5", "y": 270 },
-			{ "model": "archeology:block/excavation_dirt_5" },
-			{ "model": "archeology:block/excavation_dirt_5", "y": 90 },
-			{ "model": "archeology:block/excavation_dirt_5", "y": 180 }
-		]
-	}
+  "variants": {
+    "brushing_level=0": [
+      { "model": "archeology:block/excavation_dirt" },
+      { "model": "archeology:block/excavation_dirt", "y": 90 },
+      { "model": "archeology:block/excavation_dirt", "y": 180 },
+      { "model": "archeology:block/excavation_dirt", "y": 270 }
+    ],
+    "brushing_level=1": [
+      { "model": "archeology:block/excavation_dirt_1", "y": 180 },
+      { "model": "archeology:block/excavation_dirt_1", "y": 270 },
+      { "model": "archeology:block/excavation_dirt_1", "y": 90 },
+      { "model": "archeology:block/excavation_dirt_1" }
+    ],
+    "brushing_level=2": [
+      { "model": "archeology:block/excavation_dirt_2" },
+      { "model": "archeology:block/excavation_dirt_2", "y": 90 },
+      { "model": "archeology:block/excavation_dirt_2", "y": 180 },
+      { "model": "archeology:block/excavation_dirt_2", "y": 270 }
+    ],
+    "brushing_level=3": [
+      { "model": "archeology:block/excavation_dirt_3", "y": 180 },
+      { "model": "archeology:block/excavation_dirt_3", "y": 270 },
+      { "model": "archeology:block/excavation_dirt_3" },
+      { "model": "archeology:block/excavation_dirt_3", "y": 90 }
+    ],
+    "brushing_level=4": [
+      { "model": "archeology:block/excavation_dirt_4", "y": 90 },
+      { "model": "archeology:block/excavation_dirt_4", "y": 180 },
+      { "model": "archeology:block/excavation_dirt_4", "y": 270 },
+      { "model": "archeology:block/excavation_dirt_4" }
+    ],
+    "brushing_level=5": [
+      { "model": "archeology:block/excavation_dirt_5", "y": 270 },
+      { "model": "archeology:block/excavation_dirt_5" },
+      { "model": "archeology:block/excavation_dirt_5", "y": 90 },
+      { "model": "archeology:block/excavation_dirt_5", "y": 180 }
+    ]
+  }
 }

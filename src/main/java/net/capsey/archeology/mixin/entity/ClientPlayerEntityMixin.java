@@ -1,10 +1,5 @@
 package net.capsey.archeology.mixin.entity;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import me.shedaniel.autoconfig.AutoConfig;
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.ModConfig;
@@ -20,18 +15,20 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayerEntity.class)
 public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
 
+    private static final float[] REGULAR_BREAK_DELTAS = {0.3F, 0.3F, 0.4F, 0.5F};
+    private static final float[] REGULAR_REPAIR_DELTAS = {-0.15F, -0.15F, -0.1F, -0.07F};
+    private static final double[] BREAK_THRESHOLD = {5.0E-6, 1.0E-5, 2.0E-5, 5.0E-5};
     private float breakingProgress = 0.0F;
-	private int currentStage = 0;
+    private int currentStage = 0;
     private BlockPos brushingPos;
-
-    private static final float[] REGULAR_BREAK_DELTAS = { 0.3F, 0.3F, 0.4F, 0.5F };
-    private static final float[] REGULAR_REPAIR_DELTAS = { -0.15F, -0.15F, -0.1F, -0.07F };
-
-    private static final double[] BREAK_THRESHOLD = { 5.0E-6, 1.0E-5, 2.0E-5, 5.0E-5 };
 
     private static float getBreakDelta(double change, ClientPlayerEntity player) {
         // Do not break if creative
@@ -61,11 +58,11 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
     public void tick(CallbackInfo info) {
         if (brushingPos != null) {
             MinecraftClient client = MinecraftClient.getInstance();
-            ClientPlayerEntity player = (ClientPlayerEntity)(Object) this;
-            
+            ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+
             if (client.crosshairTarget.getType() == HitResult.Type.BLOCK) {
                 BlockHitResult raycast = (BlockHitResult) client.crosshairTarget;
-                
+
                 if (raycast.getBlockPos().equals(brushingPos)) {
                     // Calculating break delta (how much block breaks/restores)
                     Vec3d lookDir = Vec3d.fromPolar(player.getPitch(), player.getHeadYaw());
@@ -88,18 +85,17 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
                     return;
                 }
             }
-            
+
             this.sendBreakPacket();
         }
-	}
+    }
 
     private void sendInfoPacket(int stage) {
         stage = Math.max(stage, 0);
 
         if (stage > 9) {
             this.sendBreakPacket();
-        }
-        else if (stage != this.currentStage) {
+        } else if (stage != this.currentStage) {
             // Sending packet to the server
             PacketByteBuf buf = PacketByteBufs.create();
             buf.writeInt(stage);
@@ -127,5 +123,5 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
         this.currentStage = -1;
         this.brushingPos = null;
     }
-    
+
 }

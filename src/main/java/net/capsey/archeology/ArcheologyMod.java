@@ -1,10 +1,5 @@
 package net.capsey.archeology;
 
-import java.util.function.Consumer;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
@@ -20,73 +15,77 @@ import net.minecraft.stat.Stats;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.function.Consumer;
 
 public class ArcheologyMod implements ModInitializer {
 
-	public static final String MOD_ID = "archeology";
-	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+    public static final String MOD_ID = "archeology";
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-	// Loot context type for Fossil Container
-	public static final LootContextType EXCAVATION_LOOT_CONTEXT_TYPE = createLootContextType(builder ->
-		builder.allow(LootContextParameters.TOOL)
-				.allow(LootContextParameters.THIS_ENTITY)
-				.allow(LootContextParameters.BLOCK_ENTITY)
-	);
+    // Loot context type for Fossil Container
+    public static final LootContextType EXCAVATION_LOOT_CONTEXT_TYPE = createLootContextType(builder ->
+            builder.allow(LootContextParameters.TOOL)
+                    .allow(LootContextParameters.THIS_ENTITY)
+                    .allow(LootContextParameters.BLOCK_ENTITY)
+    );
 
-	// Player Statistics
-	public static final Identifier EXCAVATED = new Identifier(MOD_ID, "excavated");
+    // Player Statistics
+    public static final Identifier EXCAVATED = new Identifier(MOD_ID, "excavated");
 
-	// Network Packet IDs
-	public static final Identifier START_BRUSHING = new Identifier(MOD_ID, "start_brushing");
-	public static final Identifier EXCAVATION_BREAKING_INFO = new Identifier(MOD_ID, "excavation_breaking_info");
-	public static final Identifier EXCAVATION_STOP_BRUSHING = new Identifier(MOD_ID, "excavation_stop_brushing");
+    // Network Packet IDs
+    public static final Identifier START_BRUSHING = new Identifier(MOD_ID, "start_brushing");
+    public static final Identifier EXCAVATION_BREAKING_INFO = new Identifier(MOD_ID, "excavation_breaking_info");
+    public static final Identifier EXCAVATION_STOP_BRUSHING = new Identifier(MOD_ID, "excavation_stop_brushing");
 
-	@Override
-	public void onInitialize() {
-		// Adding Config
-		// TODO: Separate configs for server and client
-		AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
+    @Override
+    public void onInitialize() {
+        // Adding Config
+        // TODO: Separate configs for server and client
+        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
 
-		// Registering all stuff
-		Blocks.onInitialize();
-		BlockEntities.onInitialize();
-		Items.onInitialize();
-		CeramicShards.registerDefaultShards();
+        // Registering all stuff
+        Blocks.onInitialize();
+        BlockEntities.onInitialize();
+        Items.onInitialize();
+        CeramicShards.registerDefaultShards();
         Features.onInitialize();
 
-		// Registering other stuff
-		Registry.register(Registry.SOUND_EVENT, Sounds.BRUSHING_SOUND_ID, Sounds.BRUSHING_SOUND_EVENT);
-		Registry.register(Registry.CUSTOM_STAT, "excavated", EXCAVATED);
-		Stats.CUSTOM.getOrCreateStat(EXCAVATED, StatFormatter.DEFAULT);
+        // Registering other stuff
+        Registry.register(Registry.SOUND_EVENT, Sounds.BRUSHING_SOUND_ID, Sounds.BRUSHING_SOUND_EVENT);
+        Registry.register(Registry.CUSTOM_STAT, "excavated", EXCAVATED);
+        Stats.CUSTOM.getOrCreateStat(EXCAVATED, StatFormatter.DEFAULT);
 
-		// Networking
-		ServerPlayNetworking.registerGlobalReceiver(ArcheologyMod.EXCAVATION_BREAKING_INFO, (server, player, handler, buf, sender) -> {
-			int newStage = buf.readInt();
-			server.execute(() -> {
-				ExcavationBlockEntity entity = ((ExcavatorPlayerEntity) player).getExcavatingBlock();
-				
-				if (entity != null && !entity.isRemoved() && entity.isCorrectPlayer(player)) {
-					ServerWorld world = (ServerWorld) entity.getWorld();
-					world.setBlockBreakingInfo(0, entity.getPos(), MathHelper.clamp(newStage, 0, 9));
-				}
-			});
-		});
+        // Networking
+        ServerPlayNetworking.registerGlobalReceiver(ArcheologyMod.EXCAVATION_BREAKING_INFO, (server, player, handler, buf, sender) -> {
+            int newStage = buf.readInt();
+            server.execute(() -> {
+                ExcavationBlockEntity entity = ((ExcavatorPlayerEntity) player).getExcavatingBlock();
 
-		ServerPlayNetworking.registerGlobalReceiver(ArcheologyMod.EXCAVATION_STOP_BRUSHING, (server, player, handler, buf, sender) -> {	
-			server.execute(() -> {
-				ExcavationBlockEntity entity = ((ExcavatorPlayerEntity) player).getExcavatingBlock();
-				
-				if (entity != null && !entity.isRemoved() && entity.isCorrectPlayer(player)) {
-					player.stopUsingItem();
-				}
-			});
-		});
-	}
+                if (entity != null && !entity.isRemoved() && entity.isCorrectPlayer(player)) {
+                    ServerWorld world = (ServerWorld) entity.getWorld();
+                    world.setBlockBreakingInfo(0, entity.getPos(), MathHelper.clamp(newStage, 0, 9));
+                }
+            });
+        });
 
-	private static LootContextType createLootContextType(Consumer<LootContextType.Builder> type) {
-		LootContextType.Builder builder = new LootContextType.Builder();
-		type.accept(builder);
-		return builder.build();
-	}
-	
+        ServerPlayNetworking.registerGlobalReceiver(ArcheologyMod.EXCAVATION_STOP_BRUSHING, (server, player, handler, buf, sender) -> {
+            server.execute(() -> {
+                ExcavationBlockEntity entity = ((ExcavatorPlayerEntity) player).getExcavatingBlock();
+
+                if (entity != null && !entity.isRemoved() && entity.isCorrectPlayer(player)) {
+                    player.stopUsingItem();
+                }
+            });
+        });
+    }
+
+    private static LootContextType createLootContextType(Consumer<LootContextType.Builder> type) {
+        LootContextType.Builder builder = new LootContextType.Builder();
+        type.accept(builder);
+        return builder.build();
+    }
+
 }

@@ -1,6 +1,6 @@
 {
-    "parent": "archeology:item/copper_brush",
-    "textures": {
-        "layer0": "archeology:item/exposed_copper_brush"
-    }
+  "parent": "archeology:item/copper_brush",
+  "textures": {
+    "layer0": "archeology:item/exposed_copper_brush"
+  }
 }

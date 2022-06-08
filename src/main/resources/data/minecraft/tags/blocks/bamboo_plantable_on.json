@@ -1,6 +1,6 @@
 {
-    "replace": false,
-    "values": [
-        "#archeology:clay_pots"
-    ]
+  "replace": false,
+  "values": [
+    "#archeology:clay_pots"
+  ]
 }

@@ -1,8 +1,8 @@
 {
-    "replace": false,
-    "values": [
-        "archeology:raw_clay_pot",
-        "archeology:excavation_dirt",
-        "archeology:excavation_gravel"
-    ]
+  "replace": false,
+  "values": [
+    "archeology:raw_clay_pot",
+    "archeology:excavation_dirt",
+    "archeology:excavation_gravel"
+  ]
 }

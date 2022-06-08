@@ -1,10 +1,5 @@
 package net.capsey.archeology.mixin.render;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import net.capsey.archeology.Blocks;
 import net.capsey.archeology.blocks.clay_pot.AbstractClayPotBlock;
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlockEntity;
@@ -21,6 +16,10 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BuiltinModelItemRenderer.class)
 public abstract class BuiltinModelItemRendererMixin {
@@ -31,12 +30,12 @@ public abstract class BuiltinModelItemRendererMixin {
     @Inject(at = @At("HEAD"), cancellable = true, method = "render(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformation$Mode;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;II)V")
     public void render(ItemStack stack, ModelTransformation.Mode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, CallbackInfo info) {
         Item item = stack.getItem();
-		if (item instanceof BlockItem bItem) {
-			Block block = bItem.getBlock();
+        if (item instanceof BlockItem bItem) {
+            Block block = bItem.getBlock();
 
-			if (block instanceof AbstractClayPotBlock) {
+            if (block instanceof AbstractClayPotBlock) {
                 BlockState blockState = block.getDefaultState();
-				BlockEntity blockEntity;
+                BlockEntity blockEntity;
 
                 if (blockState.isOf(Blocks.CLAY_POT)) {
                     this.renderClayPot.readFrom(stack);
@@ -49,10 +48,10 @@ public abstract class BuiltinModelItemRendererMixin {
                 }
 
                 BlockEntityRenderDispatcher dispatcher = ((BuiltinModelItemRendererAccessor) this).getBlockEntityRenderDispatcher();
-				dispatcher.renderEntity(blockEntity, matrices, vertexConsumers, light, overlay);
+                dispatcher.renderEntity(blockEntity, matrices, vertexConsumers, light, overlay);
                 info.cancel();
-			}
-		}
+            }
+        }
     }
-    
+
 }

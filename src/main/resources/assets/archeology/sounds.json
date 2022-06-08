@@ -1,11 +1,11 @@
 {
-    "item.copper_brush.brushing": {
-        "subtitle": "subtitles.archeology.item.copper_brush.brushing",
-        "sounds": [
-            "archeology:item/copper_brush/brushing1",
-            "archeology:item/copper_brush/brushing2",
-            "archeology:item/copper_brush/brushing3",
-            "archeology:item/copper_brush/brushing4"
-        ]
-    }
+  "item.copper_brush.brushing": {
+    "subtitle": "subtitles.archeology.item.copper_brush.brushing",
+    "sounds": [
+      "archeology:item/copper_brush/brushing1",
+      "archeology:item/copper_brush/brushing2",
+      "archeology:item/copper_brush/brushing3",
+      "archeology:item/copper_brush/brushing4"
+    ]
+  }
 }

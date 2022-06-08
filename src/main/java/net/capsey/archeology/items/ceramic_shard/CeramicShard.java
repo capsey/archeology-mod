@@ -1,16 +1,11 @@
 package net.capsey.archeology.items.ceramic_shard;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 public record CeramicShard(Identifier shardId) {
-
-    public ItemStack getStack() {
-        return new ItemStack(CeramicShardRegistry.getShardItem(shardId));
-    }
 
     @Nullable
     public static CeramicShard fromNbt(NbtCompound nbt) {
@@ -20,6 +15,10 @@ public record CeramicShard(Identifier shardId) {
         } else {
             return null;
         }
+    }
+
+    public ItemStack getStack() {
+        return new ItemStack(CeramicShardRegistry.getShardItem(shardId));
     }
 
     public NbtCompound writeNbt(NbtCompound nbt) {
