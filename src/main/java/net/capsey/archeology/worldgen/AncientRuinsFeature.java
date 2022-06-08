@@ -1,6 +1,5 @@
 package net.capsey.archeology.worldgen;
 
-import net.capsey.archeology.ArcheologyMod;
 import net.minecraft.structure.PoolStructurePiece;
 import net.minecraft.structure.PostPlacementProcessor;
 import net.minecraft.structure.StructureGeneratorFactory;
@@ -9,7 +8,6 @@ import net.minecraft.structure.pool.StructurePoolBasedGenerator;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
-import org.apache.logging.log4j.Level;
 
 import java.util.Optional;
 
@@ -20,6 +18,7 @@ public class AncientRuinsFeature extends StructureFeature<StructurePoolFeatureCo
 
     public static Optional<StructurePiecesGenerator<StructurePoolFeatureConfig>> createPiecesGenerator(StructureGeneratorFactory.Context<StructurePoolFeatureConfig> context) {
         BlockPos blockpos = context.chunkPos().getCenterAtY(0);
+        blockpos = blockpos.up(1); // Align with the surface
 
         Optional<StructurePiecesGenerator<StructurePoolFeatureConfig>> structurePiecesGenerator =
                 StructurePoolBasedGenerator.generate(
@@ -29,10 +28,6 @@ public class AncientRuinsFeature extends StructureFeature<StructurePoolFeatureCo
                         false,
                         true
                 );
-
-        if (structurePiecesGenerator.isPresent()) {
-            ArcheologyMod.LOGGER.log(Level.DEBUG, "Ancient Ruins at {}", blockpos);
-        }
 
         return structurePiecesGenerator;
     }

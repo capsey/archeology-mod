@@ -1,8 +1,8 @@
 {
-  "type": "minecraft:village",
+  "type": "archeology:ancient_ruins",
   "config": {
     "start_pool": "archeology:ancient_ruins/surface",
-    "size": 1
+    "size": 2
   },
   "biomes": "#archeology:has_structure/ancient_ruins",
   "adapt_noise": true,
