@@ -15,7 +15,7 @@ import net.minecraft.world.Difficulty;
 
 public class ExcavationBlockEntity extends FossilContainerBlockEntity {
 
-    public static final Identifier DEFAULT_LOOT_TABLE = new Identifier(ArcheologyMod.MODID, "excavation/ancient_ruins");
+    public static final Identifier DEFAULT_LOOT_TABLE = new Identifier(ArcheologyMod.MOD_ID, "excavation/ancient_ruins");
 
     private PlayerEntity brushingPlayer;
     private int brushTicks;

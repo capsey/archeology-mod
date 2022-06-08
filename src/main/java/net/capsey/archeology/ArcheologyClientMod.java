@@ -17,8 +17,8 @@ import net.minecraft.util.math.BlockPos;
 
 public class ArcheologyClientMod implements ClientModInitializer {
     
-    public static final EntityModelLayer CLAY_POT_MODEL_LAYER = new EntityModelLayer(new Identifier(ArcheologyMod.MODID, "clay_pot_block_entity"), "model");
-    public static final EntityModelLayer CLAY_POT_SHARDS_MODEL_LAYER = new EntityModelLayer(new Identifier(ArcheologyMod.MODID, "clay_pot_block_entity"), "shards");
+    public static final EntityModelLayer CLAY_POT_MODEL_LAYER = new EntityModelLayer(new Identifier(ArcheologyMod.MOD_ID, "clay_pot_block_entity"), "model");
+    public static final EntityModelLayer CLAY_POT_SHARDS_MODEL_LAYER = new EntityModelLayer(new Identifier(ArcheologyMod.MOD_ID, "clay_pot_block_entity"), "shards");
 
     @Override
     public void onInitializeClient() {

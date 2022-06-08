@@ -28,7 +28,7 @@ public class Items {
 	}
 
 	private static Item register(String id, Item item) {
-		return Registry.register(Registry.ITEM, new Identifier(ArcheologyMod.MODID, id), item);
+		return Registry.register(Registry.ITEM, new Identifier(ArcheologyMod.MOD_ID, id), item);
 	}
 	
 }

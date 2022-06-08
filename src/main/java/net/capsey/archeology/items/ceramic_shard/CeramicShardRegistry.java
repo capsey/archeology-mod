@@ -17,7 +17,7 @@ import net.minecraft.util.registry.Registry;
 public class CeramicShardRegistry {
     
     public static final ItemGroup SHARDS_ITEM_GROUP = FabricItemGroupBuilder.build(
-		new Identifier(ArcheologyMod.MODID, "shards"),
+		new Identifier(ArcheologyMod.MOD_ID, "shards"),
 		() -> new ItemStack(CeramicShards.ENDER_DRAGON)
     );
 

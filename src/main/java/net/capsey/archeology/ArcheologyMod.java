@@ -23,8 +23,8 @@ import net.minecraft.util.registry.Registry;
 
 public class ArcheologyMod implements ModInitializer {
 
-	public static final String MODID = "archeology";
-	public static final Logger LOGGER = LogManager.getLogger(MODID);
+	public static final String MOD_ID = "archeology";
+	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
 	// Loot context type for Fossil Container
 	public static final LootContextType EXCAVATION_LOOT_CONTEXT_TYPE = createLootContextType(builder ->
@@ -34,12 +34,12 @@ public class ArcheologyMod implements ModInitializer {
 	);
 
 	// Player Statistics
-	public static final Identifier EXCAVATED = new Identifier(MODID, "excavated");
+	public static final Identifier EXCAVATED = new Identifier(MOD_ID, "excavated");
 
 	// Network Packet IDs
-	public static final Identifier START_BRUSHING = new Identifier(MODID, "start_brushing");
-	public static final Identifier EXCAVATION_BREAKING_INFO = new Identifier(MODID, "excavation_breaking_info");
-	public static final Identifier EXCAVATION_STOP_BRUSHING = new Identifier(MODID, "excavation_stop_brushing");
+	public static final Identifier START_BRUSHING = new Identifier(MOD_ID, "start_brushing");
+	public static final Identifier EXCAVATION_BREAKING_INFO = new Identifier(MOD_ID, "excavation_breaking_info");
+	public static final Identifier EXCAVATION_STOP_BRUSHING = new Identifier(MOD_ID, "excavation_stop_brushing");
 
 	@Override
 	public void onInitialize() {
@@ -52,7 +52,7 @@ public class ArcheologyMod implements ModInitializer {
 		BlockEntities.onInitialize();
 		Items.onInitialize();
 		CeramicShards.registerDefaultShards();
-		Features.onInitialize();
+        Features.onInitialize();
 
 		// Registering other stuff
 		Registry.register(Registry.SOUND_EVENT, Sounds.BRUSHING_SOUND_ID, Sounds.BRUSHING_SOUND_EVENT);

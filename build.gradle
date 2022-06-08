@@ -30,9 +30,9 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Third-party mods dependencies
-	modImplementation "com.terraformersmc:modmenu:3.0.1"
+	modImplementation "com.terraformersmc:modmenu:3.2.2"
 
-	modApi("me.shedaniel.cloth:cloth-config-fabric:6.1.48") {
+	modApi("me.shedaniel.cloth:cloth-config-fabric:6.2.62") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 }

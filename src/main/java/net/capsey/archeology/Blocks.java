@@ -21,10 +21,10 @@ public class Blocks {
 	public static Block CLAY_POT;
 
 	// Block Tags
-	public static final TagKey<Block> EXCAVATION_BLOCKS_TAG = TagKey.of(Registry.BLOCK_KEY, new Identifier(ArcheologyMod.MODID, "excavation_blocks"));
+	public static final TagKey<Block> EXCAVATION_BLOCKS_TAG = TagKey.of(Registry.BLOCK_KEY, new Identifier(ArcheologyMod.MOD_ID, "excavation_blocks"));
 
-	public static final TagKey<Block> CLAY_POTS_TAG = TagKey.of(Registry.BLOCK_KEY, new Identifier(ArcheologyMod.MODID, "clay_pots"));
-	public static final TagKey<Block> CLAY_POT_PLANTABLE_TAG = TagKey.of(Registry.BLOCK_KEY, new Identifier(ArcheologyMod.MODID, "clay_pot_plantable"));
+	public static final TagKey<Block> CLAY_POTS_TAG = TagKey.of(Registry.BLOCK_KEY, new Identifier(ArcheologyMod.MOD_ID, "clay_pots"));
+	public static final TagKey<Block> CLAY_POT_PLANTABLE_TAG = TagKey.of(Registry.BLOCK_KEY, new Identifier(ArcheologyMod.MOD_ID, "clay_pot_plantable"));
 
 	public static void onInitialize() {
 		EXCAVATION_DIRT = register("excavation_dirt", new ExcavationBlock(AbstractBlock.Settings.copy(net.minecraft.block.Blocks.DIRT).hardness(1.0F)));
@@ -34,7 +34,7 @@ public class Blocks {
 	}
 
 	private static Block register(String id, Block block) {
-		return Registry.register(Registry.BLOCK, new Identifier(ArcheologyMod.MODID, id), block);
+		return Registry.register(Registry.BLOCK, new Identifier(ArcheologyMod.MOD_ID, id), block);
 	}
 	
 }

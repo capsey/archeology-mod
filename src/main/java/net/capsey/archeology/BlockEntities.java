@@ -23,7 +23,7 @@ public class BlockEntities {
 
 	private static <T extends BlockEntity> BlockEntityType<T> register(String id, FabricBlockEntityTypeBuilder.Factory<? extends T> factory, Block... blocks) {
 		FabricBlockEntityTypeBuilder<T> builder = FabricBlockEntityTypeBuilder.create(factory, blocks);
-		return Registry.register(Registry.BLOCK_ENTITY_TYPE, ArcheologyMod.MODID + ":" + id, builder.build(null));
+		return Registry.register(Registry.BLOCK_ENTITY_TYPE, ArcheologyMod.MOD_ID + ":" + id, builder.build(null));
 	}
 
 }

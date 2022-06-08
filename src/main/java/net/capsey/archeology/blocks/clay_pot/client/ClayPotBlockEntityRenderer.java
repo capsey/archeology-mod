@@ -26,8 +26,8 @@ public class ClayPotBlockEntityRenderer<T extends ShardsContainer> extends Shard
 
 	public static final Identifier CLAY_POTS_ATLAS_TEXTURE = new Identifier("textures/atlas/shards.png");
 
-	public static final SpriteIdentifier MODEL_TEXTURE = new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MODID, "entity/clay_pot"));
-	public static final SpriteIdentifier RAW_MODEL_TEXTURE = new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MODID, "entity/raw_clay_pot"));
+	public static final SpriteIdentifier MODEL_TEXTURE = new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MOD_ID, "entity/clay_pot"));
+	public static final SpriteIdentifier RAW_MODEL_TEXTURE = new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MOD_ID, "entity/raw_clay_pot"));
 	
 	private final SpriteIdentifier modelTexture;
 

@@ -13,23 +13,23 @@ public class CeramicShards {
 
     public static void registerDefaultShards() {
         ENDER_DRAGON = CeramicShardRegistry.registerShard(
-            new Identifier(ArcheologyMod.MODID, "ender_dragon_shard"), 
-            new Identifier(ArcheologyMod.MODID, "ender_dragon")
+            new Identifier(ArcheologyMod.MOD_ID, "ender_dragon_shard"),
+            new Identifier(ArcheologyMod.MOD_ID, "ender_dragon")
         );
 
         OVERWORLD = CeramicShardRegistry.registerShard(
-            new Identifier(ArcheologyMod.MODID, "overworld_shard"),
-            new Identifier(ArcheologyMod.MODID, "overworld")
+            new Identifier(ArcheologyMod.MOD_ID, "overworld_shard"),
+            new Identifier(ArcheologyMod.MOD_ID, "overworld")
         );
 
         DIAMOND = CeramicShardRegistry.registerShard(
-            new Identifier(ArcheologyMod.MODID, "diamond_shard"),
-            new Identifier(ArcheologyMod.MODID, "diamond")
+            new Identifier(ArcheologyMod.MOD_ID, "diamond_shard"),
+            new Identifier(ArcheologyMod.MOD_ID, "diamond")
         );
 
         EMERALD = CeramicShardRegistry.registerShard(
-            new Identifier(ArcheologyMod.MODID, "emerald_shard"),
-            new Identifier(ArcheologyMod.MODID, "emerald")
+            new Identifier(ArcheologyMod.MOD_ID, "emerald_shard"),
+            new Identifier(ArcheologyMod.MOD_ID, "emerald")
         );
     }
 
