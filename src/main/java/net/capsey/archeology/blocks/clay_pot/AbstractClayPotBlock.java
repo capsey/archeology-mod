@@ -38,7 +38,7 @@ public abstract class AbstractClayPotBlock extends Block implements Waterloggabl
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED).booleanValue()) {
+        if (state.get(WATERLOGGED)) {
             world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
 
@@ -69,7 +69,7 @@ public abstract class AbstractClayPotBlock extends Block implements Waterloggabl
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED).booleanValue() ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
 }

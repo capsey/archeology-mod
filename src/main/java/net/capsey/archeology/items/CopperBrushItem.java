@@ -1,6 +1,5 @@
 package net.capsey.archeology.items;
 
-import me.shedaniel.autoconfig.AutoConfig;
 import net.capsey.archeology.ModConfig;
 import net.capsey.archeology.Sounds;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
@@ -83,8 +82,7 @@ public class CopperBrushItem extends Item {
     @Override
     public UseAction getUseAction(ItemStack stack) {
         // Temporary solution?
-        ModConfig config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
-        return config.disableBrushingAnimation ? UseAction.BOW : CustomUseAction.BRUSH;
+        return ModConfig.disableBrushingAnimation ? UseAction.BOW : CustomUseAction.BRUSH;
     }
 
     @Override

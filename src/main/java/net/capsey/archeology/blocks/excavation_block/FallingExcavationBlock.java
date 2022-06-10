@@ -16,16 +16,16 @@ import java.util.Random;
 
 public class FallingExcavationBlock extends ExcavationBlock implements FallingBlockWithEntity {
 
-    private final FallingBlock mimicingBlock;
+    private final FallingBlock mimickingBlock;
 
     public FallingExcavationBlock(Settings settings, FallingBlock block) {
         super(settings);
-        mimicingBlock = block;
+        mimickingBlock = block;
     }
 
     @Override
     public ItemEntity dropItem(FallingBlockEntity entity, ItemConvertible item) {
-        return entity.dropItem(mimicingBlock);
+        return entity.dropItem(mimickingBlock);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class FallingExcavationBlock extends ExcavationBlock implements FallingBl
 
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        mimicingBlock.randomDisplayTick(state, world, pos, random);
+        mimickingBlock.randomDisplayTick(state, world, pos, random);
     }
 
 }

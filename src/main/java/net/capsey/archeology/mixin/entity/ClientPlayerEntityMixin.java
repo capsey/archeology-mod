@@ -1,6 +1,5 @@
 package net.capsey.archeology.mixin.entity;
 
-import me.shedaniel.autoconfig.AutoConfig;
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.ModConfig;
 import net.capsey.archeology.entity.BrushingPlayerEntity;
@@ -36,22 +35,21 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
             return 0;
         }
 
-        ModConfig config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
         float value;
         boolean moved;
 
-        if (!config.brushing.mojangExcavationBreaking) {
+        if (!ModConfig.mojangExcavationBreaking) {
             // Break/restore value depends on oxidization level
             int i = CopperBrushItem.getOxidizationIndex(player.getActiveItem());
-            moved = change > (BREAK_THRESHOLD[i] * config.getThresholdCoef());
+            moved = change > (BREAK_THRESHOLD[i] * ModConfig.thresholdCoef);
             value = (moved ? REGULAR_REPAIR_DELTAS : REGULAR_BREAK_DELTAS)[i];
         } else {
-            // Mojang one do not
+            // With Mojang style it does not
             moved = change > 0;
             value = moved ? 0.7F : -0.04F;
         }
 
-        return value * config.getBreakDeltaCoef(moved);
+        return value * ModConfig.getBreakDeltaCoef(moved);
     }
 
     @Inject(method = "tick()V", at = @At("TAIL"))

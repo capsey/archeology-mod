@@ -1,7 +1,6 @@
 package net.capsey.archeology;
 
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import eu.midnightdust.lib.config.MidnightConfig;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.capsey.archeology.entity.ExcavatorPlayerEntity;
 import net.capsey.archeology.items.ceramic_shard.CeramicShards;
@@ -42,9 +41,9 @@ public class ArcheologyMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        // Adding Config
+        // Initializing Config
         // TODO: Separate configs for server and client
-        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
+        MidnightConfig.init(MOD_ID, ModConfig.class);
 
         // Registering all stuff
         Blocks.onInitialize();

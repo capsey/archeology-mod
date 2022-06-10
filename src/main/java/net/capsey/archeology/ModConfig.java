@@ -1,44 +1,20 @@
 package net.capsey.archeology;
 
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import eu.midnightdust.lib.config.MidnightConfig;
 
-@Config(name = ArcheologyMod.MOD_ID)
-public class ModConfig implements ConfigData {
+public class ModConfig extends MidnightConfig {
 
-    @ConfigEntry.Gui.Tooltip(count = 2)
-    public boolean disableBrushingAnimation = false;
+    @Client @Entry public static boolean disableBrushingAnimation = false;
+    @Client @Entry public static boolean mojangExcavationBreaking = false;
+    @Client @Entry(min = 0.5F, max = 2.0F) public static float thresholdCoef = 1.0F;
+    @Client @Entry(min = 0.5F, max = 2.0F) public static float breakingSpeed = 1.0F;
+    @Client @Entry(min = 0.5F, max = 2.0F) public static float repairingSpeed = 1.0F;
 
-    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
-    public BrushingOptions brushing = new BrushingOptions();
-
-    public float getBreakDeltaCoef(boolean moved) {
+    public static float getBreakDeltaCoef(boolean moved) {
         // XOR operator, gives True only if one of them True, otherwise False
         // Because on Mojang breaking behavior is reversed
-        boolean bl = brushing.mojangExcavationBreaking ^ moved;
-        return (bl ? brushing.repairingSpeed : brushing.breakingSpeed) / 100.0F;
-    }
-
-    public float getThresholdCoef() {
-        return brushing.thresholdCoef / 100.0F;
-    }
-
-    public static class BrushingOptions {
-        @ConfigEntry.Gui.Tooltip(count = 2)
-        public boolean mojangExcavationBreaking = false;
-
-        @ConfigEntry.Gui.Tooltip(count = 2)
-        @ConfigEntry.BoundedDiscrete(min = 50, max = 200)
-        public int thresholdCoef = 100;
-
-        @ConfigEntry.Gui.Tooltip(count = 2)
-        @ConfigEntry.BoundedDiscrete(min = 50, max = 200)
-        public int breakingSpeed = 100;
-
-        @ConfigEntry.Gui.Tooltip(count = 2)
-        @ConfigEntry.BoundedDiscrete(min = 50, max = 200)
-        public int repairingSpeed = 100;
+        boolean bl = mojangExcavationBreaking ^ moved;
+        return bl ? repairingSpeed : breakingSpeed;
     }
 
 }
