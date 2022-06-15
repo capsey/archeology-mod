@@ -50,7 +50,6 @@ public class ArcheologyMod implements ModInitializer {
         BlockEntities.onInitialize();
         Items.onInitialize();
         CeramicShards.registerDefaultShards();
-        Features.onInitialize();
 
         // Registering other stuff
         Registry.register(Registry.SOUND_EVENT, Sounds.BRUSHING_SOUND_ID, Sounds.BRUSHING_SOUND_EVENT);

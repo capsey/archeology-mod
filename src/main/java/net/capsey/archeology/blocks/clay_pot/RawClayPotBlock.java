@@ -22,12 +22,12 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 
 public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntityProvider {
 

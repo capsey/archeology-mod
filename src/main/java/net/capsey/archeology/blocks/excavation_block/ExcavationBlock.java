@@ -15,6 +15,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -22,7 +23,6 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 
 import java.util.Optional;
-import java.util.Random;
 
 public class ExcavationBlock extends BlockWithEntity {
 
