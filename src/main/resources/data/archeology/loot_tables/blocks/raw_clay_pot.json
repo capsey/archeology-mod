@@ -2,21 +2,52 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": {
-        "min": 3,
-        "max": 5
-      },
+      "bonus_rolls": 0.0,
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "minecraft:clay_ball"
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "conditions": [
+                {
+                  "condition": "minecraft:match_tool",
+                  "predicate": {
+                    "enchantments": [
+                      {
+                        "enchantment": "minecraft:silk_touch",
+                        "levels": {
+                          "min": 1
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "name": "archeology:raw_clay_pot"
+            },
+            {
+              "type": "minecraft:item",
+              "functions": [
+                {
+                  "add": false,
+                  "count": {
+                    "type": "minecraft:uniform",
+                    "max": 5.0,
+                    "min": 3.0
+                  },
+                  "function": "minecraft:set_count"
+                },
+                {
+                  "function": "minecraft:explosion_decay"
+                }
+              ],
+              "name": "minecraft:clay_ball"
+            }
+          ]
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+      "rolls": 1.0
     }
   ]
 }
