@@ -1,0 +1,12 @@
+{
+    "parent": "archeology:block/base_chiseled_upper",
+    "textures": {
+        "north": "minecraft:block/calcite",
+        "east": "minecraft:block/calcite",
+        "south": "minecraft:block/calcite",
+        "west": "minecraft:block/calcite",
+        "up": "minecraft:block/calcite",
+        "down": "minecraft:block/calcite",
+        "particle": "minecraft:block/calcite"
+    }
+}
