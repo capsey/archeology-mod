@@ -58,10 +58,10 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
             MinecraftClient client = MinecraftClient.getInstance();
             ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
 
-            if (client.crosshairTarget.getType() == HitResult.Type.BLOCK) {
-                BlockHitResult raycast = (BlockHitResult) client.crosshairTarget;
+            if (client.crosshairTarget instanceof BlockHitResult raycast) {
+                BlockPos pos = raycast.getBlockPos();
 
-                if (raycast.getBlockPos().equals(brushingPos)) {
+                if (pos.equals(brushingPos)) {
                     // Calculating break delta (how much block breaks/restores)
                     Vec3d lookDir = Vec3d.fromPolar(player.getPitch(), player.getHeadYaw());
                     Vec3d prevLookDir = Vec3d.fromPolar(player.prevPitch, player.prevHeadYaw);
@@ -77,9 +77,9 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
                     }
 
                     // Adding brushing particles
-                    client.particleManager.addBlockBreakingParticles(raycast.getBlockPos(), Direction.UP);
-                    client.particleManager.addBlockBreakingParticles(raycast.getBlockPos(), Direction.UP);
-                    client.particleManager.addBlockBreakingParticles(raycast.getBlockPos(), Direction.UP);
+                    client.particleManager.addBlockBreakingParticles(pos, Direction.UP);
+                    client.particleManager.addBlockBreakingParticles(pos, Direction.UP);
+                    client.particleManager.addBlockBreakingParticles(pos, Direction.UP);
                     return;
                 }
             }

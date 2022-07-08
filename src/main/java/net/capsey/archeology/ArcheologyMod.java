@@ -1,6 +1,7 @@
 package net.capsey.archeology;
 
 import eu.midnightdust.lib.config.MidnightConfig;
+import net.capsey.archeology.blocks.chiseled.ChiseledBlock;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.capsey.archeology.entity.ExcavatorPlayerEntity;
 import net.capsey.archeology.items.ceramic_shard.CeramicShards;
@@ -12,11 +13,14 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.StatFormatter;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ArcheologyMod implements ModInitializer {
@@ -38,6 +42,7 @@ public class ArcheologyMod implements ModInitializer {
     public static final Identifier START_BRUSHING = new Identifier(MOD_ID, "start_brushing");
     public static final Identifier EXCAVATION_BREAKING_INFO = new Identifier(MOD_ID, "excavation_breaking_info");
     public static final Identifier EXCAVATION_STOP_BRUSHING = new Identifier(MOD_ID, "excavation_stop_brushing");
+    public static final Identifier CHISEL_BLOCK_SEGMENT = new Identifier(MOD_ID, "chisel_block_segment");
 
     @Override
     public void onInitialize() {
@@ -58,15 +63,17 @@ public class ArcheologyMod implements ModInitializer {
 
         // Networking
         ServerPlayNetworking.registerGlobalReceiver(ArcheologyMod.EXCAVATION_BREAKING_INFO, (server, player, handler, buf, sender) -> {
-            int newStage = buf.readInt();
-            server.execute(() -> {
-                ExcavationBlockEntity entity = ((ExcavatorPlayerEntity) player).getExcavatingBlock();
+            if (player.getAbilities().allowModifyWorld) {
+                int newStage = buf.readInt();
+                server.execute(() -> {
+                    ExcavationBlockEntity entity = ((ExcavatorPlayerEntity) player).getExcavatingBlock();
 
-                if (entity != null && !entity.isRemoved() && entity.isCorrectPlayer(player)) {
-                    ServerWorld world = (ServerWorld) entity.getWorld();
-                    world.setBlockBreakingInfo(0, entity.getPos(), MathHelper.clamp(newStage, 0, 9));
-                }
-            });
+                    if (entity != null && !entity.isRemoved() && entity.isCorrectPlayer(player)) {
+                        ServerWorld world = Objects.requireNonNull((ServerWorld) entity.getWorld());
+                        world.setBlockBreakingInfo(0, entity.getPos(), MathHelper.clamp(newStage, 0, 9));
+                    }
+                });
+            }
         });
 
         ServerPlayNetworking.registerGlobalReceiver(ArcheologyMod.EXCAVATION_STOP_BRUSHING, (server, player, handler, buf, sender) -> {
@@ -77,6 +84,18 @@ public class ArcheologyMod implements ModInitializer {
                     player.stopUsingItem();
                 }
             });
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(ArcheologyMod.CHISEL_BLOCK_SEGMENT, (server, player, handler, buf, sender) -> {
+            if (player.getAbilities().allowModifyWorld) {
+                BlockPos pos = buf.readBlockPos();
+                String segment = buf.readString();
+
+                ChiseledBlock.Segment.get(segment).ifPresent(value -> server.execute(() -> {
+                    ServerWorld world = player.getWorld();
+                    ChiseledBlock.chiselSegment(world, pos, value, player);
+                }));
+            }
         });
     }
 

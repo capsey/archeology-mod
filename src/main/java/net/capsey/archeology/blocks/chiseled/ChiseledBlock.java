@@ -1,19 +1,30 @@
 package net.capsey.archeology.blocks.chiseled;
 
+import net.capsey.archeology.ArcheologyMod;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.context.LootContext;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldEvents;
+import net.minecraft.world.event.GameEvent;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
 public class ChiseledBlock extends Block {
 
@@ -38,15 +49,92 @@ public class ChiseledBlock extends Block {
                     .cuboid(0.0F, 0.0F, 0.0F, 0.5F, 0.5F, 0.5F)
                     .offset(x, y, z);
         }
+
+        public static Optional<Segment> get(String name) {
+            try {
+                return Optional.of(Segment.valueOf(name));
+            } catch (IllegalArgumentException e) {
+                return Optional.empty();
+            }
+        }
+
+        public Segment offset(Direction direction) {
+            return switch (direction) {
+                case DOWN -> Segment.valueOf(this.name().replace("UPPER", "LOWER"));
+                case UP -> Segment.valueOf(this.name().replace("LOWER", "UPPER"));
+                case NORTH -> Segment.valueOf(this.name().replace("SOUTH", "NORTH"));
+                case SOUTH -> Segment.valueOf(this.name().replace("NORTH", "SOUTH"));
+                case WEST -> Segment.valueOf(this.name().replace("EAST", "WEST"));
+                case EAST -> Segment.valueOf(this.name().replace("WEST", "EAST"));
+            };
+        }
+
+        public static Segment fromRaycast(BlockHitResult raycast, BlockState state) {
+            Vec3d blockPos = Vec3d.ofCenter(raycast.getBlockPos());
+            Vec3d pos = blockPos.relativize(raycast.getPos());
+            Segment segment;
+
+            if (pos.x < 0) {
+                if (pos.z < 0) {
+                    segment = pos.y < 0 ? LOWER_NORTH_WEST : UPPER_NORTH_WEST;
+                } else {
+                    segment = pos.y < 0 ? LOWER_SOUTH_WEST : UPPER_SOUTH_WEST;
+                }
+            } else {
+                if (pos.z < 0) {
+                    segment = pos.y < 0 ? LOWER_NORTH_EAST : UPPER_NORTH_EAST;
+                } else {
+                    segment = pos.y < 0 ? LOWER_SOUTH_EAST : UPPER_SOUTH_EAST;
+                }
+            }
+
+            if (state.getBlock() instanceof ChiseledBlock && !state.get(SEGMENTS.get(segment))) {
+                return segment.offset(raycast.getSide().getOpposite());
+            }
+
+            return segment;
+        }
     }
 
-    public static final BooleanProperty[] SEGMENTS = new BooleanProperty[Segment.values().length];
+    public static final Map<Segment, BooleanProperty> SEGMENTS = new EnumMap<>(Segment.class);
+    public static Map<Block, ChiseledBlock> CHISELABLE_BLOCKS = new HashMap<>();
 
     static {
-        Segment[] values = Segment.values();
-        for (int i = 0; i < values.length; i++) {
-            SEGMENTS[i] = BooleanProperty.of(values[i].name().toLowerCase());
+        for (Segment segment : Segment.values()) {
+            SEGMENTS.put(segment, BooleanProperty.of(segment.name().toLowerCase()));
         }
+    }
+
+    public static boolean isChiselable(Block block) {
+        return CHISELABLE_BLOCKS.containsKey(block) || block instanceof ChiseledBlock;
+    }
+
+    public static void chiselSegment(ServerWorld world, BlockPos pos, Segment segment, Entity player) {
+        BlockState state = world.getBlockState(pos);
+
+        if (CHISELABLE_BLOCKS.containsKey(state.getBlock())) {
+            emitEvents(world, state, pos, player);
+            world.setBlockState(pos, CHISELABLE_BLOCKS
+                    .get(state.getBlock())
+                    .getDefaultState()
+                    .with(SEGMENTS.get(segment), false)
+            );
+        } else if (state.getBlock() instanceof ChiseledBlock) {
+            state = state.with(SEGMENTS.get(segment), false);
+
+            if (SEGMENTS.values().stream().anyMatch(state::get)) {
+                emitEvents(world, state, pos, player);
+                world.setBlockState(pos, state);
+            } else {
+                world.breakBlock(pos, true, player);
+            }
+        }
+    }
+
+    private static void emitEvents(ServerWorld world, BlockState state, BlockPos pos, Entity player) {
+        world.playSound(null, pos, state.getSoundGroup().getBreakSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
+        world.syncWorldEvent(WorldEvents.BLOCK_BROKEN, pos, Block.getRawIdFromState(state));
+        world.emitGameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Emitter.of(player, state));
     }
 
     public final Block mimickingBlock;
@@ -54,13 +142,15 @@ public class ChiseledBlock extends Block {
 
     public ChiseledBlock(Block block) {
         super(FabricBlockSettings.copy(block));
-        mimickingBlock = block;
         shapesByState = getShapesForStates(ChiseledBlock::getShapeForState);
+        mimickingBlock = block;
+
+        CHISELABLE_BLOCKS.put(mimickingBlock, this);
 
         // Setting default state
         BlockState state = getStateManager().getDefaultState();
 
-        for (BooleanProperty property : SEGMENTS) {
+        for (BooleanProperty property : SEGMENTS.values()) {
             state = state.with(property, true);
         }
 
@@ -69,11 +159,10 @@ public class ChiseledBlock extends Block {
 
     private static VoxelShape getShapeForState(BlockState state) {
         VoxelShape shape = VoxelShapes.empty();
-        Segment[] values = Segment.values();
 
-        for (int i = 0; i < values.length; i++) {
-            if (state.get(SEGMENTS[i])) {
-                shape = VoxelShapes.union(shape, values[i].shape);
+        for (Segment segment : Segment.values()) {
+            if (state.get(SEGMENTS.get(segment))) {
+                shape = VoxelShapes.union(shape, segment.shape);
             }
         }
 
@@ -82,22 +171,31 @@ public class ChiseledBlock extends Block {
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (Arrays.stream(SEGMENTS).allMatch(state::get)) {
+        if (SEGMENTS.values().stream().allMatch(state::get)) {
             return mimickingBlock.getDefaultState();
-        } else if (Arrays.stream(SEGMENTS).noneMatch(state::get)) {
+        } else if (SEGMENTS.values().stream().noneMatch(state::get)) {
             return Blocks.AIR.getDefaultState();
         }
         return state;
     }
 
     @Override
-    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        return new ItemStack(mimickingBlock);
+    public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
+        if (SEGMENTS.values().stream().map(x -> state.get(x) ? 1 : 0).reduce(0, Integer::sum) > 4) {
+            return List.of(new ItemStack(mimickingBlock));
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public Item asItem() {
+        return mimickingBlock.asItem();
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(SEGMENTS);
+        SEGMENTS.values().forEach(builder::add);
     }
 
     @Override

@@ -39,7 +39,7 @@ public class CopperBrushItem extends Item {
         World world = context.getWorld();
         PlayerEntity player = context.getPlayer();
 
-        if (!world.isClient && player.getAbilities().allowModifyWorld) {
+        if (!world.isClient && player != null && player.getAbilities().allowModifyWorld) {
             BlockPos pos = context.getBlockPos();
             Block block = world.getBlockState(pos).getBlock();
 
