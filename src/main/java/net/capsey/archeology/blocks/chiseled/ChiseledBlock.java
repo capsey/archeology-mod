@@ -181,11 +181,13 @@ public class ChiseledBlock extends Block {
 
     @Override
     public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-        if (SEGMENTS.values().stream().map(x -> state.get(x) ? 1 : 0).reduce(0, Integer::sum) > 4) {
-            return List.of(new ItemStack(mimickingBlock));
-        } else {
+        int segmentsLeft = SEGMENTS.values().stream().mapToInt(x -> state.get(x) ? 1 : 0).sum();
+
+        if (segmentsLeft <= 4) {
             return Collections.emptyList();
         }
+
+        return mimickingBlock.getDroppedStacks(state, builder);
     }
 
     @Override
