@@ -4,7 +4,7 @@ import eu.midnightdust.lib.config.MidnightConfig;
 
 public class ModConfig extends MidnightConfig {
 
-    @Client @Entry public static boolean disableBrushingAnimation = false;
+    @Client @Entry public static boolean disableFirstPersonItemAnimations = false;
     @Client @Entry public static boolean mojangExcavationBreaking = false;
     @Client @Entry(min = 0.5F, max = 2.0F) public static float thresholdCoef = 1.0F;
     @Client @Entry(min = 0.5F, max = 2.0F) public static float breakingSpeed = 1.0F;

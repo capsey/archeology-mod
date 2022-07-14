@@ -4,14 +4,18 @@ import eu.midnightdust.lib.config.MidnightConfig;
 import net.capsey.archeology.blocks.chiseled.ChiseledBlock;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.capsey.archeology.entity.ExcavatorPlayerEntity;
+import net.capsey.archeology.items.ChiselItem;
 import net.capsey.archeology.items.ceramic_shard.CeramicShards;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.StatFormatter;
 import net.minecraft.stat.Stats;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -20,7 +24,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ArcheologyMod implements ModInitializer {
@@ -92,8 +95,15 @@ public class ArcheologyMod implements ModInitializer {
                 String segment = buf.readString();
 
                 ChiseledBlock.Segment.get(segment).ifPresent(value -> server.execute(() -> {
-                    ServerWorld world = player.getWorld();
-                    ChiseledBlock.chiselSegment(world, pos, value, player);
+                    ItemStack stack = player.getMainHandStack();
+
+                    if (stack.getItem() instanceof ChiselItem) {
+                        ServerWorld world = player.getWorld();
+                        ChiseledBlock.chiselSegment(world, pos, value, player);
+                        stack.damage(1, player, p ->
+                                p.sendEquipmentBreakStatus(player.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
+                        );
+                    }
                 }));
             }
         });

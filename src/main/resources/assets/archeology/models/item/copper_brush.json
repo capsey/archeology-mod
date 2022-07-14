@@ -1,44 +1,33 @@
 {
-  "credit": "Made with Blockbench",
-  "parent": "item/handheld",
-  "textures": {
-    "layer0": "archeology:item/copper_brush"
-  },
-  "display": {
-    "thirdperson_righthand": {
-      "rotation": [0, 0, 45],
-      "translation": [0, 2.5, 1],
-      "scale": [0.7, 0.7, 0.7]
-    },
-    "thirdperson_lefthand": {
-      "rotation": [0, 0, -45],
-      "translation": [0, 2.5, 1],
-      "scale": [0.7, 0.7, 0.7]
-    },
-    "head": {
-      "rotation": [-160, 180, 45],
-      "translation": [0, -4, -5],
-      "scale": [1, 1, 2]
-    }
-  },
-  "overrides": [
-    {
-      "predicate": {
-        "damage": 0.25
-      },
-      "model": "archeology:item/exposed_copper_brush"
-    },
-    {
-      "predicate": {
-        "damage": 0.50
-      },
-      "model": "archeology:item/weathered_copper_brush"
-    },
-    {
-      "predicate": {
-        "damage": 0.75
-      },
-      "model": "archeology:item/oxidized_copper_brush"
-    }
-  ]
+	"credit": "Made with Blockbench",
+	"parent": "item/handheld",
+	"textures": {
+		"layer0": "archeology:item/copper_brush"
+	},
+	"overrides": [
+		{
+			"predicate": {
+				"damage": 0.25
+			},
+			"model": "archeology:item/exposed_copper_brush"
+		},
+		{
+			"predicate": {
+				"damage": 0.5
+			},
+			"model": "archeology:item/weathered_copper_brush"
+		},
+		{
+			"predicate": {
+				"damage": 0.75
+			},
+			"model": "archeology:item/oxidized_copper_brush"
+		}
+	],
+	"display": {
+		"head": {
+			"rotation": [34, 0, -135],
+			"translation": [0, -3.75, -5]
+		}
+	}
 }

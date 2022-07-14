@@ -1,6 +1,13 @@
 {
-  "parent": "minecraft:item/handheld",
-  "textures": {
-    "layer0": "archeology:item/chisel"
-  }
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:item/handheld_rod",
+	"textures": {
+		"layer0": "archeology:item/chisel"
+	},
+	"display": {
+		"head": {
+			"rotation": [90, -90, 45],
+			"translation": [0, -2, -5]
+		}
+	}
 }

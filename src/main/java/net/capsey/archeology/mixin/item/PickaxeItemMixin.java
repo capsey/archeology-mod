@@ -19,11 +19,7 @@ public abstract class PickaxeItemMixin extends MiningToolItem {
 
     @Override
     public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
-        if (state.isIn(Blocks.CLAY_POTS_TAG)) {
-            return 5.0F;
-        } else {
-            return super.getMiningSpeedMultiplier(stack, state);
-        }
+        return state.isIn(Blocks.CLAY_POTS_TAG) ? 5.0F : super.getMiningSpeedMultiplier(stack, state);
     }
 
 }

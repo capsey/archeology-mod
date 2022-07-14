@@ -81,8 +81,7 @@ public class CopperBrushItem extends Item {
 
     @Override
     public UseAction getUseAction(ItemStack stack) {
-        // Temporary solution?
-        return ModConfig.disableBrushingAnimation ? UseAction.BOW : CustomUseAction.BRUSH;
+        return UseAction.BOW;
     }
 
     @Override

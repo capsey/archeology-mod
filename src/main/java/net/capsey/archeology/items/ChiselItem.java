@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -22,28 +23,34 @@ import java.util.Objects;
 
 public class ChiselItem extends Item {
 
+    public static final int MAX_USE_TICKS = 18;
+    public static final int HIT_PERIOD = 6;
+
     public ChiselItem(Settings settings) {
         super(settings);
     }
 
     @Override
     public UseAction getUseAction(ItemStack stack) {
-        return UseAction.CROSSBOW;
+        return UseAction.BOW;
     }
 
     @Override
     public int getMaxUseTime(ItemStack stack) {
-        return 12;
+        return MAX_USE_TICKS;
     }
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-        BlockState state = context.getWorld().getBlockState(context.getBlockPos());
         PlayerEntity player = Objects.requireNonNull(context.getPlayer());
 
-        if (ChiseledBlock.isChiselable(state.getBlock())) {
-            player.setCurrentHand(context.getHand());
-            return ActionResult.CONSUME;
+        if (context.getHand() == Hand.MAIN_HAND && player.getAbilities().allowModifyWorld) {
+            BlockState state = context.getWorld().getBlockState(context.getBlockPos());
+
+            if (ChiseledBlock.isChiselable(state.getBlock())) {
+                player.setCurrentHand(context.getHand());
+                return ActionResult.CONSUME;
+            }
         }
 
         return super.useOnBlock(context);
@@ -57,6 +64,11 @@ public class ChiselItem extends Item {
             if (client.crosshairTarget instanceof BlockHitResult raycast) {
                 BlockPos pos = raycast.getBlockPos();
                 BlockState state = world.getBlockState(pos);
+                int useTicks = user.getItemUseTime();
+
+                if (useTicks != 0 && useTicks % HIT_PERIOD == 0) {
+                    client.particleManager.addBlockBreakingParticles(pos, raycast.getSide());
+                }
 
                 if (ChiseledBlock.isChiselable(state.getBlock())) {
                     return;

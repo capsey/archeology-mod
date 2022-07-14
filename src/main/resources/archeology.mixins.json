@@ -12,16 +12,13 @@
     "entity.FallingBlockEntityMixin",
     "entity.ServerPlayerEntityMixin",
     "item.BoneMealItemMixin",
-    "item.PickaxeItemMixin",
-    "item.UseActionMixin"
+    "item.PickaxeItemMixin"
   ],
   "client": [
     "entity.ClientPlayerEntityMixin",
-    "render.BuiltinModelItemRendererAccessor",
     "render.BuiltinModelItemRendererMixin",
     "render.FallingBlockEntityRendererMixin",
     "render.HeldItemRendererMixin",
-    "render.PlayerEntityRendererMixin",
     "render.TexturedRenderLayersMixin"
   ],
   "injectors": {
