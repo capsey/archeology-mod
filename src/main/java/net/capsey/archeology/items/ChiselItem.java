@@ -31,32 +31,6 @@ public class ChiselItem extends Item {
     }
 
     @Override
-    public UseAction getUseAction(ItemStack stack) {
-        return UseAction.BOW;
-    }
-
-    @Override
-    public int getMaxUseTime(ItemStack stack) {
-        return MAX_USE_TICKS;
-    }
-
-    @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        PlayerEntity player = Objects.requireNonNull(context.getPlayer());
-
-        if (context.getHand() == Hand.MAIN_HAND && player.getAbilities().allowModifyWorld) {
-            BlockState state = context.getWorld().getBlockState(context.getBlockPos());
-
-            if (ChiseledBlock.isChiselable(state.getBlock())) {
-                player.setCurrentHand(context.getHand());
-                return ActionResult.CONSUME;
-            }
-        }
-
-        return super.useOnBlock(context);
-    }
-
-    @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         if (world.isClient) {
             MinecraftClient client = MinecraftClient.getInstance();
@@ -80,6 +54,22 @@ public class ChiselItem extends Item {
     }
 
     @Override
+    public ActionResult useOnBlock(ItemUsageContext context) {
+        PlayerEntity player = Objects.requireNonNull(context.getPlayer());
+
+        if (context.getHand() == Hand.MAIN_HAND && player.getAbilities().allowModifyWorld) {
+            BlockState state = context.getWorld().getBlockState(context.getBlockPos());
+
+            if (ChiseledBlock.isChiselable(state.getBlock())) {
+                player.setCurrentHand(context.getHand());
+                return ActionResult.CONSUME;
+            }
+        }
+
+        return super.useOnBlock(context);
+    }
+
+    @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
         if (world.isClient) {
             MinecraftClient client = MinecraftClient.getInstance();
@@ -100,5 +90,15 @@ public class ChiselItem extends Item {
         }
 
         return super.finishUsing(stack, world, user);
+    }
+
+    @Override
+    public UseAction getUseAction(ItemStack stack) {
+        return UseAction.BOW;
+    }
+
+    @Override
+    public int getMaxUseTime(ItemStack stack) {
+        return MAX_USE_TICKS;
     }
 }

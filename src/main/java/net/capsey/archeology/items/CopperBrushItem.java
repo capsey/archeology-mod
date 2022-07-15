@@ -1,6 +1,5 @@
 package net.capsey.archeology.items;
 
-import net.capsey.archeology.ModConfig;
 import net.capsey.archeology.Sounds;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
 import net.minecraft.block.Block;
@@ -20,7 +19,7 @@ import net.minecraft.world.World;
 
 public class CopperBrushItem extends Item {
 
-    private static final int[] BRUSH_TICKS = {8, 7, 6, 5};
+    private static final int[] BRUSH_TICKS = { 8, 7, 6, 5 };
 
     public CopperBrushItem(Settings settings) {
         super(settings);
@@ -32,6 +31,24 @@ public class CopperBrushItem extends Item {
 
     public static int getOxidizationIndex(ItemStack item) {
         return item.isDamaged() ? (4 * item.getDamage() / item.getMaxDamage()) % 4 : 0;
+    }
+
+    @Override
+    public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
+        if (!world.isClient) {
+            int brushTicks = CopperBrushItem.getBrushTicks(stack);
+
+            if (remainingUseTicks % (brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty())) == 0) {
+                int damage = world.getRandom().nextInt(2);
+                stack.damage(damage, user, p ->
+                        p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
+                );
+            }
+
+            if (remainingUseTicks % brushTicks == 0) {
+                world.playSound(null, user.getBlockPos(), Sounds.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1f, 1f);
+            }
+        }
     }
 
     @Override
@@ -57,31 +74,13 @@ public class CopperBrushItem extends Item {
     }
 
     @Override
-    public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        if (!world.isClient) {
-            int brushTicks = CopperBrushItem.getBrushTicks(stack);
-
-            if (remainingUseTicks % (brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty())) == 0) {
-                int damage = world.getRandom().nextInt(2);
-                stack.damage(damage, user, p ->
-                        p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
-                );
-            }
-
-            if (remainingUseTicks % brushTicks == 0) {
-                world.playSound(null, user.getBlockPos(), Sounds.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1f, 1f);
-            }
-        }
+    public UseAction getUseAction(ItemStack stack) {
+        return UseAction.BOW;
     }
 
     @Override
     public int getMaxUseTime(ItemStack stack) {
         return 6000;
-    }
-
-    @Override
-    public UseAction getUseAction(ItemStack stack) {
-        return UseAction.BOW;
     }
 
     @Override

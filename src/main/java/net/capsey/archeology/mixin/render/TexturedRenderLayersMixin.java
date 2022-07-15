@@ -32,8 +32,8 @@ public class TexturedRenderLayersMixin {
         Map<Identifier, SpriteIdentifier> rawShardIds = getSpriteIds(RAW_SHARDS_ATLAS_TEXTURE, "entity/raw_shard/");
 
         // Adding shards textures
-        shardIds.values().forEach(adder::accept);
-        rawShardIds.values().forEach(adder::accept);
+        shardIds.values().forEach(adder);
+        rawShardIds.values().forEach(adder);
 
         // Putting them into map for renderer to use
         ShardsContainerRenderer.SHARD_SPRITE_IDS.putAll(shardIds);

@@ -10,7 +10,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -22,9 +21,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ClientPlayerEntity.class)
 public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
 
-    private static final float[] REGULAR_BREAK_DELTAS = {0.3F, 0.3F, 0.4F, 0.5F};
-    private static final float[] REGULAR_REPAIR_DELTAS = {-0.15F, -0.15F, -0.1F, -0.07F};
-    private static final double[] BREAK_THRESHOLD = {5.0E-6, 1.0E-5, 2.0E-5, 5.0E-5};
+    private static final float[] REGULAR_BREAK_DELTAS = { 0.3F, 0.3F, 0.4F, 0.5F };
+    private static final float[] REGULAR_REPAIR_DELTAS = { -0.15F, -0.15F, -0.1F, -0.07F };
+    private static final double[] BREAK_THRESHOLD = { 5.0E-6, 1.0E-5, 2.0E-5, 5.0E-5 };
     private float breakingProgress = 0.0F;
     private int currentStage = 0;
     private BlockPos brushingPos;

@@ -119,6 +119,11 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
         }
     }
 
+    @Override
+    public boolean canPlayerUse(PlayerEntity player) {
+        return false;
+    }
+
     private void generateItems() {
         if (!this.world.isClient && this.lootTableId != null) {
             LootTable lootTable = this.world.getServer().getLootManager().getTable(this.lootTableId);
@@ -140,11 +145,6 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
     public void clear() {
         this.generateItems();
         items.clear();
-    }
-
-    @Override
-    public boolean canPlayerUse(PlayerEntity player) {
-        return false;
     }
 
     @Override

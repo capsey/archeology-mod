@@ -40,6 +40,18 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
     }
 
     @Override
+    public ItemEntity dropItem(FallingBlockEntity entity, ItemConvertible item) {
+        DefaultedList<ItemStack> items = DefaultedList.ofSize(9, ItemStack.EMPTY);
+
+        if (entity.blockEntityData != null) {
+            Inventories.readNbt(entity.blockEntityData, items);
+            items.forEach(entity::dropStack);
+        }
+
+        return null;
+    }
+
+    @Override
     public NbtCompound writeFallingBlockNbt(BlockEntity entity) {
         NbtCompound nbt = entity.createNbt();
 
@@ -60,18 +72,6 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
     }
 
     @Override
-    public ItemEntity dropItem(FallingBlockEntity entity, ItemConvertible item) {
-        DefaultedList<ItemStack> items = DefaultedList.ofSize(9, ItemStack.EMPTY);
-
-        if (entity.blockEntityData != null) {
-            Inventories.readNbt(entity.blockEntityData, items);
-            items.forEach(entity::dropStack);
-        }
-
-        return null;
-    }
-
-    @Override
     public void onDestroyedOnLanding(World world, BlockPos pos, FallingBlockEntity entity) {
         world.playSound(null, pos, getSoundGroup(entity.getBlockState()).getBreakSound(), SoundCategory.NEUTRAL, 1.0F, 1.0F);
     }
@@ -79,17 +79,6 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         this.tryScheduleTick(world, pos, this);
-    }
-
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        this.tryScheduleTick(world, pos, this);
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
-    }
-
-    @Override
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        this.trySpawnFallingBlock(state, world, pos, true);
     }
 
     @Override
@@ -114,6 +103,17 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
     @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
         return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
+    }
+
+    @Override
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        this.trySpawnFallingBlock(state, world, pos, true);
+    }
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        this.tryScheduleTick(world, pos, this);
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
 }

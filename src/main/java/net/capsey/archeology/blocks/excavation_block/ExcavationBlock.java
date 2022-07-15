@@ -29,7 +29,7 @@ public class ExcavationBlock extends BlockWithEntity {
     public static final int MAX_BRUSHING_LEVELS = 5;
     public static final IntProperty BRUSHING_LEVEL = IntProperty.of("brushing_level", 0, MAX_BRUSHING_LEVELS);
 
-    private static final int[] BRUSH_TICKS_PER_LAYER = {4, 4, 6, 6};
+    private static final int[] BRUSH_TICKS_PER_LAYER = { 4, 4, 6, 6 };
 
     private final UniformIntProvider experienceDropped;
 
@@ -40,16 +40,12 @@ public class ExcavationBlock extends BlockWithEntity {
     }
 
     public static int getBrushTicksPerLayer(Difficulty difficulty) {
-        switch (difficulty) {
-            case PEACEFUL:
-                return BRUSH_TICKS_PER_LAYER[0];
-            case EASY:
-                return BRUSH_TICKS_PER_LAYER[1];
-            default:
-                return BRUSH_TICKS_PER_LAYER[2];
-            case HARD:
-                return BRUSH_TICKS_PER_LAYER[3];
-        }
+        return switch (difficulty) {
+            case PEACEFUL -> BRUSH_TICKS_PER_LAYER[0];
+            case EASY -> BRUSH_TICKS_PER_LAYER[1];
+            default -> BRUSH_TICKS_PER_LAYER[2];
+            case HARD -> BRUSH_TICKS_PER_LAYER[3];
+        };
     }
 
     public boolean startBrushing(World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
@@ -76,37 +72,27 @@ public class ExcavationBlock extends BlockWithEntity {
     }
 
     @Override
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        int i = state.get(BRUSHING_LEVEL);
-
-        if (i != 0) {
-            Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, BlockEntities.EXCAVATION_BLOCK_ENTITY);
-
-            if (entity.isPresent() && entity.get().brushingCheck()) {
-
-                if (i < MAX_BRUSHING_LEVELS) {
-                    // Remove layer
-                    if (entity.get().isTime(world.getDifficulty())) {
-                        world.setBlockState(pos, state.with(ExcavationBlock.BRUSHING_LEVEL, i + 1));
-                    }
-
-                    world.createAndScheduleBlockTick(pos, this, 1);
-                    return;
-                } else {
-                    // Drop experience
-                    int exp = this.experienceDropped.get(world.random);
-                    if (exp > 0) {
-                        this.dropExperience(world, pos, exp);
-                    }
-
-                    // Drop loot
-                    entity.get().successfullyBrushed();
-                    entity.get().dropLoot();
-                }
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (!state.isOf(newState.getBlock())) {
+            if (!world.isClient) {
+                world.setBlockBreakingInfo(0, pos, -1);
+                Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, BlockEntities.EXCAVATION_BLOCK_ENTITY);
+                entity.ifPresent(ExcavationBlockEntity::onBlockBreak);
             }
 
-            world.breakBlock(pos, true);
+            super.onStateReplaced(state, world, pos, newState, moved);
         }
+    }
+
+    @Override
+    public PistonBehavior getPistonBehavior(BlockState state) {
+        return PistonBehavior.DESTROY;
+    }
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
+        float num = 8.0F - state.get(BRUSHING_LEVEL);
+        return VoxelShapes.cuboid(0.0F, 0.0F, 0.0F, 1.0F, (num / 8), 1.0F);
     }
 
     @Override
@@ -152,18 +138,36 @@ public class ExcavationBlock extends BlockWithEntity {
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (!state.isOf(newState.getBlock())) {
-            if (!world.isClient) {
-                world.setBlockBreakingInfo(0, pos, -1);
-                Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, BlockEntities.EXCAVATION_BLOCK_ENTITY);
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        int i = state.get(BRUSHING_LEVEL);
 
-                if (entity.isPresent()) {
-                    entity.get().onBlockBreak();
+        if (i != 0) {
+            Optional<ExcavationBlockEntity> entity = world.getBlockEntity(pos, BlockEntities.EXCAVATION_BLOCK_ENTITY);
+
+            if (entity.isPresent() && entity.get().brushingCheck()) {
+
+                if (i < MAX_BRUSHING_LEVELS) {
+                    // Remove layer
+                    if (entity.get().isTime(world.getDifficulty())) {
+                        world.setBlockState(pos, state.with(ExcavationBlock.BRUSHING_LEVEL, i + 1));
+                    }
+
+                    world.createAndScheduleBlockTick(pos, this, 1);
+                    return;
+                } else {
+                    // Drop experience
+                    int exp = this.experienceDropped.get(world.random);
+                    if (exp > 0) {
+                        this.dropExperience(world, pos, exp);
+                    }
+
+                    // Drop loot
+                    entity.get().successfullyBrushed();
+                    entity.get().dropLoot();
                 }
             }
 
-            super.onStateReplaced(state, world, pos, newState, moved);
+            world.breakBlock(pos, true);
         }
     }
 
@@ -180,17 +184,6 @@ public class ExcavationBlock extends BlockWithEntity {
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
-    }
-
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        float num = 8.0F - state.get(BRUSHING_LEVEL);
-        return VoxelShapes.cuboid(0.0F, 0.0F, 0.0F, 1.0F, (num / 8), 1.0F);
-    }
-
-    @Override
-    public PistonBehavior getPistonBehavior(BlockState state) {
-        return PistonBehavior.DESTROY;
     }
 
 }

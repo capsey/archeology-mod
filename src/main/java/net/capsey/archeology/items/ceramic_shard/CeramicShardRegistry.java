@@ -35,6 +35,7 @@ public class CeramicShardRegistry {
      *
      * @param itemId  is Identifier of shard item
      * @param shardId is Identifier of shard texture for the Clay Pot (e.g. "archeology:ender_dragon")
+     *
      * @return Returns registered {@link Item} object of the shard
      */
     public static Item registerShard(Identifier itemId, Identifier shardId) {

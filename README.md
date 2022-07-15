@@ -20,7 +20,7 @@ Archeology was firstly introduced at [Minecraft Live 2020](https://youtu.be/DWZI
 * Hardening (firing up) Clay Pots
 
 ## Mod features
-Some of the features that I added wasn't announced by Mojang and was made up by me. There is a full list of all implemented features:
+Some features that I added wasn't announced by Mojang and was made up by me. There is a full list of all implemented features:
 
 ### Copper Brush (AKA Archeology Brush)
 Copper Brush is a new tool, used for excavating special blocks for getting loot. It is made using a [Copper Ingot](https://minecraft.fandom.com/wiki/Copper_Ingot) and a [Feather](https://minecraft.fandom.com/wiki/Feather).

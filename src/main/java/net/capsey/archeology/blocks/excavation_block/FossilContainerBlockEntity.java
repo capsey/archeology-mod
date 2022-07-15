@@ -26,9 +26,10 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
 
     private static final String LOOT_TABLE_TAG = "LootTable";
     private static final String LOOT_TAG = "Loot";
-    private static final float[] LUCK_POINTS = {1.0F, 2.0F, 3.0F, 4.0F};
+    private static final float[] LUCK_POINTS = { 1.0F, 2.0F, 3.0F, 4.0F };
+    protected final ArrayList<ItemStack> loot = new ArrayList<>();
     protected Identifier lootTableId;
-    protected ArrayList<ItemStack> loot = new ArrayList<>();
+
     protected FossilContainerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, Identifier lootTable) {
         super(type, pos, state);
         lootTableId = lootTable;
@@ -102,7 +103,7 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
     }
 
     public void generateLoot(PlayerEntity player, ItemStack stack) {
-        if (!world.isClient) {
+        if (!this.world.isClient) {
             LootContext.Builder builder = (new LootContext.Builder((ServerWorld) this.world))
                     .parameter(LootContextParameters.TOOL, stack)
                     .parameter(LootContextParameters.THIS_ENTITY, player)
@@ -119,7 +120,7 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
 
     public void dropLoot() {
         for (ItemStack stack : loot) {
-            ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+            ItemScatterer.spawn(this.world, pos.getX(), pos.getY(), pos.getZ(), stack);
         }
     }
 

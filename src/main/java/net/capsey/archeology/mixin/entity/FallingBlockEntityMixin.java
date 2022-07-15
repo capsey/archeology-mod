@@ -47,8 +47,7 @@ public abstract class FallingBlockEntityMixin extends Entity implements FallingB
 
     @Override
     public ItemEntity dropItem(ItemConvertible item) {
-        if (item instanceof FallingBlockWithEntity) {
-            FallingBlockWithEntity block = (FallingBlockWithEntity) item;
+        if (item instanceof FallingBlockWithEntity block) {
             return block.dropItem((FallingBlockEntity) (Object) this, item);
         }
 

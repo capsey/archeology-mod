@@ -182,27 +182,17 @@ public abstract class ShardsContainer extends BlockEntity {
 
             int compass = ((int) Math.round(MathHelper.atan2(-relativePos.getZ(), relativePos.getX()) / (2 * MathHelper.PI / 8)) + 8) % 8;
 
-            switch (compass) {
-                case 0:
-                    return EAST;
-                case 1:
-                    return NORTH_EAST;
-                case 2:
-                    return NORTH;
-                case 3:
-                    return NORTH_WEST;
-                case 4:
-                    return WEST;
-                case 5:
-                    return SOUTH_WEST;
-                case 6:
-                    return SOUTH;
-                case 7:
-                    return SOUTH_EAST;
-
-                default:
-                    throw new IllegalStateException("WTF... How?");
-            }
+            return switch (compass) {
+                case 0 -> EAST;
+                case 1 -> NORTH_EAST;
+                case 2 -> NORTH;
+                case 3 -> NORTH_WEST;
+                case 4 -> WEST;
+                case 5 -> SOUTH_WEST;
+                case 6 -> SOUTH;
+                case 7 -> SOUTH_EAST;
+                default -> throw new IllegalStateException("My confusion is immeasurable.");
+            };
         }
     }
 

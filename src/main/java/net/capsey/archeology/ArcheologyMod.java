@@ -47,6 +47,12 @@ public class ArcheologyMod implements ModInitializer {
     public static final Identifier EXCAVATION_STOP_BRUSHING = new Identifier(MOD_ID, "excavation_stop_brushing");
     public static final Identifier CHISEL_BLOCK_SEGMENT = new Identifier(MOD_ID, "chisel_block_segment");
 
+    private static LootContextType createLootContextType(Consumer<LootContextType.Builder> type) {
+        LootContextType.Builder builder = new LootContextType.Builder();
+        type.accept(builder);
+        return builder.build();
+    }
+
     @Override
     public void onInitialize() {
         // Initializing Config
@@ -79,15 +85,13 @@ public class ArcheologyMod implements ModInitializer {
             }
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(ArcheologyMod.EXCAVATION_STOP_BRUSHING, (server, player, handler, buf, sender) -> {
-            server.execute(() -> {
-                ExcavationBlockEntity entity = ((ExcavatorPlayerEntity) player).getExcavatingBlock();
+        ServerPlayNetworking.registerGlobalReceiver(ArcheologyMod.EXCAVATION_STOP_BRUSHING, (server, player, handler, buf, sender) -> server.execute(() -> {
+            ExcavationBlockEntity entity = ((ExcavatorPlayerEntity) player).getExcavatingBlock();
 
-                if (entity != null && !entity.isRemoved() && entity.isCorrectPlayer(player)) {
-                    player.stopUsingItem();
-                }
-            });
-        });
+            if (entity != null && !entity.isRemoved() && entity.isCorrectPlayer(player)) {
+                player.stopUsingItem();
+            }
+        }));
 
         ServerPlayNetworking.registerGlobalReceiver(ArcheologyMod.CHISEL_BLOCK_SEGMENT, (server, player, handler, buf, sender) -> {
             if (player.getAbilities().allowModifyWorld) {
@@ -107,12 +111,6 @@ public class ArcheologyMod implements ModInitializer {
                 }));
             }
         });
-    }
-
-    private static LootContextType createLootContextType(Consumer<LootContextType.Builder> type) {
-        LootContextType.Builder builder = new LootContextType.Builder();
-        type.accept(builder);
-        return builder.build();
     }
 
 }
