@@ -1,0 +1,36 @@
+{
+  "multipart": [
+    {
+      "apply": {"model": "archeology:block/chiseled_calcite_bricks"},
+      "when": {"lower_north_west": "true"}
+    },
+    {
+      "apply": {"model": "archeology:block/chiseled_calcite_bricks", "uvlock": true, "y": 90},
+      "when": {"lower_north_east": "true"}
+    },
+    {
+      "apply": {"model": "archeology:block/chiseled_calcite_bricks", "uvlock": true, "y": 180},
+      "when": {"lower_south_east": "true"}
+    },
+    {
+      "apply": {"model": "archeology:block/chiseled_calcite_bricks", "uvlock": true, "y": 270},
+      "when": {"lower_south_west": "true"}
+    },
+    {
+      "apply": {"model": "archeology:block/chiseled_calcite_bricks", "uvlock": true, "x": 270},
+      "when": {"upper_north_west": "true"}
+    },
+    {
+      "apply": {"model": "archeology:block/chiseled_calcite_bricks", "uvlock": true, "x": 270, "y": 90},
+      "when": {"upper_north_east": "true"}
+    },
+    {
+      "apply": {"model": "archeology:block/chiseled_calcite_bricks", "uvlock": true, "x": 270, "y": 180},
+      "when": {"upper_south_east": "true"}
+    },
+    {
+      "apply": {"model": "archeology:block/chiseled_calcite_bricks", "uvlock": true, "x": 270, "y": 270},
+      "when": {"upper_south_west": "true"}
+    }
+  ]
+}

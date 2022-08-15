@@ -24,6 +24,7 @@ public class Items {
     public static Item RAW_CLAY_POT;
 
     // New stone variants
+    public static Item CALCITE_BRICKS;
     public static Item CALCITE_PILLAR;
 
     public static void onInitialize() {
@@ -36,6 +37,7 @@ public class Items {
         RAW_CLAY_POT = register("raw_clay_pot", new BlockItem(Blocks.RAW_CLAY_POT, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
         CLAY_POT = register("clay_pot", new BlockItem(Blocks.CLAY_POT, new FabricItemSettings().maxCount(1).group(ItemGroup.DECORATIONS)));
 
+        CALCITE_BRICKS = register("calcite_bricks", new BlockItem(Blocks.CALCITE_BRICKS, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         CALCITE_PILLAR = register("calcite_pillar", new BlockItem(Blocks.CALCITE_PILLAR, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
     }
 

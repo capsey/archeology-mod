@@ -1,0 +1,12 @@
+{
+    "parent": "archeology:block/base_segment",
+    "textures": {
+        "north": "archeology:block/calcite_bricks",
+        "east": "archeology:block/calcite_bricks",
+        "south": "archeology:block/calcite_bricks",
+        "west": "archeology:block/calcite_bricks",
+        "up": "archeology:block/calcite_bricks",
+        "down": "archeology:block/calcite_bricks",
+        "particle": "archeology:block/calcite_bricks"
+    }
+}

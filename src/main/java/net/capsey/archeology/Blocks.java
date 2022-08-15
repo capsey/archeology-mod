@@ -24,8 +24,10 @@ public class Blocks {
     public static Block EXCAVATION_GRAVEL;
     public static Block RAW_CLAY_POT;
     public static Block CLAY_POT;
+    public static Block CALCITE_BRICKS;
     public static Block CALCITE_PILLAR;
     public static Block CHISELED_CALCITE;
+    public static Block CHISELED_CALCITE_BRICKS;
     public static Block CHISELED_CALCITE_PILLAR;
 
     public static void onInitialize() {
@@ -38,10 +40,12 @@ public class Blocks {
         CLAY_POT = register("clay_pot", new ClayPotBlock(FabricBlockSettings.copy(net.minecraft.block.Blocks.TERRACOTTA).nonOpaque().strength(0.6F).sounds(ClayPotBlock.SOUND_GROUP)));
 
         // New stone variants
+        CALCITE_BRICKS = register("calcite_bricks", new Block(FabricBlockSettings.copy(net.minecraft.block.Blocks.CALCITE)));
         CALCITE_PILLAR = register("calcite_pillar", new PillarBlock(FabricBlockSettings.copy(net.minecraft.block.Blocks.CALCITE)));
 
         // Chiseled blocks
         CHISELED_CALCITE = register("chiseled_calcite", new ChiseledBlock(net.minecraft.block.Blocks.CALCITE));
+        CHISELED_CALCITE_BRICKS = register("chiseled_calcite_bricks", new ChiseledBlock(CALCITE_BRICKS));
         CHISELED_CALCITE_PILLAR = register("chiseled_calcite_pillar", new ChiseledPillarBlock((PillarBlock) CALCITE_PILLAR));
     }
 
