@@ -1,0 +1,16 @@
+{
+    "variants": {
+        "axis=x": {
+            "model": "archeology:block/calcite_pillar_horizontal",
+            "x": 90,
+            "y": 90
+        },
+        "axis=y": {
+            "model": "archeology:block/calcite_pillar"
+        },
+        "axis=z": {
+            "model": "archeology:block/calcite_pillar_horizontal",
+            "x": 90
+        }
+    }
+}

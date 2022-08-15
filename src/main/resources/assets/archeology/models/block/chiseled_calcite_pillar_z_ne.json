@@ -1,0 +1,24 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"top": "archeology:block/calcite_pillar_top",
+		"side": "archeology:block/calcite_pillar",
+		"inner": "block/calcite"
+	},
+	"elements": [
+		{
+			"name": "z_ne_down",
+			"from": [8, 0, 0],
+			"to": [16, 8, 8],
+			"faces": {
+				"north": {"uv": [0, 8, 8, 16], "texture": "#top", "cullface": "north"},
+				"east": {"uv": [8, 0, 16, 8], "rotation": 90, "texture": "#side", "cullface": "east"},
+				"south": {"uv": [8, 8, 16, 16], "texture": "#top"},
+				"west": {"uv": [0, 8, 8, 16], "texture": "#inner"},
+				"up": {"uv": [0, 0, 8, 8], "texture": "#inner"},
+				"down": {"uv": [0, 0, 8, 8], "rotation": 180, "texture": "#side", "cullface": "down"}
+			}
+		}
+	]
+}

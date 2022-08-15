@@ -1,0 +1,100 @@
+{
+    "multipart": [
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_x_nw"},
+            "when": {"lower_north_west": "true", "axis": "x"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_x_ne"},
+            "when": {"lower_north_east": "true", "axis": "x"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_x_nw", "uvlock": true, "y": 180},
+            "when": {"lower_south_east": "true", "axis": "x"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_x_ne", "uvlock": true, "y": 180},
+            "when": {"lower_south_west": "true", "axis": "x"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_x_ne", "uvlock": true, "x": 180, "y": 180},
+            "when": {"upper_north_west": "true", "axis": "x"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_x_nw", "uvlock": true, "x": 180, "y": 180},
+            "when": {"upper_north_east": "true", "axis": "x"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_x_ne", "uvlock": true, "x": 180},
+            "when": {"upper_south_east": "true", "axis": "x"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_x_nw", "uvlock": true, "x": 180},
+            "when": {"upper_south_west": "true", "axis": "x"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_y"},
+            "when": {"lower_north_west": "true", "axis": "y"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_y", "uvlock": true, "y": 90},
+            "when": {"lower_north_east": "true", "axis": "y"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_y", "uvlock": true, "y": 180},
+            "when": {"lower_south_east": "true", "axis": "y"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_y", "uvlock": true, "y": 270},
+            "when": {"lower_south_west": "true", "axis": "y"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_y", "uvlock": true, "x": 180, "y": 90},
+            "when": {"upper_north_west": "true", "axis": "y"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_y", "uvlock": true, "x": 180, "y": 180},
+            "when": {"upper_north_east": "true", "axis": "y"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_y", "uvlock": true, "x": 180, "y": 270},
+            "when": {"upper_south_east": "true", "axis": "y"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_y", "uvlock": true, "x": 180},
+            "when": {"upper_south_west": "true", "axis": "y"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_z_nw"},
+            "when": {"lower_north_west": "true", "axis": "z"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_z_ne"},
+            "when": {"lower_north_east": "true", "axis": "z"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_z_nw", "uvlock": true, "y": 180},
+            "when": {"lower_south_east": "true", "axis": "z"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_z_ne", "uvlock": true, "y": 180},
+            "when": {"lower_south_west": "true", "axis": "z"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_z_ne", "uvlock": true, "x": 180, "y": 180},
+            "when": {"upper_north_west": "true", "axis": "z"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_z_nw", "uvlock": true, "x": 180, "y": 180},
+            "when": {"upper_north_east": "true", "axis": "z"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_z_ne", "uvlock": true, "x": 180},
+            "when": {"upper_south_east": "true", "axis": "z"}
+        },
+        {
+            "apply": {"model": "archeology:block/chiseled_calcite_pillar_z_nw", "uvlock": true, "x": 180},
+            "when": {"upper_south_west": "true", "axis": "z"}
+        }
+    ]
+}

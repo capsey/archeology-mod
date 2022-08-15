@@ -1,0 +1,12 @@
+{
+    "parent": "archeology:block/base_segment",
+    "textures": {
+        "north": "archeology:block/calcite_pillar",
+        "east": "minecraft:block/calcite",
+        "south": "minecraft:block/calcite",
+        "west": "archeology:block/calcite_pillar",
+        "up": "archeology:block/calcite_pillar_top",
+        "down": "archeology:block/calcite_pillar_top",
+        "particle": "archeology:block/calcite_pillar"
+    }
+}

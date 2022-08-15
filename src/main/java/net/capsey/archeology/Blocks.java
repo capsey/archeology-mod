@@ -1,13 +1,13 @@
 package net.capsey.archeology;
 
 import net.capsey.archeology.blocks.chiseled.ChiseledBlock;
+import net.capsey.archeology.blocks.chiseled.ChiseledPillarBlock;
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlock;
 import net.capsey.archeology.blocks.clay_pot.RawClayPotBlock;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
 import net.capsey.archeology.blocks.excavation_block.FallingExcavationBlock;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.FallingBlock;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.minecraft.block.*;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -24,14 +24,25 @@ public class Blocks {
     public static Block EXCAVATION_GRAVEL;
     public static Block RAW_CLAY_POT;
     public static Block CLAY_POT;
+    public static Block CALCITE_PILLAR;
     public static Block CHISELED_CALCITE;
+    public static Block CHISELED_CALCITE_PILLAR;
 
     public static void onInitialize() {
-        EXCAVATION_DIRT = register("excavation_dirt", new ExcavationBlock(AbstractBlock.Settings.copy(net.minecraft.block.Blocks.DIRT).hardness(1.0F)));
-        EXCAVATION_GRAVEL = register("excavation_gravel", new FallingExcavationBlock(AbstractBlock.Settings.copy(net.minecraft.block.Blocks.GRAVEL).hardness(1.2F).ticksRandomly(), (FallingBlock) net.minecraft.block.Blocks.GRAVEL));
-        RAW_CLAY_POT = register("raw_clay_pot", new RawClayPotBlock(AbstractBlock.Settings.copy(net.minecraft.block.Blocks.CLAY).nonOpaque()));
-        CLAY_POT = register("clay_pot", new ClayPotBlock(AbstractBlock.Settings.copy(net.minecraft.block.Blocks.TERRACOTTA).nonOpaque().strength(0.6F).sounds(ClayPotBlock.SOUND_GROUP)));
+        // Excavation Blocks
+        EXCAVATION_DIRT = register("excavation_dirt", new ExcavationBlock(FabricBlockSettings.copy(net.minecraft.block.Blocks.DIRT).hardness(1.0F)));
+        EXCAVATION_GRAVEL = register("excavation_gravel", new FallingExcavationBlock(FabricBlockSettings.copy(net.minecraft.block.Blocks.GRAVEL).hardness(1.2F).ticksRandomly(), (FallingBlock) net.minecraft.block.Blocks.GRAVEL));
+
+        // Clay Pots
+        RAW_CLAY_POT = register("raw_clay_pot", new RawClayPotBlock(FabricBlockSettings.copy(net.minecraft.block.Blocks.CLAY).nonOpaque()));
+        CLAY_POT = register("clay_pot", new ClayPotBlock(FabricBlockSettings.copy(net.minecraft.block.Blocks.TERRACOTTA).nonOpaque().strength(0.6F).sounds(ClayPotBlock.SOUND_GROUP)));
+
+        // New stone variants
+        CALCITE_PILLAR = register("calcite_pillar", new PillarBlock(FabricBlockSettings.copy(net.minecraft.block.Blocks.CALCITE)));
+
+        // Chiseled blocks
         CHISELED_CALCITE = register("chiseled_calcite", new ChiseledBlock(net.minecraft.block.Blocks.CALCITE));
+        CHISELED_CALCITE_PILLAR = register("chiseled_calcite_pillar", new ChiseledPillarBlock((PillarBlock) CALCITE_PILLAR));
     }
 
     private static Block register(String id, Block block) {

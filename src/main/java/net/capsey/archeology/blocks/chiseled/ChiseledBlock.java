@@ -54,7 +54,11 @@ public class ChiseledBlock extends Block {
             state = state.with(property, true);
         }
 
-        setDefaultState(state);
+        setDefaultState(processDefaultState(state));
+    }
+
+    protected BlockState processDefaultState(BlockState state) {
+        return state;
     }
 
     public static boolean isChiselable(Block block) {
@@ -68,7 +72,7 @@ public class ChiseledBlock extends Block {
             emitEvents(world, state, pos, player);
             world.setBlockState(pos, CHISELABLE_BLOCKS
                     .get(state.getBlock())
-                    .getDefaultState()
+                    .getConvertedState(state)
                     .with(SEGMENTS.get(segment), false)
             );
         } else if (state.getBlock() instanceof ChiseledBlock) {
@@ -83,13 +87,17 @@ public class ChiseledBlock extends Block {
         }
     }
 
-    private static void emitEvents(ServerWorld world, BlockState state, BlockPos pos, Entity player) {
+    protected BlockState getConvertedState(BlockState state) {
+        return getDefaultState();
+    }
+
+    protected static void emitEvents(ServerWorld world, BlockState state, BlockPos pos, Entity player) {
         world.playSound(null, pos, state.getSoundGroup().getBreakSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
         world.syncWorldEvent(WorldEvents.BLOCK_BROKEN, pos, Block.getRawIdFromState(state));
         world.emitGameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Emitter.of(player, state));
     }
 
-    private static VoxelShape getShapeForState(BlockState state) {
+    protected static VoxelShape getShapeForState(BlockState state) {
         VoxelShape shape = VoxelShapes.empty();
 
         for (Segment segment : Segment.values()) {
@@ -104,11 +112,15 @@ public class ChiseledBlock extends Block {
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (SEGMENTS.values().stream().allMatch(state::get)) {
-            return mimickingBlock.getDefaultState();
+            return getMimickingState(state);
         } else if (SEGMENTS.values().stream().noneMatch(state::get)) {
             return Blocks.AIR.getDefaultState();
         }
         return state;
+    }
+
+    protected BlockState getMimickingState(BlockState state) {
+        return mimickingBlock.getDefaultState();
     }
 
     @Override

@@ -1,5 +1,5 @@
 {
-    "parent": "archeology:block/base_chiseled_upper",
+    "parent": "archeology:block/base_segment",
     "textures": {
         "north": "minecraft:block/calcite",
         "east": "minecraft:block/calcite",

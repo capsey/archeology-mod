@@ -1,35 +1,35 @@
 {
     "multipart": [
         {
-            "apply": {"model": "archeology:block/chiseled_calcite_lower"},
+            "apply": {"model": "archeology:block/chiseled_calcite"},
             "when": {"lower_north_west": "true"}
         },
         {
-            "apply": {"model": "archeology:block/chiseled_calcite_lower", "uvlock": true, "y": 90},
+            "apply": {"model": "archeology:block/chiseled_calcite", "uvlock": true, "y": 90},
             "when": {"lower_north_east": "true"}
         },
         {
-            "apply": {"model": "archeology:block/chiseled_calcite_lower", "uvlock": true, "y": 180},
+            "apply": {"model": "archeology:block/chiseled_calcite", "uvlock": true, "y": 180},
             "when": {"lower_south_east": "true"}
         },
         {
-            "apply": {"model": "archeology:block/chiseled_calcite_lower", "uvlock": true, "y": 270},
+            "apply": {"model": "archeology:block/chiseled_calcite", "uvlock": true, "y": 270},
             "when": {"lower_south_west": "true"}
         },
         {
-            "apply": {"model": "archeology:block/chiseled_calcite_upper"},
+            "apply": {"model": "archeology:block/chiseled_calcite", "uvlock": true, "x": 270},
             "when": {"upper_north_west": "true"}
         },
         {
-            "apply": {"model": "archeology:block/chiseled_calcite_upper", "uvlock": true, "y": 90},
+            "apply": {"model": "archeology:block/chiseled_calcite", "uvlock": true, "x": 270, "y": 90},
             "when": {"upper_north_east": "true"}
         },
         {
-            "apply": {"model": "archeology:block/chiseled_calcite_upper", "uvlock": true, "y": 180},
+            "apply": {"model": "archeology:block/chiseled_calcite", "uvlock": true, "x": 270, "y": 180},
             "when": {"upper_south_east": "true"}
         },
         {
-            "apply": {"model": "archeology:block/chiseled_calcite_upper", "uvlock": true, "y": 270},
+            "apply": {"model": "archeology:block/chiseled_calcite", "uvlock": true, "x": 270, "y": 270},
             "when": {"upper_south_west": "true"}
         }
     ]
