@@ -1,18 +1,19 @@
 package net.capsey.archeology.blocks.chiseled;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -26,8 +27,9 @@ import net.minecraft.world.event.GameEvent;
 
 import java.util.*;
 
-public class ChiseledBlock extends Block {
+public class ChiseledBlock extends Block implements Waterloggable {
 
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public static final Map<Segment, BooleanProperty> SEGMENTS = new EnumMap<>(Segment.class);
     public static final Map<Block, ChiseledBlock> CHISELABLE_BLOCKS = new HashMap<>();
 
@@ -47,18 +49,15 @@ public class ChiseledBlock extends Block {
 
         CHISELABLE_BLOCKS.put(mimickingBlock, this);
 
-        // Setting default state
-        BlockState state = getStateManager().getDefaultState();
+        setDefaultState(processDefaultState(getStateManager().getDefaultState()));
+    }
 
+    protected BlockState processDefaultState(BlockState state) {
         for (BooleanProperty property : SEGMENTS.values()) {
             state = state.with(property, true);
         }
 
-        setDefaultState(processDefaultState(state));
-    }
-
-    protected BlockState processDefaultState(BlockState state) {
-        return state;
+        return state.with(WATERLOGGED, false);
     }
 
     public static boolean isChiselable(Block block) {
@@ -81,6 +80,9 @@ public class ChiseledBlock extends Block {
             if (SEGMENTS.values().stream().anyMatch(state::get)) {
                 emitEvents(world, state, pos, player);
                 world.setBlockState(pos, state);
+                if (state.get(WATERLOGGED)) {
+                    world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+                }
             } else {
                 world.breakBlock(pos, true, player);
             }
@@ -111,16 +113,28 @@ public class ChiseledBlock extends Block {
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        // Scheduling water update
+        if (state.get(WATERLOGGED)) {
+            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
+
+        // Replace, if needed
         if (SEGMENTS.values().stream().allMatch(state::get)) {
             return getMimickingState(state);
         } else if (SEGMENTS.values().stream().noneMatch(state::get)) {
             return Blocks.AIR.getDefaultState();
         }
+
         return state;
     }
 
     protected BlockState getMimickingState(BlockState state) {
         return mimickingBlock.getDefaultState();
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
     @Override
@@ -142,6 +156,7 @@ public class ChiseledBlock extends Block {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         SEGMENTS.values().forEach(builder::add);
+        builder.add(WATERLOGGED);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class ChiseledPillarBlock extends ChiseledBlock {
 
     @Override
     protected BlockState processDefaultState(BlockState state) {
-        return state.with(PillarBlock.AXIS, Direction.Axis.Y);
+        return super.processDefaultState(state).with(PillarBlock.AXIS, Direction.Axis.Y);
     }
 
     @Override
