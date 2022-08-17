@@ -5,12 +5,14 @@ import net.capsey.archeology.blocks.clay_pot.client.ShardsContainerRenderer;
 import net.capsey.archeology.items.ceramic_shard.CeramicShardRegistry;
 import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -25,6 +27,7 @@ public class TexturedRenderLayersMixin {
     private static void addDefaultTextures(Consumer<SpriteIdentifier> adder, CallbackInfo ci) {
         // Adding Clay Pots model textures
         adder.accept(ClayPotBlockEntityRenderer.MODEL_TEXTURE);
+        Arrays.stream(ClayPotBlockEntityRenderer.MODEL_COLORED_TEXTURES).forEach(adder);
         adder.accept(ClayPotBlockEntityRenderer.RAW_MODEL_TEXTURE);
 
         // Making SpriteIds map for all shards
@@ -32,8 +35,8 @@ public class TexturedRenderLayersMixin {
         Map<Identifier, SpriteIdentifier> rawShardIds = getSpriteIds(RAW_SHARDS_ATLAS_TEXTURE, "entity/raw_shard/");
 
         // Adding shards textures
-        shardIds.values().forEach(adder::accept);
-        rawShardIds.values().forEach(adder::accept);
+        shardIds.values().forEach(adder);
+        rawShardIds.values().forEach(adder);
 
         // Putting them into map for renderer to use
         ShardsContainerRenderer.SHARD_SPRITE_IDS.putAll(shardIds);

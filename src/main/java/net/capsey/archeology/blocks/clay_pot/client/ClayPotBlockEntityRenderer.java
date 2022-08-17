@@ -12,8 +12,10 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory.Context;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 
+import java.util.Arrays;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
@@ -21,18 +23,19 @@ public class ClayPotBlockEntityRenderer<T extends ShardsContainer> extends Shard
 
     public static final Identifier CLAY_POTS_ATLAS_TEXTURE = new Identifier("textures/atlas/shards.png");
 
-    public static final SpriteIdentifier MODEL_TEXTURE = new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MOD_ID, "entity/clay_pot"));
-    public static final SpriteIdentifier RAW_MODEL_TEXTURE = new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MOD_ID, "entity/raw_clay_pot"));
+    public static final SpriteIdentifier MODEL_TEXTURE = getSpriteId("clay_pot");
+    public static final SpriteIdentifier[] MODEL_COLORED_TEXTURES = Arrays.stream(DyeColor.values()).map(x -> getSpriteId("clay_pot_" + x.getName())).toArray(SpriteIdentifier[]::new);
+    public static final SpriteIdentifier RAW_MODEL_TEXTURE = getSpriteId("raw_clay_pot");
 
-    private final SpriteIdentifier modelTexture;
+    private final SpriteIdentifierProvider<T> textureProvider;
 
     private final ModelPart base;
     private final ModelPart neck;
     private final ModelPart head;
 
-    public ClayPotBlockEntityRenderer(Context ctx, Map<Identifier, SpriteIdentifier> spriteIds, SpriteIdentifier modelTexture) {
+    public ClayPotBlockEntityRenderer(Context ctx, Map<Identifier, SpriteIdentifier> spriteIds, SpriteIdentifierProvider<T> textureProvider) {
         super(ctx, spriteIds);
-        this.modelTexture = modelTexture;
+        this.textureProvider = textureProvider;
 
         ModelPart modelPart = ctx.getLayerModelPart(ArcheologyClientMod.CLAY_POT_MODEL_LAYER);
         this.base = modelPart.getChild("base");
@@ -58,13 +61,21 @@ public class ClayPotBlockEntityRenderer<T extends ShardsContainer> extends Shard
 
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        VertexConsumer consumer = this.modelTexture.getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
+        VertexConsumer consumer = this.textureProvider.get(entity).getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
 
         base.render(matrices, consumer, light, overlay);
         neck.render(matrices, consumer, light, overlay);
         head.render(matrices, consumer, light, overlay);
 
         super.render(entity, tickDelta, matrices, vertexConsumers, light, overlay);
+    }
+
+    private static SpriteIdentifier getSpriteId(String id) {
+        return new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MOD_ID, "entity/" + id));
+    }
+
+    public interface SpriteIdentifierProvider<T> {
+        SpriteIdentifier get(T entity);
     }
 
 }

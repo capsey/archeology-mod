@@ -41,15 +41,17 @@ public interface FallingBlockWithEntity {
 
     default void trySpawnFallingBlock(BlockState state, World world, BlockPos pos, boolean dropItem) {
         if (!world.isClient && canFallThrough(world, pos)) {
-            FallingBlockEntity fallingBlockEntity = FallingBlockEntity.spawnFromBlock(world, pos, state);
-            fallingBlockEntity.dropItem = dropItem;
-
             BlockEntity entity = world.getBlockEntity(pos);
+            NbtCompound entityData = null;
 
             if (entity != null) {
-                fallingBlockEntity.blockEntityData = writeFallingBlockNbt(entity);
-                ((FallingBlockEntityMixinInterface) fallingBlockEntity).setClientBlockEntityData(writeClientData(new NbtCompound(), entity));
+                entityData = writeFallingBlockNbt(entity);
             }
+
+            FallingBlockEntity fallingBlockEntity = FallingBlockEntity.spawnFromBlock(world, pos, state);
+            fallingBlockEntity.dropItem = dropItem;
+            fallingBlockEntity.blockEntityData = entityData;
+            ((FallingBlockEntityMixinInterface) fallingBlockEntity).setClientBlockEntityData(writeClientData(new NbtCompound(), entity));
 
             world.spawnEntity(fallingBlockEntity);
         }

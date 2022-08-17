@@ -142,8 +142,7 @@ public abstract class ShardsContainer extends BlockEntity {
 
     @Override
     public NbtCompound toInitialChunkDataNbt() {
-        NbtCompound tag = this.createNbt();
-        return writeShards(tag);
+        return this.createNbt();
     }
 
     public enum Side {

@@ -14,12 +14,14 @@ import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -27,13 +29,16 @@ import java.util.stream.IntStream;
 public class ClayPotBlockEntity extends ShardsContainer implements SidedInventory {
 
     private static final String LOOT_TABLE_TAG = "LootTable";
+    private static final String COLOR_TAG = "Color";
     private static final int[] AVAILABLE_SLOTS = IntStream.range(0, 9).toArray();
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(9, ItemStack.EMPTY);
+    @Nullable private DyeColor color;
     private Identifier lootTableId;
     private long lootTableSeed;
 
-    public ClayPotBlockEntity(BlockPos pos, BlockState state, Map<Side, CeramicShard> shards) {
+    public ClayPotBlockEntity(BlockPos pos, BlockState state, Map<Side, CeramicShard> shards, @Nullable DyeColor color) {
         super(BlockEntities.CLAY_POT_BLOCK_ENTITY, pos, state);
+        this.color = color;
         replaceShards(shards);
     }
 
@@ -47,6 +52,14 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
         this.lootTableSeed = seed;
     }
 
+    public @Nullable DyeColor getColor() {
+        return color;
+    }
+
+    public void setColor(@Nullable DyeColor color) {
+        this.color = color;
+    }
+
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
@@ -55,6 +68,10 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
             lootTableId = new Identifier(nbt.getString(LOOT_TABLE_TAG));
         } else {
             Inventories.readNbt(nbt, items);
+        }
+
+        if (nbt.contains(COLOR_TAG, NbtElement.INT_TYPE)) {
+            color = DyeColor.byId(nbt.getInt(COLOR_TAG));
         }
     }
 
@@ -67,14 +84,43 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
         } else {
             Inventories.writeNbt(nbt, items);
         }
+
+        if (color != null) {
+            nbt.putInt(COLOR_TAG, color.getId());
+        }
+    }
+
+    public void readClientData(NbtCompound tag) {
+        readShards(tag);
+        if (tag.contains(COLOR_TAG, NbtElement.INT_TYPE)) {
+            color = DyeColor.byId(tag.getInt(COLOR_TAG));
+        }
+    }
+
+    public NbtCompound writeClientData(NbtCompound tag) {
+        writeShards(tag);
+        if (color != null) {
+            tag.putInt(COLOR_TAG, color.getId());
+        }
+        return tag;
+    }
+
+    @Override
+    public void readFrom(ItemStack stack) {
+        super.readFrom(stack);
+
+        NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
+        if (nbt != null && nbt.contains(COLOR_TAG, NbtElement.INT_TYPE)) {
+            color = DyeColor.byId(nbt.getInt(COLOR_TAG));
+        } else {
+            color = null;
+        }
     }
 
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         NbtCompound tag = new NbtCompound();
-        super.writeNbt(tag);
-
-        return writeShards(tag);
+        return writeClientData(tag);
     }
 
     @Override

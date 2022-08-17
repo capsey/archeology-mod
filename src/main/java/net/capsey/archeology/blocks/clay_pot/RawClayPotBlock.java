@@ -141,7 +141,7 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
 
             BlockState newState = Blocks.CLAY_POT.getDefaultState();
             world.setBlockState(pos, newState, Block.NOTIFY_LISTENERS);
-            world.addBlockEntity(new ClayPotBlockEntity(pos, newState, shards));
+            world.addBlockEntity(new ClayPotBlockEntity(pos, newState, shards, null));
         }
     }
 
