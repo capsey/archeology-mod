@@ -26,6 +26,7 @@ public class Items {
     // New stone variants
     public static Item CALCITE_BRICKS;
     public static Item CALCITE_PILLAR;
+    public static Item CALCITE_WALL;
 
     public static void onInitialize() {
         COPPER_BRUSH = register("copper_brush", new CopperBrushItem(new Item.Settings().maxDamage(64).group(ItemGroup.TOOLS)));
@@ -39,6 +40,7 @@ public class Items {
 
         CALCITE_BRICKS = register("calcite_bricks", new BlockItem(Blocks.CALCITE_BRICKS, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         CALCITE_PILLAR = register("calcite_pillar", new BlockItem(Blocks.CALCITE_PILLAR, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        CALCITE_WALL = register("calcite_wall", new BlockItem(Blocks.CALCITE_WALL, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
     }
 
     private static Item register(String id, Item item) {

@@ -1,6 +1,11 @@
 {
   "replace": false,
   "values": [
+    "archeology:calcite_bricks",
+    "archeology:calcite_pillar",
+    "archeology:calcite_wall",
+    "archeology:chiseled_calcite_bricks",
+    "archeology:chiseled_calcite_pillar",
     "archeology:chiseled_calcite"
   ]
 }
