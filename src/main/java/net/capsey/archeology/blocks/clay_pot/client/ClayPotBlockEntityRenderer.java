@@ -38,9 +38,9 @@ public class ClayPotBlockEntityRenderer<T extends ShardsContainer> extends Shard
         this.textureProvider = textureProvider;
 
         ModelPart modelPart = ctx.getLayerModelPart(ArcheologyClientMod.CLAY_POT_MODEL_LAYER);
-        this.base = modelPart.getChild("base");
-        this.neck = modelPart.getChild("neck");
-        this.head = modelPart.getChild("head");
+        base = modelPart.getChild("base");
+        neck = modelPart.getChild("neck");
+        head = modelPart.getChild("head");
     }
 
     public static TexturedModelData getTexturedModelData() {
@@ -61,7 +61,7 @@ public class ClayPotBlockEntityRenderer<T extends ShardsContainer> extends Shard
 
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        VertexConsumer consumer = this.textureProvider.get(entity).getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
+        VertexConsumer consumer = textureProvider.get(entity).getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
 
         base.render(matrices, consumer, light, overlay);
         neck.render(matrices, consumer, light, overlay);

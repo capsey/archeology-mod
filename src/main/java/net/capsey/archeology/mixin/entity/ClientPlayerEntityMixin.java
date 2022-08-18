@@ -71,9 +71,9 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
 
                     // Sending break packet
                     if (breakingProgress >= 1.0F) {
-                        this.sendInfoPacket(currentStage + 1);
+                        sendInfoPacket(currentStage + 1);
                     } else if (breakingProgress <= -1.0F) {
-                        this.sendInfoPacket(currentStage - 1);
+                        sendInfoPacket(currentStage - 1);
                     }
 
                     // Adding brushing particles
@@ -84,7 +84,7 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
                 }
             }
 
-            this.sendBreakPacket();
+            sendBreakPacket();
         }
     }
 
@@ -92,34 +92,34 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity {
         stage = Math.max(stage, 0);
 
         if (stage > 9) {
-            this.sendBreakPacket();
-        } else if (stage != this.currentStage) {
+            sendBreakPacket();
+        } else if (stage != currentStage) {
             // Sending packet to the server
             PacketByteBuf buf = PacketByteBufs.create();
             buf.writeInt(stage);
             ClientPlayNetworking.send(ArcheologyMod.EXCAVATION_BREAKING_INFO, buf);
 
             // Updating values
-            this.currentStage = stage;
-            this.breakingProgress = 0.0F;
+            currentStage = stage;
+            breakingProgress = 0.0F;
         }
     }
 
     private void sendBreakPacket() {
         ClientPlayNetworking.send(ArcheologyMod.EXCAVATION_STOP_BRUSHING, PacketByteBufs.empty());
-        this.reset();
+        reset();
     }
 
     @Override
     public void startBrushing(BlockPos pos) {
-        this.reset();
-        this.brushingPos = pos;
+        reset();
+        brushingPos = pos;
     }
 
     private void reset() {
-        this.breakingProgress = 0.0F;
-        this.currentStage = -1;
-        this.brushingPos = null;
+        breakingProgress = 0.0F;
+        currentStage = -1;
+        brushingPos = null;
     }
 
 }

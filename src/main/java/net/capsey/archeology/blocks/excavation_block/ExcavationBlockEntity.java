@@ -26,13 +26,13 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
 
     public void setLootTable(Identifier id) {
         loot.clear();
-        this.lootTableId = id;
+        lootTableId = id;
     }
 
     public void startBrushing(PlayerEntity player, ItemStack stack) {
         if (stack.isOf(Items.COPPER_BRUSH)) {
-            this.brushingPlayer = player;
-            this.brushTicks = CopperBrushItem.getBrushTicks(stack);
+            brushingPlayer = player;
+            brushTicks = CopperBrushItem.getBrushTicks(stack);
             generateLoot(player, stack);
         }
     }

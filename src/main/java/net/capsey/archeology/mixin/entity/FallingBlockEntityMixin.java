@@ -32,17 +32,17 @@ public abstract class FallingBlockEntityMixin extends Entity implements FallingB
 
     @Inject(method = "initDataTracker()V", at = @At("TAIL"))
     public void initDataTracker(CallbackInfo info) {
-        this.dataTracker.startTracking(CLIENT_BLOCK_ENTITY_DATA, new NbtCompound());
+        dataTracker.startTracking(CLIENT_BLOCK_ENTITY_DATA, new NbtCompound());
     }
 
     @Override
     public NbtCompound getClientBlockEntityData() {
-        return this.dataTracker.get(CLIENT_BLOCK_ENTITY_DATA);
+        return dataTracker.get(CLIENT_BLOCK_ENTITY_DATA);
     }
 
     @Override
     public void setClientBlockEntityData(NbtCompound nbt) {
-        this.dataTracker.set(CLIENT_BLOCK_ENTITY_DATA, nbt);
+        dataTracker.set(CLIENT_BLOCK_ENTITY_DATA, nbt);
     }
 
     @Override

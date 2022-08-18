@@ -23,11 +23,11 @@ public class CeramicShardItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(this.getDescription().formatted(Formatting.GRAY));
+        tooltip.add(getDescription().formatted(Formatting.GRAY));
     }
 
     public MutableText getDescription() {
-        return Text.translatable(this.getTranslationKey() + ".desc");
+        return Text.translatable(getTranslationKey() + ".desc");
     }
 
     public CeramicShard getShard() {

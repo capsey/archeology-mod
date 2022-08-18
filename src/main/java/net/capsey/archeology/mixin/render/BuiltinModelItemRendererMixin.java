@@ -38,11 +38,11 @@ public abstract class BuiltinModelItemRendererMixin {
                 BlockEntity blockEntity;
 
                 if (blockState.isOf(Blocks.CLAY_POT)) {
-                    this.renderClayPot.readFrom(stack);
-                    blockEntity = this.renderClayPot;
+                    renderClayPot.readFrom(stack);
+                    blockEntity = renderClayPot;
                 } else if (blockState.isOf(Blocks.RAW_CLAY_POT)) {
-                    this.renderRawClayPot.readFrom(stack);
-                    blockEntity = this.renderRawClayPot;
+                    renderRawClayPot.readFrom(stack);
+                    blockEntity = renderRawClayPot;
                 } else {
                     return;
                 }

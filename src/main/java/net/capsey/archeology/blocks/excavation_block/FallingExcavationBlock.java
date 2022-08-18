@@ -29,22 +29,22 @@ public class FallingExcavationBlock extends ExcavationBlock implements FallingBl
 
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        this.tryScheduleTick(world, pos, this);
+        tryScheduleTick(world, pos, this);
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        this.tryScheduleTick(world, pos, this);
+        tryScheduleTick(world, pos, this);
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (this.canFallThrough(world, pos)) {
+        if (canFallThrough(world, pos)) {
             int level = state.get(ExcavationBlock.BRUSHING_LEVEL);
 
             if (level == 0) {
-                this.trySpawnFallingBlock(state, world, pos, true);
+                trySpawnFallingBlock(state, world, pos, true);
             } else {
                 world.breakBlock(pos, true);
             }

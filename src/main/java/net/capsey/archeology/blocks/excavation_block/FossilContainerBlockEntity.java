@@ -70,7 +70,7 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
 
     @Override
     public NbtCompound toInitialChunkDataNbt() {
-        NbtCompound tag = this.createNbt();
+        NbtCompound tag = createNbt();
 
         if (!loot.isEmpty()) {
             NbtList nbtList = new NbtList();
@@ -91,11 +91,11 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
      * Check world.isClient to be false before using!!
      */
     public ItemStack generateItem() {
-        LootContext.Builder builder = (new LootContext.Builder((ServerWorld) this.world))
+        LootContext.Builder builder = (new LootContext.Builder((ServerWorld) world))
                 .parameter(LootContextParameters.BLOCK_ENTITY, this)
-                .random(this.world.getRandom());
+                .random(world.getRandom());
 
-        LootTable lootTable = this.world.getServer().getLootManager().getTable(lootTableId);
+        LootTable lootTable = world.getServer().getLootManager().getTable(lootTableId);
         List<ItemStack> list = lootTable.generateLoot(builder.build(ArcheologyMod.EXCAVATION_LOOT_CONTEXT_TYPE));
 
         return list.isEmpty() ? ItemStack.EMPTY : list.get(0);
@@ -103,17 +103,17 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
 
     public void generateLoot(PlayerEntity player, ItemStack stack) {
         if (!world.isClient) {
-            LootContext.Builder builder = (new LootContext.Builder((ServerWorld) this.world))
+            LootContext.Builder builder = (new LootContext.Builder((ServerWorld) world))
                     .parameter(LootContextParameters.TOOL, stack)
                     .parameter(LootContextParameters.THIS_ENTITY, player)
                     .parameter(LootContextParameters.BLOCK_ENTITY, this)
-                    .random(this.world.getRandom()).luck(player.getLuck() + getLuckPoints(stack));
+                    .random(world.getRandom()).luck(player.getLuck() + getLuckPoints(stack));
 
-            LootTable lootTable = this.world.getServer().getLootManager().getTable(lootTableId);
+            LootTable lootTable = world.getServer().getLootManager().getTable(lootTableId);
             List<ItemStack> list = lootTable.generateLoot(builder.build(ArcheologyMod.EXCAVATION_LOOT_CONTEXT_TYPE));
 
             loot.addAll(list);
-            this.markDirty();
+            markDirty();
         }
     }
 

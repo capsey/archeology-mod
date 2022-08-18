@@ -40,7 +40,7 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (Side.validHit(hit)) {
+        if (Side.isValidHit(hit)) {
             Optional<RawClayPotBlockEntity> entity = world.getBlockEntity(pos, BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
 
             if (entity.isPresent()) {

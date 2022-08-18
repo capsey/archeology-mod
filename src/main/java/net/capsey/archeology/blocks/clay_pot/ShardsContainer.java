@@ -10,14 +10,14 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 import java.security.InvalidParameterException;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 
 public abstract class ShardsContainer extends BlockEntity {
 
@@ -48,26 +48,34 @@ public abstract class ShardsContainer extends BlockEntity {
 
     public void setShard(Side direction, CeramicShard shard) {
         ceramicShards.put(direction, shard);
-        if (!this.world.isClient && this.world instanceof ServerWorld server) {
-            this.markDirty();
-            server.getChunkManager().markForUpdate(this.pos);
-        }
+        markForUpdate();
     }
 
     public void removeShard(Side direction) {
         ceramicShards.remove(direction);
-        if (!this.world.isClient && this.world instanceof ServerWorld server) {
-            this.markDirty();
-            server.getChunkManager().markForUpdate(this.pos);
-        }
+        markForUpdate();
     }
 
     public void clearShards() {
         ceramicShards.clear();
-        if (!this.world.isClient && this.world instanceof ServerWorld server) {
-            this.markDirty();
-            server.getChunkManager().markForUpdate(this.pos);
+        markForUpdate();
+    }
+
+    protected void markForUpdate() {
+        markDirty();
+        if (world != null && !world.isClient) {
+            ((ServerWorld) world).getChunkManager().markForUpdate(pos);
         }
+    }
+
+    public void rotateShards(BlockRotation rotation) {
+        if (rotation == BlockRotation.NONE) {
+            return;
+        }
+
+        EnumMap<Side, CeramicShard> newShards = new EnumMap<>(Side.class);
+        ceramicShards.forEach((key, value) -> newShards.put(key.rotate(rotation), value));
+        replaceShards(newShards);
     }
 
     public boolean hasShards() {
@@ -102,7 +110,7 @@ public abstract class ShardsContainer extends BlockEntity {
         }
     }
 
-    public NbtCompound writeShards(NbtCompound tag) {
+    public void writeShards(NbtCompound tag) {
         if (hasShards()) {
             NbtList nbtList = new NbtList();
 
@@ -119,8 +127,6 @@ public abstract class ShardsContainer extends BlockEntity {
 
             tag.put(SHARDS_TAG, nbtList);
         }
-
-        return tag;
     }
 
     @Override
@@ -142,26 +148,42 @@ public abstract class ShardsContainer extends BlockEntity {
 
     @Override
     public NbtCompound toInitialChunkDataNbt() {
-        return this.createNbt();
+        return createNbt();
     }
 
     public enum Side {
-        NORTH_WEST(false),
-        NORTH(true),
-        NORTH_EAST(false),
-        EAST(true),
-        SOUTH_EAST(false),
-        SOUTH(true),
-        SOUTH_WEST(false),
-        WEST(true);
+        NORTH(true, 0),
+        NORTH_WEST(false, 1),
+        WEST(true, 2),
+        SOUTH_WEST(false, 3),
+        SOUTH(true, 4),
+        SOUTH_EAST(false, 5),
+        EAST(true, 6),
+        NORTH_EAST(false, 7);
 
         public final boolean straight;
+        public final int id;
 
-        Side(boolean straight) {
+        Side(boolean straight, int id) {
             this.straight = straight;
+            this.id = id;
         }
 
-        public static boolean validHit(BlockHitResult hit) {
+        public static Side fromId(int id) {
+            return switch (id % 8) {
+                case 0 -> NORTH;
+                case 1 -> NORTH_WEST;
+                case 2 -> WEST;
+                case 3 -> SOUTH_WEST;
+                case 4 -> SOUTH;
+                case 5 -> SOUTH_EAST;
+                case 6 -> EAST;
+                case 7 -> NORTH_EAST;
+                default -> throw new IllegalStateException();
+            };
+        }
+
+        public static boolean isValidHit(BlockHitResult hit) {
             Vec3d blockPos = Vec3d.ofBottomCenter(hit.getBlockPos());
             Vec3d relativePos = blockPos.relativize(hit.getPos());
 
@@ -172,36 +194,24 @@ public abstract class ShardsContainer extends BlockEntity {
         }
 
         public static Side fromHit(BlockHitResult hit) {
-            if (!validHit(hit)) {
+            if (!isValidHit(hit)) {
                 throw new InvalidParameterException();
             }
 
             Vec3d blockPos = Vec3d.ofBottomCenter(hit.getBlockPos());
             Vec3d relativePos = blockPos.relativize(hit.getPos());
+            double angle = MathHelper.atan2(-relativePos.getX(), -relativePos.getZ());
 
-            int compass = ((int) Math.round(MathHelper.atan2(-relativePos.getZ(), relativePos.getX()) / (2 * MathHelper.PI / 8)) + 8) % 8;
+            return fromId((int) Math.round(8 * angle / MathHelper.TAU) + 8);
+        }
 
-            switch (compass) {
-                case 0:
-                    return EAST;
-                case 1:
-                    return NORTH_EAST;
-                case 2:
-                    return NORTH;
-                case 3:
-                    return NORTH_WEST;
-                case 4:
-                    return WEST;
-                case 5:
-                    return SOUTH_WEST;
-                case 6:
-                    return SOUTH;
-                case 7:
-                    return SOUTH_EAST;
-
-                default:
-                    throw new IllegalStateException("WTF... How?");
-            }
+        public Side rotate(BlockRotation rotation) {
+            return switch (rotation) {
+                case NONE -> this;
+                case CLOCKWISE_90 -> fromId(id + EAST.id);
+                case CLOCKWISE_180 -> fromId(id + SOUTH.id);
+                case COUNTERCLOCKWISE_90 -> fromId(id + WEST.id);
+            };
         }
     }
 

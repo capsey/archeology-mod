@@ -35,7 +35,7 @@ public class ExcavationBlock extends BlockWithEntity {
 
     public ExcavationBlock(AbstractBlock.Settings settings) {
         super(settings);
-        this.experienceDropped = UniformIntProvider.create(2, 5);
+        experienceDropped = UniformIntProvider.create(2, 5);
         setDefaultState(getStateManager().getDefaultState().with(BRUSHING_LEVEL, 0));
     }
 
@@ -94,9 +94,9 @@ public class ExcavationBlock extends BlockWithEntity {
                     return;
                 } else {
                     // Drop experience
-                    int exp = this.experienceDropped.get(world.random);
+                    int exp = experienceDropped.get(world.random);
                     if (exp > 0) {
-                        this.dropExperience(world, pos, exp);
+                        dropExperience(world, pos, exp);
                     }
 
                     // Drop loot

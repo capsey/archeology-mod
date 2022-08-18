@@ -58,6 +58,7 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
 
     public void setColor(@Nullable DyeColor color) {
         this.color = color;
+        markForUpdate();
     }
 
     @Override
@@ -94,6 +95,8 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
         readShards(tag);
         if (tag.contains(COLOR_TAG, NbtElement.INT_TYPE)) {
             color = DyeColor.byId(tag.getInt(COLOR_TAG));
+        } else {
+            color = null;
         }
     }
 
@@ -125,7 +128,7 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
 
     @Override
     public int size() {
-        this.generateItems();
+        generateItems();
         return items.size();
     }
 
@@ -142,7 +145,7 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
 
     @Override
     public ItemStack getStack(int slot) {
-        this.generateItems();
+        generateItems();
         return items.get(slot);
     }
 
@@ -158,7 +161,7 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
 
     @Override
     public void setStack(int slot, ItemStack stack) {
-        this.generateItems();
+        generateItems();
         items.set(slot, stack);
         if (stack.getCount() > getMaxCountPerStack()) {
             stack.setCount(getMaxCountPerStack());
@@ -166,25 +169,25 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
     }
 
     private void generateItems() {
-        if (!this.world.isClient && this.lootTableId != null) {
-            LootTable lootTable = this.world.getServer().getLootManager().getTable(this.lootTableId);
-            LootContext.Builder builder = (new LootContext.Builder((ServerWorld) this.world))
-                    .parameter(LootContextParameters.ORIGIN, Vec3d.ofCenter(this.pos))
-                    .random(this.lootTableSeed);
+        if (!world.isClient && lootTableId != null) {
+            LootTable lootTable = world.getServer().getLootManager().getTable(lootTableId);
+            LootContext.Builder builder = (new LootContext.Builder((ServerWorld) world))
+                    .parameter(LootContextParameters.ORIGIN, Vec3d.ofCenter(pos))
+                    .random(lootTableSeed);
 
-            this.lootTableId = null;
+            lootTableId = null;
             lootTable.supplyInventory(this, builder.build(LootContextTypes.CHEST));
         }
     }
 
     public void onBreak() {
-        this.generateItems();
+        generateItems();
         ItemScatterer.spawn(world, pos, this);
     }
 
     @Override
     public void clear() {
-        this.generateItems();
+        generateItems();
         items.clear();
     }
 

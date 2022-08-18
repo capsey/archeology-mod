@@ -128,18 +128,18 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
 
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        this.tryScheduleTick(world, pos, this);
+        tryScheduleTick(world, pos, this);
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        this.tryScheduleTick(world, pos, this);
+        tryScheduleTick(world, pos, this);
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        this.trySpawnFallingBlock(state, world, pos, true);
+        trySpawnFallingBlock(state, world, pos, true);
     }
 
     @Override
