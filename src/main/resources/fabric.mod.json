@@ -13,15 +13,7 @@
 			}
 		}
 	],
-	"contributors": [
-		{
-			"name": "13GPanska_Stanek_Vojtech",
-			"contact": {
-				"homepage": "https://freesound.org/people/13GPanska_Stanek_Vojtech/",
-				"sources": "https://freesound.org/people/13GPanska_Stanek_Vojtech/sounds/371909/"
-			}
-		}
-	],
+	"contributors": [],
 
 	"license": "MIT",
 	"icon": "assets/archeology/icon.png",

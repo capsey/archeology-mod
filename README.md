@@ -56,6 +56,8 @@ This is a container block, that have 9 item slots (shards contained separately).
 
 ![Hardening the Raw Clat Pot (2)](https://i.ibb.co/k0K92yB/hardening-1.png "Hardening the Raw Clat Pot (2)")
 
+You can dye them by using [Dye](https://minecraft.fandom.com/wiki/Dye) on an uncolored Clay Pot, and you can remove dye using [Water Bottle](https://minecraft.fandom.com/wiki/Water_Bottle) on it.
+
 ### Excavation Sites
 Excavation Sites are structures in where you can find Excavation Blocks. This is the only place where these blocks spawn naturally and where you can find them in Survival. Currently, there is only one type of Excavation Site - Ancient Ruins. You can find them in such biomes as Plains, Savanna, Desert, Forest, Birch Forest and Taiga.
 
@@ -66,7 +68,6 @@ When you enter any Excavation Site, you get an advancement called "Forgotten Leg
 It consists of 2 parts: Surface and Main ruins. Surface ruins are the structure you see on the picture above. They are located on the ground and indicate an Ancient Ruins underneath. Main ruins are structures buried under the Surface ones, surrounded with Excavation Blocks. You can find a Clay Pots with loot in them!
 
 ## Unimplemented Features (yet)
-* Dyeing the Clay Pots (separate from Ceramic Shards)
 * Copper Brush enchantments
 * More ceramic shards
 * (Maybe) [The Copper Golem](https://www.youtube.com/watch?v=jVdBhu0KgJo)
