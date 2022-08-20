@@ -1,4 +1,4 @@
-package net.capsey.archeology.mixin.render;
+package net.capsey.archeology.mixin.client;
 
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;

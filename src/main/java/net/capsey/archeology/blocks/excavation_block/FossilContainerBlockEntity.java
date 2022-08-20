@@ -28,7 +28,8 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
     private static final String LOOT_TAG = "Loot";
     private static final float[] LUCK_POINTS = {1.0F, 2.0F, 3.0F, 4.0F};
     protected Identifier lootTableId;
-    protected ArrayList<ItemStack> loot = new ArrayList<>();
+    protected final ArrayList<ItemStack> loot = new ArrayList<>();
+
     protected FossilContainerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, Identifier lootTable) {
         super(type, pos, state);
         lootTableId = lootTable;
@@ -88,36 +89,28 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
     }
 
     /***
-     * Check world.isClient to be false before using!!
+     * Should only be called on server side, otherwise will cause crash!
+     * Check {@link net.minecraft.world.World#isClient world.isClient} before calling!
      */
-    public ItemStack generateItem() {
+    public void generateLoot(PlayerEntity player, ItemStack stack) {
+        if (world.random.nextFloat() > 0.5) {
+            return;
+        }
+
         LootContext.Builder builder = (new LootContext.Builder((ServerWorld) world))
+                .parameter(LootContextParameters.TOOL, stack)
+                .parameter(LootContextParameters.THIS_ENTITY, player)
                 .parameter(LootContextParameters.BLOCK_ENTITY, this)
-                .random(world.getRandom());
+                .random(world.getRandom()).luck(player.getLuck() + getLuckPoints(stack));
 
         LootTable lootTable = world.getServer().getLootManager().getTable(lootTableId);
         List<ItemStack> list = lootTable.generateLoot(builder.build(ArcheologyMod.EXCAVATION_LOOT_CONTEXT_TYPE));
 
-        return list.isEmpty() ? ItemStack.EMPTY : list.get(0);
+        loot.addAll(list);
+        markDirty();
     }
 
-    public void generateLoot(PlayerEntity player, ItemStack stack) {
-        if (!world.isClient) {
-            LootContext.Builder builder = (new LootContext.Builder((ServerWorld) world))
-                    .parameter(LootContextParameters.TOOL, stack)
-                    .parameter(LootContextParameters.THIS_ENTITY, player)
-                    .parameter(LootContextParameters.BLOCK_ENTITY, this)
-                    .random(world.getRandom()).luck(player.getLuck() + getLuckPoints(stack));
-
-            LootTable lootTable = world.getServer().getLootManager().getTable(lootTableId);
-            List<ItemStack> list = lootTable.generateLoot(builder.build(ArcheologyMod.EXCAVATION_LOOT_CONTEXT_TYPE));
-
-            loot.addAll(list);
-            markDirty();
-        }
-    }
-
-    public void dropLoot() {
+    public void dropLoot(PlayerEntity player) {
         for (ItemStack stack : loot) {
             ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), stack);
         }
@@ -130,5 +123,4 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
     public ItemStack getDisplayLootItem() {
         return loot.get(0);
     }
-
 }

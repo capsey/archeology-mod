@@ -1,6 +1,6 @@
-package net.capsey.archeology.mixin.render;
+package net.capsey.archeology.mixin.client;
 
-import net.capsey.archeology.items.CustomUseAction;
+import net.capsey.archeology.items.CopperBrushItem;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
@@ -18,9 +18,8 @@ public class PlayerEntityRendererMixin {
     private static void getArmPose(AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> info) {
         ItemStack itemStack = player.getStackInHand(hand);
 
-        if (!itemStack.isEmpty() && itemStack.getUseAction() == CustomUseAction.BRUSH) {
+        if (!itemStack.isEmpty() && itemStack.getItem() instanceof CopperBrushItem) {
             if (player.getItemUseTimeLeft() > 0 && player.getActiveHand() == hand) {
-                // TODO: Add own ArmPose!!
                 info.setReturnValue(BipedEntityModel.ArmPose.CROSSBOW_HOLD);
             }
         }

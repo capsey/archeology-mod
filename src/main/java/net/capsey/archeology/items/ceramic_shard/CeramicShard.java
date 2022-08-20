@@ -21,9 +21,8 @@ public record CeramicShard(Identifier shardId) {
         return new ItemStack(CeramicShardRegistry.getShardItem(shardId));
     }
 
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         nbt.putString("ShardId", shardId.toString());
-        return nbt;
     }
 
 }

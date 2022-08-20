@@ -3,19 +3,25 @@ package net.capsey.archeology.items;
 import net.capsey.archeology.ModConfig;
 import net.capsey.archeology.Sounds;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
-import net.minecraft.block.Block;
-import net.minecraft.entity.EquipmentSlot;
+import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
+import net.capsey.archeology.entity.BrushingPlayerEntity;
+import net.capsey.archeology.mixin.client.MinecraftClientAccessor;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.UseAction;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 public class CopperBrushItem extends Item {
@@ -39,17 +45,14 @@ public class CopperBrushItem extends Item {
         World world = context.getWorld();
         PlayerEntity player = context.getPlayer();
 
-        if (!world.isClient && player.getAbilities().allowModifyWorld) {
+        if (player != null && player.getAbilities().allowModifyWorld) {
             BlockPos pos = context.getBlockPos();
-            Block block = world.getBlockState(pos).getBlock();
+            BlockState state = world.getBlockState(pos);
 
-            if (block instanceof ExcavationBlock excBlock) {
-                ItemStack stack = context.getStack();
-
-                if (excBlock.startBrushing(world, pos, player, stack)) {
-                    player.setCurrentHand(context.getHand());
-                    return ActionResult.CONSUME;
-                }
+            if (state.getBlock() instanceof ExcavationBlock) {
+                player.setCurrentHand(context.getHand());
+                ((BrushingPlayerEntity) player).startBrushing(pos);
+                return ActionResult.CONSUME;
             }
         }
 
@@ -58,19 +61,64 @@ public class CopperBrushItem extends Item {
 
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        if (!world.isClient) {
-            int brushTicks = CopperBrushItem.getBrushTicks(stack);
+        BrushingPlayerEntity player = (BrushingPlayerEntity) user;
+        ExcavationBlockEntity entity = player.getBrushingEntity();
+        int brushTicks = CopperBrushItem.getBrushTicks(stack);
 
-            if (remainingUseTicks % (brushTicks * ExcavationBlock.getBrushTicksPerLayer(world.getDifficulty())) == 0) {
-                int damage = world.getRandom().nextInt(2);
-                stack.damage(damage, user, p ->
-                        p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
-                );
+        if (!world.isClient) {
+
+            if (entity == null) {
+                user.stopUsingItem();
+                return;
             }
 
             if (remainingUseTicks % brushTicks == 0) {
-                world.playSound(null, user.getBlockPos(), Sounds.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1f, 1f);
+                BlockState state = entity.getCachedState();
+                int i = state.get(ExcavationBlock.BRUSHING_LEVEL) + 1;
+
+                world.playSound(null, user.getBlockPos(), Sounds.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 0.5F, 1.0F);
+
+                if (world.random.nextFloat() > 0.25F) {
+                    return;
+                }
+
+                if (i > ExcavationBlock.MAX_BRUSHING_LEVELS) {
+                    entity.dropLoot((PlayerEntity) user);
+                    user.stopUsingItem();
+                } else {
+                    BlockSoundGroup soundGroup = entity.getCachedState().getSoundGroup();
+                    world.setBlockState(entity.getPos(), state.with(ExcavationBlock.BRUSHING_LEVEL, i));
+                    world.playSound(null, entity.getPos(), soundGroup.getBreakSound(), SoundCategory.BLOCKS, (soundGroup.getVolume() + 1.0F) / 4.0F, soundGroup.getPitch() * 0.8F);
+                }
             }
+        } else {
+            MinecraftClient client = MinecraftClient.getInstance();
+
+            if (entity != null && !entity.isRemoved()) {
+                if (client.crosshairTarget instanceof BlockHitResult target && entity == world.getBlockEntity(target.getBlockPos())) {
+                    if (((BrushingPlayerEntity.Client) player).tick()) {
+                        if (remainingUseTicks % brushTicks == 0) {
+                            addBrushingParticles(client.particleManager, target.getBlockPos());
+                        }
+
+                        return;
+                    }
+                }
+            }
+
+            client.interactionManager.stopUsingItem((PlayerEntity) user);
+            if (ModConfig.releaseUseKeyAfterBrushing) {
+                client.options.useKey.setPressed(false);
+            } else {
+                ((MinecraftClientAccessor) client).setItemUseCooldown(16);
+            }
+        }
+    }
+
+    @Override
+    public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+        if (!world.isClient) {
+            ((BrushingPlayerEntity.Server) user).onStopBrushing();
         }
     }
 
@@ -81,13 +129,19 @@ public class CopperBrushItem extends Item {
 
     @Override
     public UseAction getUseAction(ItemStack stack) {
-        // Temporary solution?
-        return ModConfig.disableBrushingAnimation ? UseAction.BOW : CustomUseAction.BRUSH;
+        return UseAction.BOW;
     }
 
     @Override
     public boolean canRepair(ItemStack stack, ItemStack ingredient) {
-        return ingredient.getItem() == Items.COPPER_INGOT;
+        return ingredient.isOf(Items.COPPER_INGOT);
+    }
+
+    // Particles
+    public static void addBrushingParticles(ParticleManager particleManager, BlockPos pos) {
+        for (int i = 0; i < 10; i++) {
+            particleManager.addBlockBreakingParticles(pos, Direction.UP);
+        }
     }
 
 }

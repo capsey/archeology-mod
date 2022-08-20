@@ -1,4 +1,4 @@
-package net.capsey.archeology.mixin.render;
+package net.capsey.archeology.mixin.client;
 
 import net.capsey.archeology.Blocks;
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlockEntity;

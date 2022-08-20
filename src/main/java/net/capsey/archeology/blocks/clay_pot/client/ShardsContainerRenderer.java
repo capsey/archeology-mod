@@ -18,7 +18,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 

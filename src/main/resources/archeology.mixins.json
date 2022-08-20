@@ -9,20 +9,20 @@
     "block.MushroomPlantBlockMixin",
     "block.PlantBlockMixin",
     "block.SaplingBlockMixin",
+    "client.MinecraftClientAccessor",
     "entity.FallingBlockEntityMixin",
     "entity.ServerPlayerEntityMixin",
     "item.BoneMealItemMixin",
-    "item.PickaxeItemMixin",
-    "item.UseActionMixin"
+    "item.PickaxeItemMixin"
   ],
   "client": [
-    "entity.ClientPlayerEntityMixin",
-    "render.BuiltinModelItemRendererAccessor",
-    "render.BuiltinModelItemRendererMixin",
-    "render.FallingBlockEntityRendererMixin",
-    "render.HeldItemRendererMixin",
-    "render.PlayerEntityRendererMixin",
-    "render.TexturedRenderLayersMixin"
+    "client.BuiltinModelItemRendererAccessor",
+    "client.BuiltinModelItemRendererMixin",
+    "client.FallingBlockEntityRendererMixin",
+    "client.HeldItemRendererMixin",
+    "client.PlayerEntityRendererMixin",
+    "client.TexturedRenderLayersMixin",
+    "entity.ClientPlayerEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

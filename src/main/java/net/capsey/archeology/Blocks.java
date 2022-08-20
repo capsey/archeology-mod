@@ -25,7 +25,7 @@ public class Blocks {
 
     public static void onInitialize() {
         EXCAVATION_DIRT = register("excavation_dirt", new ExcavationBlock(AbstractBlock.Settings.copy(net.minecraft.block.Blocks.DIRT).hardness(1.0F)));
-        EXCAVATION_GRAVEL = register("excavation_gravel", new FallingExcavationBlock(AbstractBlock.Settings.copy(net.minecraft.block.Blocks.GRAVEL).hardness(1.2F).ticksRandomly(), (FallingBlock) net.minecraft.block.Blocks.GRAVEL));
+        EXCAVATION_GRAVEL = register("excavation_gravel", new FallingExcavationBlock(AbstractBlock.Settings.copy(net.minecraft.block.Blocks.GRAVEL).hardness(1.2F), (FallingBlock) net.minecraft.block.Blocks.GRAVEL));
         RAW_CLAY_POT = register("raw_clay_pot", new RawClayPotBlock(AbstractBlock.Settings.copy(net.minecraft.block.Blocks.CLAY).nonOpaque()));
         CLAY_POT = register("clay_pot", new ClayPotBlock(AbstractBlock.Settings.copy(net.minecraft.block.Blocks.TERRACOTTA).nonOpaque().strength(0.6F).sounds(ClayPotBlock.SOUND_GROUP)));
     }
