@@ -1,6 +1,6 @@
 package net.capsey.archeology.blocks.clay_pot;
 
-import net.capsey.archeology.BlockEntities;
+import net.capsey.archeology.main.BlockEntities;
 import net.capsey.archeology.blocks.FallingBlockWithEntity;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;

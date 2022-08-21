@@ -1,6 +1,6 @@
 package net.capsey.archeology.mixin.item;
 
-import net.capsey.archeology.Blocks;
+import net.capsey.archeology.main.Blocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Fertilizable;
 import net.minecraft.item.BoneMealItem;

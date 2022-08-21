@@ -1,10 +1,10 @@
 package net.capsey.archeology.blocks.excavation_block;
 
 import net.capsey.archeology.ArcheologyMod;
-import net.capsey.archeology.BlockEntities;
+import net.capsey.archeology.main.BlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ExperienceOrbEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -26,10 +26,9 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
     }
 
     @Override
-    public void dropLoot(PlayerEntity player) {
+    public void dropLoot(ServerPlayerEntity player) {
         super.dropLoot(player);
 
-        // Drop experience
         if (world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)) {
             int experience = UniformIntProvider.create(2, 5).get(world.random);
             if (experience > 0) {
@@ -37,7 +36,7 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
             }
         }
 
-        // Give achievement for successful brushing
-        // TODO
+        player.incrementStat(ArcheologyMod.EXCAVATED);
+        ArcheologyMod.EXCAVATED_CRITERION.trigger(player, getCachedState());
     }
 }

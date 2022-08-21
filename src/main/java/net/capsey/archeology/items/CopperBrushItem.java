@@ -1,7 +1,7 @@
 package net.capsey.archeology.items;
 
 import net.capsey.archeology.ModConfig;
-import net.capsey.archeology.Sounds;
+import net.capsey.archeology.main.Sounds;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.capsey.archeology.entity.BrushingPlayerEntity;
@@ -15,6 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
@@ -85,7 +86,7 @@ public class CopperBrushItem extends Item {
                 }
 
                 if (i > ExcavationBlock.MAX_BRUSHING_LEVELS) {
-                    entity.dropLoot((PlayerEntity) user);
+                    entity.dropLoot((ServerPlayerEntity) user);
                     user.stopUsingItem();
                 } else {
                     BlockSoundGroup soundGroup = entity.getCachedState().getSoundGroup();

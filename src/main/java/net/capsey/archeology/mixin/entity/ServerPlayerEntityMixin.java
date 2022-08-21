@@ -1,11 +1,12 @@
 package net.capsey.archeology.mixin.entity;
 
-import net.capsey.archeology.BlockEntities;
+import net.capsey.archeology.main.BlockEntities;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.capsey.archeology.entity.BrushingPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.stat.Stats;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -47,10 +48,11 @@ public class ServerPlayerEntityMixin implements BrushingPlayerEntity, BrushingPl
     @Override
     public void onStopBrushing() {
         ExcavationBlockEntity entity = brushingEntity.get();
+        PlayerEntity player = (PlayerEntity)(Object) this;
 
         if (entity != null && !entity.isRemoved()) {
-            World world = ((Entity)(Object) this).world;
-            world.breakBlock(entity.getPos(), true, (PlayerEntity)(Object) this);
+            player.world.breakBlock(entity.getPos(), true, player);
+            player.incrementStat(Stats.MINED.getOrCreateStat(entity.getCachedState().getBlock()));
         }
     }
 }

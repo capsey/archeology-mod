@@ -1,6 +1,6 @@
 package net.capsey.archeology.mixin.entity;
 
-import net.capsey.archeology.BlockEntities;
+import net.capsey.archeology.main.BlockEntities;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.capsey.archeology.entity.BrushingPlayerEntity;
 import net.capsey.archeology.items.CopperBrushItem;

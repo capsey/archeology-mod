@@ -22,6 +22,8 @@
   "advancements.archeology.root.description": "Archeology and Excavation",
   "advancements.archeology.find_ruins.title": "Forgotten Legacy",
   "advancements.archeology.find_ruins.description": "Find Ancient Ruins",
+  "advancements.archeology.first_excavated.title": "Novice Archeologist",
+  "advancements.archeology.first_excavated.description": "Use Copper Brush to excavate loot from odd dirt blocks",
   "advancements.archeology.dragon_shard.title": "Foreshadowing",
   "advancements.archeology.dragon_shard.description": "Eerie drawing of a giant creature"
 }

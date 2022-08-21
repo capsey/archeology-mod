@@ -1,5 +1,5 @@
 {
-  "parent": "archeology:archeology/find_ruins",
+  "parent": "archeology:archeology/first_excavated",
   "display": {
     "icon": {
       "item": "archeology:ender_dragon_shard"
@@ -10,19 +10,19 @@
     "description": {
       "translate": "advancements.archeology.dragon_shard.description"
     },
-    "frame": "task",
+    "frame": "goal",
     "show_toast": true,
     "announce_to_chat": true,
-    "hidden": false
+    "hidden": true
   },
   "criteria": {
-    "dragon_egg": {
+    "dragon_shard": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:dragon_egg"
+              "archeology:dragon_shard"
             ]
           }
         ]
@@ -31,7 +31,7 @@
   },
   "requirements": [
     [
-      "dragon_egg"
+      "dragon_shard"
     ]
   ]
 }

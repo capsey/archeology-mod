@@ -1,5 +1,6 @@
-package net.capsey.archeology;
+package net.capsey.archeology.main;
 
+import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.items.CopperBrushItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.BlockItem;

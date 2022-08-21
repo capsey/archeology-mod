@@ -1,6 +1,6 @@
 package net.capsey.archeology.mixin.block;
 
-import net.capsey.archeology.Blocks;
+import net.capsey.archeology.main.Blocks;
 import net.minecraft.block.BigDripleafBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;

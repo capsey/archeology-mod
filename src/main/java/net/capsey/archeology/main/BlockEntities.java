@@ -1,5 +1,6 @@
-package net.capsey.archeology;
+package net.capsey.archeology.main;
 
+import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlockEntity;
 import net.capsey.archeology.blocks.clay_pot.RawClayPotBlockEntity;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;

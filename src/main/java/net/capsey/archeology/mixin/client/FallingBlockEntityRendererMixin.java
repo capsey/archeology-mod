@@ -1,6 +1,6 @@
 package net.capsey.archeology.mixin.client;
 
-import net.capsey.archeology.Blocks;
+import net.capsey.archeology.main.Blocks;
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlockEntity;
 import net.capsey.archeology.entity.FallingBlockEntityMixinInterface;
 import net.minecraft.block.BlockState;

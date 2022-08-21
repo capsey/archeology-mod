@@ -1,7 +1,7 @@
 package net.capsey.archeology.blocks.clay_pot;
 
-import net.capsey.archeology.BlockEntities;
-import net.capsey.archeology.Blocks;
+import net.capsey.archeology.main.BlockEntities;
+import net.capsey.archeology.main.Blocks;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer.Side;
 import net.capsey.archeology.items.CeramicShardItem;
 import net.capsey.archeology.items.ceramic_shard.CeramicShard;

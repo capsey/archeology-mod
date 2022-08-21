@@ -22,6 +22,8 @@
   "advancements.archeology.root.description": "Археология и раскопки",
   "advancements.archeology.find_ruins.title": "Забытое наследие",
   "advancements.archeology.find_ruins.description": "Найти Древние Руины",
+  "advancements.archeology.first_excavated.title": "Начинающий Археолог",
+  "advancements.archeology.first_excavated.description": "Откопать предметы из странной грязи с помощью Медной кисти",
   "advancements.archeology.dragon_shard.title": "Предзнаменование",
   "advancements.archeology.dragon_shard.description": "Подозрительный рисунок огромного существа"
 }

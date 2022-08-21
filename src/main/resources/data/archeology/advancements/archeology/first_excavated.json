@@ -1,0 +1,29 @@
+{
+  "parent": "archeology:archeology/root",
+  "display": {
+    "icon": {
+      "item": "archeology:copper_brush"
+    },
+    "title": {
+      "translate": "advancements.archeology.first_excavated.title"
+    },
+    "description": {
+      "translate": "advancements.archeology.first_excavated.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "excavated": {
+      "trigger": "archeology:excavated",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "excavated"
+    ]
+  ]
+}
