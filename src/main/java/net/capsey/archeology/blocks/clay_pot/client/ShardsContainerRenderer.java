@@ -1,6 +1,7 @@
 package net.capsey.archeology.blocks.clay_pot.client;
 
 import net.capsey.archeology.ArcheologyClientMod;
+import net.capsey.archeology.blocks.clay_pot.AbstractClayPotBlock;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer.Side;
 import net.capsey.archeology.items.ceramic_shard.CeramicShard;
@@ -15,6 +16,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
 
@@ -65,10 +67,11 @@ public abstract class ShardsContainerRenderer<T extends ShardsContainer> impleme
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         if (entity.hasShards()) {
+            Direction facing = entity.getCachedState().get(AbstractClayPotBlock.FACING);
             matrices.push();
 
             for (Side side : Side.values()) {
-                CeramicShard shard = entity.getShard(side);
+                CeramicShard shard = entity.getShard(side.rotate(facing));
 
                 if (shard != null) {
                     renderShard(shard, side, matrices, vertexConsumers, light, overlay);

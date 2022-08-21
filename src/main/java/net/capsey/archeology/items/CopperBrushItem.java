@@ -42,17 +42,19 @@ public class CopperBrushItem extends Item {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-        World world = context.getWorld();
-        PlayerEntity player = context.getPlayer();
+        if (context.getSide() != Direction.DOWN) {
+            World world = context.getWorld();
+            PlayerEntity player = context.getPlayer();
 
-        if (player != null && player.getAbilities().allowModifyWorld) {
-            BlockPos pos = context.getBlockPos();
-            BlockState state = world.getBlockState(pos);
+            if (player != null && player.getAbilities().allowModifyWorld) {
+                BlockPos pos = context.getBlockPos();
+                BlockState state = world.getBlockState(pos);
 
-            if (state.getBlock() instanceof ExcavationBlock) {
-                player.setCurrentHand(context.getHand());
-                ((BrushingPlayerEntity) player).startBrushing(pos);
-                return ActionResult.CONSUME;
+                if (state.getBlock() instanceof ExcavationBlock) {
+                    player.setCurrentHand(context.getHand());
+                    ((BrushingPlayerEntity) player).startBrushing(pos);
+                    return ActionResult.CONSUME;
+                }
             }
         }
 

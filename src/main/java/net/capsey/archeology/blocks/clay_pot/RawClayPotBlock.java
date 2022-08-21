@@ -41,26 +41,27 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (Side.isValidHit(hit)) {
-            Optional<RawClayPotBlockEntity> entity = world.getBlockEntity(pos, BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
+            Optional<RawClayPotBlockEntity> optional = world.getBlockEntity(pos, BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
 
-            if (entity.isPresent()) {
+            if (optional.isPresent()) {
                 ItemStack item = player.getStackInHand(hand);
-                Side side = Side.fromHit(hit);
+                RawClayPotBlockEntity entity = optional.get();
+                Side side = Side.fromHit(hit).rotate(entity.getCachedState().get(AbstractClayPotBlock.FACING));
 
                 if (item.isEmpty() && hand == Hand.MAIN_HAND) {
-                    CeramicShard shard = entity.get().getShard(side);
+                    CeramicShard shard = entity.getShard(side);
 
                     if (shard != null) {
                         if (!world.isClient) {
                             player.setStackInHand(hand, shard.getStack());
-                            entity.get().removeShard(side);
+                            entity.removeShard(side);
                         }
 
                         return ActionResult.success(!world.isClient);
                     }
-                } else if (!entity.get().hasShard(side) && item.getItem() instanceof CeramicShardItem shard) {
+                } else if (!entity.hasShard(side) && item.getItem() instanceof CeramicShardItem shard) {
                     if (!world.isClient) {
-                        entity.get().setShard(side, shard.getShard());
+                        entity.setShard(side, shard.getShard());
                         if (!player.isCreative()) {
                             item.decrement(1);
                         }
@@ -133,16 +134,17 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
     }
 
     public void harden(World world, BlockPos pos) {
-        Optional<RawClayPotBlockEntity> entity = world.getBlockEntity(pos, BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
+        Optional<RawClayPotBlockEntity> optional = world.getBlockEntity(pos, BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY);
 
-        if (entity.isPresent()) {
-            Map<Side, CeramicShard> shards = entity.get().getShards();
-            entity.get().clearShards();
+        optional.ifPresent(entity -> {
+            Direction facing = entity.getCachedState().get(FACING);
+            BlockState newState = Blocks.CLAY_POT.getDefaultState().with(FACING, facing);
+            Map<Side, CeramicShard> shards = entity.getShards();
+            entity.clearShards();
 
-            BlockState newState = Blocks.CLAY_POT.getDefaultState();
             world.setBlockState(pos, newState, Block.NOTIFY_LISTENERS);
             world.addBlockEntity(new ClayPotBlockEntity(pos, newState, shards, null));
-        }
+        });
     }
 
     @Override

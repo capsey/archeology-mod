@@ -10,9 +10,9 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.BlockRotation;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
@@ -66,16 +66,6 @@ public abstract class ShardsContainer extends BlockEntity {
         if (world != null && !world.isClient) {
             ((ServerWorld) world).getChunkManager().markForUpdate(pos);
         }
-    }
-
-    public void rotateShards(BlockRotation rotation) {
-        if (rotation == BlockRotation.NONE) {
-            return;
-        }
-
-        EnumMap<Side, CeramicShard> newShards = new EnumMap<>(Side.class);
-        ceramicShards.forEach((key, value) -> newShards.put(key.rotate(rotation), value));
-        replaceShards(newShards);
     }
 
     public boolean hasShards() {
@@ -205,12 +195,13 @@ public abstract class ShardsContainer extends BlockEntity {
             return fromId((int) Math.round(8 * angle / MathHelper.TAU) + 8);
         }
 
-        public Side rotate(BlockRotation rotation) {
+        public Side rotate(Direction rotation) {
             return switch (rotation) {
-                case NONE -> this;
-                case CLOCKWISE_90 -> fromId(id + EAST.id);
-                case CLOCKWISE_180 -> fromId(id + SOUTH.id);
-                case COUNTERCLOCKWISE_90 -> fromId(id + WEST.id);
+                case NORTH -> this;
+                case SOUTH -> fromId(id - SOUTH.id + 8);
+                case WEST -> fromId(id - WEST.id + 8);
+                case EAST -> fromId(id - EAST.id + 8);
+                default -> throw new InvalidParameterException();
             };
         }
     }

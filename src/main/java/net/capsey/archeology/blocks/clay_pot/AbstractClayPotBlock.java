@@ -6,7 +6,10 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -18,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class AbstractClayPotBlock extends Block implements Waterloggable {
 
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
 
     public static final VoxelShape BLOCK_SHAPE;
     public static final VoxelShape BASE_SHAPE;
@@ -33,7 +37,7 @@ public abstract class AbstractClayPotBlock extends Block implements Waterloggabl
 
     protected AbstractClayPotBlock(Settings settings) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(WATERLOGGED, false));
+        setDefaultState(getStateManager().getDefaultState().with(WATERLOGGED, false).with(FACING, Direction.NORTH));
     }
 
     @Override
@@ -59,12 +63,26 @@ public abstract class AbstractClayPotBlock extends Block implements Waterloggabl
     @Nullable
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-        return getDefaultState().with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+        Direction facing = ctx.getPlayerFacing().getOpposite();
+        return getDefaultState().with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER).with(FACING, facing);
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
+        return state.with(FACING, rotation.rotate(state.get(FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
+        // Doesn't actually mirror, so shards that are placed perpendicularly to the
+        // rotation axis will switch places. I don't know how to fix this without
+        // mixin into structure placement, so I hope this is not that big of a deal.
+        return state.rotate(mirror.getRotation(state.get(FACING)));
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(WATERLOGGED);
+        stateManager.add(WATERLOGGED, FACING);
     }
 
     @Override
