@@ -20,7 +20,7 @@ import java.lang.ref.WeakReference;
 @Mixin(ServerPlayerEntity.class)
 public class ServerPlayerEntityMixin implements BrushingPlayerEntity, BrushingPlayerEntity.Server {
 
-    private WeakReference<ExcavationBlockEntity> brushingEntity;
+    private WeakReference<ExcavationBlockEntity> brushingEntity = new WeakReference<>(null);
 
     @Override
     public void startBrushing(BlockPos pos) {

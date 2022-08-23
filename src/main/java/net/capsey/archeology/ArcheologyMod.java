@@ -42,10 +42,11 @@ public class ArcheologyMod implements ModInitializer {
         MidnightConfig.init(MOD_ID, ModConfig.class);
 
         // Registering all stuff
-        BlockEntities.onInitialize();
         Blocks.onInitialize();
+        BlockEntities.onInitialize();
         Items.onInitialize();
         Sounds.onInitialize();
+        Structures.onInitialize();
         CeramicShards.registerDefaultShards();
 
         // Registering other stuff

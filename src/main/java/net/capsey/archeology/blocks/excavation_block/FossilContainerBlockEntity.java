@@ -27,7 +27,7 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
 
     private static final String LOOT_TABLE_TAG = "LootTable";
     private static final String LOOT_TAG = "Loot";
-    private static final float[] LUCK_POINTS = {1.0F, 2.0F, 3.0F, 4.0F};
+    private static final float[] LUCK_POINTS = {0.0F, 1.0F, 2.0F, 3.0F};
     protected Identifier lootTableId;
     protected final ArrayList<ItemStack> loot = new ArrayList<>();
 
@@ -94,10 +94,6 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
      * Check {@link net.minecraft.world.World#isClient world.isClient} before calling!
      */
     public void generateLoot(PlayerEntity player, ItemStack stack) {
-        if (world.random.nextFloat() > 0.5) {
-            return;
-        }
-
         LootContext.Builder builder = (new LootContext.Builder((ServerWorld) world))
                 .parameter(LootContextParameters.TOOL, stack)
                 .parameter(LootContextParameters.THIS_ENTITY, player)

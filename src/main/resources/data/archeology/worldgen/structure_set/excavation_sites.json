@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "archeology:excavation_site_plains",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 12369420,
+    "spacing": 16,
+    "separation": 6
+  }
+}
