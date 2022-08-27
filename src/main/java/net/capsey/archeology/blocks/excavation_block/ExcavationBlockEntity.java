@@ -4,6 +4,7 @@ import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.main.BlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ExperienceOrbEntity;
+import net.minecraft.loot.LootTables;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
@@ -14,17 +15,10 @@ import net.minecraft.world.GameRules;
 
 public class ExcavationBlockEntity extends FossilContainerBlockEntity {
 
-    public static final Identifier DEFAULT_LOOT_TABLE = new Identifier(ArcheologyMod.MOD_ID, "excavation/ancient_ruins");
-
     public ExcavationBlockEntity(BlockPos pos, BlockState state) {
-        super(BlockEntities.EXCAVATION_BLOCK_ENTITY, pos, state, DEFAULT_LOOT_TABLE);
+        super(BlockEntities.EXCAVATION_BLOCK_ENTITY, pos, state, LootTables.EMPTY);
     }
-
-    public void setLootTable(Identifier id) {
-        loot.clear();
-        lootTableId = id;
-    }
-
+    
     @Override
     public void dropLoot(ServerPlayerEntity player) {
         super.dropLoot(player);

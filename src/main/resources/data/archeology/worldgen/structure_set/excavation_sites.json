@@ -3,12 +3,24 @@
     {
       "structure": "archeology:excavation_site_plains",
       "weight": 1
+    },
+    {
+      "structure": "archeology:excavation_site_desert",
+      "weight": 1
+    },
+    {
+      "structure": "archeology:excavation_site_mangrove",
+      "weight": 1
+    },
+    {
+      "structure": "archeology:excavation_site_snow",
+      "weight": 1
     }
   ],
   "placement": {
     "type": "minecraft:random_spread",
     "salt": 12369420,
-    "spacing": 16,
-    "separation": 6
+    "spacing": 32,
+    "separation": 18
   }
 }

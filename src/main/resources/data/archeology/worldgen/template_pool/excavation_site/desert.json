@@ -1,12 +1,12 @@
 {
-  "name": "archeology:excavation_site/plains",
+  "name": "archeology:excavation_site/desert",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
         "element_type": "minecraft:single_pool_element",
-        "location": "archeology:excavation_site/plains_site01",
+        "location": "archeology:excavation_site/desert_site01",
         "projection": "rigid",
         "processors": "minecraft:empty"
       }
@@ -15,7 +15,7 @@
       "weight": 1,
       "element": {
         "element_type": "minecraft:single_pool_element",
-        "location": "archeology:excavation_site/plains_site02",
+        "location": "archeology:excavation_site/desert_site02",
         "projection": "rigid",
         "processors": "minecraft:empty"
       }
@@ -24,16 +24,7 @@
       "weight": 1,
       "element": {
         "element_type": "minecraft:single_pool_element",
-        "location": "archeology:excavation_site/roman_site01",
-        "projection": "rigid",
-        "processors": "minecraft:empty"
-      }
-    },
-    {
-      "weight": 1,
-      "element": {
-        "element_type": "minecraft:single_pool_element",
-        "location": "archeology:excavation_site/roman_site02",
+        "location": "archeology:excavation_site/desert_site03",
         "projection": "rigid",
         "processors": "minecraft:empty"
       }
