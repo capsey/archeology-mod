@@ -5,11 +5,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "archeology:overworld_shard"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "archeology:emerald_shard"
+          "name": "archeology:snowflake_shard"
         }
       ]
     }

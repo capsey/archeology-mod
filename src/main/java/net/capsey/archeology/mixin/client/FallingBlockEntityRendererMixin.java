@@ -40,6 +40,7 @@ public abstract class FallingBlockEntityRendererMixin extends EntityRenderer<Fal
                 matrices.translate(-0.5D, 0.0D, -0.5D);
 
                 renderClayPot.readClientData(((FallingBlockEntityMixinInterface) entity).getClientBlockEntityData());
+                renderClayPot.setCachedState(entity.getBlockState());
                 MinecraftClient.getInstance().getBlockEntityRenderDispatcher().renderEntity(renderClayPot, matrices, vertexConsumers, light, OverlayTexture.DEFAULT_UV);
 
                 matrices.pop();

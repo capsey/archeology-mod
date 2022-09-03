@@ -25,8 +25,8 @@ public class ArcheologyClientMod implements ClientModInitializer {
 
         // Renderers registration
         BlockEntityRendererRegistry.register(BlockEntities.EXCAVATION_BLOCK_ENTITY, ExcavationBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.register(BlockEntities.CLAY_POT_BLOCK_ENTITY, ctx -> new ClayPotBlockEntityRenderer<>(ctx, ShardsContainerRenderer.SHARD_SPRITE_IDS, x -> x.getColor() == null ? ClayPotBlockEntityRenderer.MODEL_TEXTURE : ClayPotBlockEntityRenderer.MODEL_COLORED_TEXTURES[x.getColor().getId()]));
-        BlockEntityRendererRegistry.register(BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY, ctx -> new ClayPotBlockEntityRenderer<>(ctx, ShardsContainerRenderer.RAW_SHARD_SPRITE_IDS, x -> ClayPotBlockEntityRenderer.RAW_MODEL_TEXTURE));
+        BlockEntityRendererRegistry.register(BlockEntities.CLAY_POT_BLOCK_ENTITY, ctx -> new ClayPotBlockEntityRenderer<>(ctx, false, x -> x.getColor() == null ? ClayPotBlockEntityRenderer.MODEL_TEXTURE : ClayPotBlockEntityRenderer.MODEL_COLORED_TEXTURES[x.getColor().getId()]));
+        BlockEntityRendererRegistry.register(BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY, ctx -> new ClayPotBlockEntityRenderer<>(ctx, true, x -> ClayPotBlockEntityRenderer.RAW_MODEL_TEXTURE));
 
         // Model Predicate for Copper Brush to change texture (oxidization)
         ModelPredicateProviderRegistry.register(Items.COPPER_BRUSH, new Identifier("damage"), (itemStack, clientWorld, livingEntity, i) -> (float) itemStack.getDamage() / itemStack.getMaxDamage());

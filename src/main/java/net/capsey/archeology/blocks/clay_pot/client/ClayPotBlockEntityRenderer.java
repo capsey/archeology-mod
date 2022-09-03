@@ -16,7 +16,6 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 
 import java.util.Arrays;
-import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class ClayPotBlockEntityRenderer<T extends ShardsContainer> extends ShardsContainerRenderer<T> {
@@ -24,7 +23,9 @@ public class ClayPotBlockEntityRenderer<T extends ShardsContainer> extends Shard
     public static final Identifier CLAY_POTS_ATLAS_TEXTURE = new Identifier("textures/atlas/shards.png");
 
     public static final SpriteIdentifier MODEL_TEXTURE = getSpriteId("clay_pot");
-    public static final SpriteIdentifier[] MODEL_COLORED_TEXTURES = Arrays.stream(DyeColor.values()).map(x -> getSpriteId("clay_pot_" + x.getName())).toArray(SpriteIdentifier[]::new);
+    public static final SpriteIdentifier[] MODEL_COLORED_TEXTURES = Arrays.stream(DyeColor.values())
+            .map(x -> getSpriteId("clay_pot_" + x.getName()))
+            .toArray(SpriteIdentifier[]::new);
     public static final SpriteIdentifier RAW_MODEL_TEXTURE = getSpriteId("raw_clay_pot");
 
     private final SpriteIdentifierProvider<T> textureProvider;
@@ -33,8 +34,8 @@ public class ClayPotBlockEntityRenderer<T extends ShardsContainer> extends Shard
     private final ModelPart neck;
     private final ModelPart head;
 
-    public ClayPotBlockEntityRenderer(Context ctx, Map<Identifier, SpriteIdentifier> spriteIds, SpriteIdentifierProvider<T> textureProvider) {
-        super(ctx, spriteIds);
+    public ClayPotBlockEntityRenderer(Context ctx, boolean raw, SpriteIdentifierProvider<T> textureProvider) {
+        super(ctx, raw);
         this.textureProvider = textureProvider;
 
         ModelPart modelPart = ctx.getLayerModelPart(ArcheologyClientMod.CLAY_POT_MODEL_LAYER);
