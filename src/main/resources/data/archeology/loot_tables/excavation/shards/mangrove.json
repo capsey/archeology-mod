@@ -5,11 +5,15 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "archeology:overworld_shard"
+          "name": "archeology:hoe_shard"
         },
         {
           "type": "minecraft:item",
-          "name": "archeology:emerald_shard"
+          "name": "archeology:propagule_shard"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "archeology:slime_shard"
         }
       ]
     }

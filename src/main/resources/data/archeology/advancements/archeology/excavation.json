@@ -1,14 +1,14 @@
 {
-  "parent": "archeology:archeology/root",
+  "parent": "archeology:archeology/find_excavation_site",
   "display": {
     "icon": {
       "item": "archeology:copper_brush"
     },
     "title": {
-      "translate": "advancements.archeology.first_excavated.title"
+      "translate": "advancements.archeology.excavation.title"
     },
     "description": {
-      "translate": "advancements.archeology.first_excavated.description"
+      "translate": "advancements.archeology.excavation.description"
     },
     "frame": "task",
     "show_toast": true,

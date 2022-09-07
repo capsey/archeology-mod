@@ -37,13 +37,13 @@ public class CeramicShardRegistry {
      * @param shardId is Identifier of shard texture for the Clay Pot (e.g. "archeology:ender_dragon")
      * @return Returns registered {@link Item} object of the shard
      */
-    public static Item registerShard(Identifier itemId, Identifier shardId) {
+    public static Item registerShard(Identifier itemId, Identifier shardId, Rarity rarity) {
         if (SHARDS.containsKey(itemId)) {
             throw new IllegalArgumentException(itemId + " is already a registered shard!");
         }
 
         CeramicShard shard = new CeramicShard(shardId);
-        Item shardItem = new CeramicShardItem(shard, new Item.Settings().maxCount(16).rarity(Rarity.UNCOMMON).group(SHARDS_ITEM_GROUP));
+        Item shardItem = new CeramicShardItem(shard, new Item.Settings().maxCount(16).rarity(rarity).group(SHARDS_ITEM_GROUP));
         Registry.register(Registry.ITEM, itemId, shardItem);
 
         SHARDS.put(shardId, shard);

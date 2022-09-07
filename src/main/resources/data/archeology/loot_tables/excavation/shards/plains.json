@@ -5,15 +5,15 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "archeology:overworld_shard"
+          "name": "archeology:diamond_shard"
         },
         {
           "type": "minecraft:item",
-          "name": "archeology:emerald_shard"
+          "name": "archeology:sun_shard"
         },
         {
           "type": "minecraft:item",
-          "name": "archeology:creeper_shard"
+          "name": "archeology:sword_shard"
         }
       ]
     }

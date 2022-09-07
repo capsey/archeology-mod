@@ -5,6 +5,14 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "name": "archeology:axe_shard"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "archeology:emerald_shard"
+        },
+        {
+          "type": "minecraft:item",
           "name": "archeology:snowflake_shard"
         }
       ]
