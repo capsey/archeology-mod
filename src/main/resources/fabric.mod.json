@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "archeology",
-	"version": "${version}",
+	"version": "${mod_version}",
 
 	"name": "CapsLock Archeology Mod",
 	"description": "My Archeology implementation mod for Minecraft Fabric",

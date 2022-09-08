@@ -110,11 +110,6 @@ public class CopperBrushItem extends Item {
             }
 
             client.interactionManager.stopUsingItem((PlayerEntity) user);
-            if (ModConfig.releaseUseKeyAfterBrushing) {
-                client.options.useKey.setPressed(false);
-            } else {
-                ((MinecraftClientAccessor) client).setItemUseCooldown(16);
-            }
         }
     }
 

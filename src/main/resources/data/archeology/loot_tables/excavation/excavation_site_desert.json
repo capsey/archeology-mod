@@ -2,9 +2,43 @@
   "type": "archeology:excavation",
   "pools": [
     {
-      "rolls": 0.9,
+      "rolls": 1,
       "bonus_rolls": 0.1,
       "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "weight": 5,
+          "quality": 2,
+          "name": "archeology:excavation/shards/desert"
+        },
+        {
+          "type": "minecraft:item",
+          "quality": 2,
+          "name": "minecraft:emerald",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 5
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "quality": 2,
+          "name": "minecraft:diamond",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ]
+        },
         {
           "type": "minecraft:item",
           "name": "minecraft:rotten_flesh",
@@ -33,46 +67,11 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:skeleton_skull",
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 1,
-                "max": 1
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:cobweb",
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 1,
-                "max": 2
-              }
-            }
-          ]
+          "name": "minecraft:skeleton_skull"
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:stick",
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 2,
-                "max": 4
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:coal",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -98,16 +97,48 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:bowl",
+          "name": "minecraft:green_dye",
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
                 "min": 1,
-                "max": 3
+                "max": 4
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:glass_bottle",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:gold_nugget",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 5
+              }
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.75
         }
       ]
     }
