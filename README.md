@@ -1,14 +1,14 @@
 # Archeology Mod
 Archeology Mod is a [Fabric](https://fabricmc.net/) mod for [Minecraft](https://www.minecraft.net/), that adds Archeology System! My goal was to make it as Vanilla-like as I possibly could, to try to imagine how Mojang will implement it (and maybe even give them inspiration).
 
-_This is my first-ever mod, so don't expect too stable experience or sensible code. If you found a bug, or have a suggestion, advice, please create a [GitHub Issue](https://github.com/capsey/archeology-mod/issues) or message me on Discord._
+**If you found a bug, or have a suggestion, advice, please create a [GitHub Issue](https://github.com/capsey/archeology-mod/issues).**
 
 [![CurseForge Downloads Badge](https://cf.way2muchnoise.eu/full_539957_downloads.svg "CurseForge Downloads Badge")](https://www.curseforge.com/minecraft/mc-mods/archeology)
 [![CurseForge Versions Badge](http://cf.way2muchnoise.eu/versions/539957.svg "CurseForge Versions Badge")](https://www.curseforge.com/minecraft/mc-mods/archeology)
 
-![Fancy screenie](https://i.ibb.co/4s0pb9F/screenie.png "Fancy screenie")
+![Fancy screenie](https://user-images.githubusercontent.com/46106832/191838583-82b8afc4-5e5f-4369-96aa-b307a4f9d38a.png "Fancy screenie")
 
-**The mod requires [Cloth Config API (Fabric)](https://github.com/shedaniel/cloth-config) and [Fabric API](https://github.com/FabricMC/fabric) to work! Also, this is recommended to use [Mod Menu](https://github.com/TerraformersMC/ModMenu) to easily edit mod's config.**
+**The mod requires [Fabric API](https://github.com/FabricMC/fabric) to work! Also, this is recommended to use [Mod Menu](https://github.com/TerraformersMC/ModMenu) to easily edit mod's config.**
 
 ## What is the Archeology System?
 Archeology was firstly introduced at [Minecraft Live 2020](https://youtu.be/DWZIfsaIgtE?t=7229), but was later [delayed from 1.17](https://youtu.be/6YgKUZnUyak?t=285) Caves and Cliffs Update. Officially announced features of the Archeology System:
@@ -27,16 +27,14 @@ Copper Brush is a new tool, used for excavating special blocks for getting loot.
 * Less durability left on a brush, more oxidized it gets, until it breaks.
 * More oxidized brush is, rarer loot you get (similar to [Luck of the Sea](https://minecraft.fandom.com/wiki/Luck_of_the_Sea) enchantment), but harder to control brushing.
 
-![Excavation Dirt (Golden Helmet)](https://i.ibb.co/pxgX1ft/golden-helmet.png "Excavation Dirt (Golden Helmet)")
+![Excavation Dirt (Emerald)](https://user-images.githubusercontent.com/46106832/191838488-1c611660-0709-46d0-a5ed-64732033511d.png "Excavation Dirt (Emerald)")
 
 ### Brushing Excavation Blocks
 New block type — Excavation Block! Currently, there are two excavation blocks in the mod: Excavation Dirt and Gravel, since this is two blocks that was shown to be able to be brushed by Mojang.
 * They look similar to regular block (e.g., Dirt or Gravel), but have white stripes, and you can use a Copper Brush on them to start brushing layers off.
 * When fully brushed off, the block drops random loot (depending on excavation site you found it, and oxidation level of the brush)
 * While brushing, you should move your camera to stop the block from breaking. If you don't move enough, the block will break eventually, and you won't get anything. The more oxidized your brush is, the faster the block breaks, and therefore faster you need to move.
-	* Actually, Mojang showed this feature as completely opposite: if you move your screen too much, the block will break. You can enable this instead, if you prefer it more than mine.
-
-![Excavation Dirt (Breaking)](https://i.ibb.co/QNkhBWZ/breaking.png "Excavation Dirt (Breaking)")
+	* Actually, Mojang showed this feature as completely opposite: if you move your screen too much, the block will break. However I changed it so that it's more challenging and exciting (you can tweak the difficulty in mod's config).
 
 ### Ceramic Shards
 Ceramic Shards are items, that are dropped from brushing the Excavation Blocks. You can place them on the Raw Clay Pot, so that when hardened, this pot will remain placed shards and have pretty drawing on it.
@@ -47,27 +45,28 @@ This is block, that used to make (Hardened) Clay Pot. It is made of 5 [Clay Ball
 * You can put up to 8 shards on one raw clay pot: 4 on the sides and 4 on the corners.
 * If you light up a fire or a campfire underneath it, it will harden after some time and become a Clay Pot.
 
-![Hardening the Raw Clat Pot (1)](https://i.ibb.co/bsM6NgC/hardening-2.png "Hardening the Raw Clat Pot (1)")
+![Hardening the Raw Clat Pot (1)](https://user-images.githubusercontent.com/46106832/191838419-c52d8aa4-f76d-4e08-be2e-f28645527d40.png "Hardening the Raw Clat Pot (1)")
 
 ### Clay Pots (AKA Hardened Clay Pots)
 This is a container block, that have 9 item slots (shards contained separately). The player cannot interact with this container in any way, and should rather use a hopper or a dropper to insert items. However, after inserting, there's no way to get these items back without breaking the pot. Think about it like a [Piggy Bank](https://en.wikipedia.org/wiki/Piggy_bank).
 * Clay Pots are [Gravity-Affected Blocks](https://minecraft.fandom.com/wiki/Falling_Block), and preserve inserted items after landing. This makes it sorta-movable container block.
 * If a Clay Pot don't find a place to land (like [sand landed on a torch](https://minecraft.fandom.com/wiki/Falling_Block#Behavior)), or despawn over time, it will break and pop all items in it, without block itself.
 
-![Hardening the Raw Clat Pot (2)](https://i.ibb.co/k0K92yB/hardening-1.png "Hardening the Raw Clat Pot (2)")
+![Hardening the Raw Clat Pot (2)](https://user-images.githubusercontent.com/46106832/191838346-1d584fe8-beaa-4dbd-a612-eb84387c3fd6.png "Hardening the Raw Clat Pot (2)")
 
 You can dye them by using [Dye](https://minecraft.fandom.com/wiki/Dye) on an uncolored Clay Pot, and you can remove dye using [Water Bottle](https://minecraft.fandom.com/wiki/Water_Bottle) on it.
 
 ### Excavation Sites
-Excavation Sites are structures in where you can find Excavation Blocks. This is the only place where these blocks spawn naturally and where you can find them in Survival. Currently, there is only one type of Excavation Site - Ancient Ruins. You can find them in such biomes as Plains, Savanna, Desert, Forest, Birch Forest and Taiga.
+Excavation Sites are structures in where you can find Excavation Blocks. This is the only place where these blocks spawn naturally and where you can find them in Survival. You can also find a Clay Pots with loot in them here! These are all currently existing structures in the mod:
+1. Excavation Site Plains
+2. Excavation Site Snow
+3. Excavation Site Mangrove
+4. Excavation SIte Desert
+
+![Excavation Site Plains](https://user-images.githubusercontent.com/46106832/191838192-69d867ae-a32b-4ff9-88f5-9b29e5f8afe4.png "Excavation Site Plains")
 
 When you enter any Excavation Site, you get an advancement called "Forgotten Legacy".
 
-![Top of the Ancient Ruins](https://i.ibb.co/JnQxYSf/2021-12-26-01-40-09.png "Top of the Ancient Ruins")
-
-It consists of 2 parts: Surface and Main ruins. Surface ruins are the structure you see on the picture above. They are located on the ground and indicate an Ancient Ruins underneath. Main ruins are structures buried under the Surface ones, surrounded with Excavation Blocks. You can find a Clay Pots with loot in them!
-
 ## Unimplemented Features (yet)
 * Copper Brush enchantments
-* More ceramic shards
 * (Maybe) [The Copper Golem](https://www.youtube.com/watch?v=jVdBhu0KgJo)
