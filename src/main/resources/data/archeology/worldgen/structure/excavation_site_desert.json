@@ -1,7 +1,7 @@
 {
   "type": "archeology:excavation_site",
   "start_pool": "archeology:excavation_site/desert",
-  "size": 1,
+  "size": 2,
   "max_distance_from_center": 80,
   "biomes": "#archeology:has_structure/excavation_site_desert",
   "step": "surface_structures",
