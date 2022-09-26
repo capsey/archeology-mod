@@ -1,0 +1,69 @@
+name: Build and Publish
+on:
+  release:
+    types: [published]
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+      - name: Build with Gradle
+        id: build
+        run: chmod +x gradlew && ./gradlew build
+
+      - name: Find correct JAR
+        id: findjar
+        run: |
+          output="$(find build/libs/ ! -name "*-dev.jar" ! -name "*-sources.jar" -type f -printf "%f\n")"
+          echo "::set-output name=jarname::$output"
+
+      - name: Upload to the GitHub release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: build/libs/${{ steps.findjar.outputs.jarname }}
+          asset_name: ${{ steps.findjar.outputs.jarname }}
+          asset_content_type: application/java-archive
+
+      - name: Upload to CurseForge
+        uses: itsmeow/curseforge-upload@v3
+        with:
+          token: ${{ secrets.CURSEFORGE_API_TOKEN }}
+          game_endpoint: minecraft
+          project_id: 539957
+
+          display_name: Archeology Mod ${{ github.event.release.tag_name }} [Fabric]
+          file_path: build/libs/${{ steps.findjar.outputs.jarname }}
+
+          release_type: release
+          game_versions: Minecraft 1.19:1.19.1,Java 17,Fabric
+          changelog: ${{ github.event.release.body }}
+          relations: fabric-api:requiredDependency,modmenu:optionalDependency
+
+      - name: Upload to Modrinth
+        uses: RubixDev/modrinth-upload@v1.0.0
+        with:
+          token: ${{ secrets.MODRINTH_API_TOKEN }}
+          project_id: archeology
+
+          name: Archeology Mod ${{ github.event.release.tag_name }}
+          file_path: build/libs/${{ steps.findjar.outputs.jarname }}
+
+          version: ${{ github.event.release.tag_name }}
+          loaders: fabric,forge
+          featured: true
+
+          release_type: release
+          game_versions: 1.19:1.19.1
+          changelog: ${{ github.event.release.body }}
+          relations: fabric-api:required,modmenu:optional
