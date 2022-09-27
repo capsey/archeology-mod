@@ -54,7 +54,7 @@ jobs:
         uses: RubixDev/modrinth-upload@v1.0.0
         with:
           token: ${{ secrets.MODRINTH_API_TOKEN }}
-          project_id: archeology
+          project_id: LWE2KdIY
 
           name: Archeology Mod ${{ github.event.release.tag_name }}
           file_path: build/libs/${{ steps.findjar.outputs.jarname }}
@@ -66,4 +66,4 @@ jobs:
           release_type: release
           game_versions: 1.19:1.19.1
           changelog: ${{ github.event.release.body }}
-          relations: fabric-api:required,modmenu:optional
+          relations: P7dR8mSH:required,mOgUt4GM:optional
