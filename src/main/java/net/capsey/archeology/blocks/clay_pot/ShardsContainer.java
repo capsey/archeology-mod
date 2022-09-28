@@ -72,12 +72,11 @@ public abstract class ShardsContainer extends BlockEntity {
         return !ceramicShards.isEmpty();
     }
 
-    public void readFrom(ItemStack stack) {
+    public void readFrom(NbtCompound nbt) {
         ceramicShards.clear();
 
-        NbtCompound nbtCompound = stack.getSubNbt("BlockEntityTag");
-        if (nbtCompound != null) {
-            readShards(nbtCompound);
+        if (nbt != null) {
+            readShards(nbt);
         }
     }
 

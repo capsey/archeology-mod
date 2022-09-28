@@ -15,6 +15,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,12 +37,13 @@ public abstract class BuiltinModelItemRendererMixin {
             if (block instanceof AbstractClayPotBlock) {
                 BlockState blockState = block.getDefaultState();
                 BlockEntity blockEntity;
+                NbtCompound entityTag = stack.getSubNbt("BlockEntityTag");
 
                 if (blockState.isOf(Blocks.CLAY_POT)) {
-                    renderClayPot.readFrom(stack);
+                    renderClayPot.readFrom(entityTag);
                     blockEntity = renderClayPot;
                 } else if (blockState.isOf(Blocks.RAW_CLAY_POT)) {
-                    renderRawClayPot.readFrom(stack);
+                    renderRawClayPot.readFrom(entityTag);
                     blockEntity = renderRawClayPot;
                 } else {
                     return;

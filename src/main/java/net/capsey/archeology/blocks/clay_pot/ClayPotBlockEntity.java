@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContext;
@@ -14,9 +15,10 @@ import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.Nameable;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -26,12 +28,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-public class ClayPotBlockEntity extends ShardsContainer implements SidedInventory {
+public class ClayPotBlockEntity extends ShardsContainer implements SidedInventory, Nameable {
 
+    private static final String CUSTOM_NAME_TAG = "CustomName";
     private static final String LOOT_TABLE_TAG = "LootTable";
     private static final String COLOR_TAG = "Color";
     private static final int[] AVAILABLE_SLOTS = IntStream.range(0, 9).toArray();
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(9, ItemStack.EMPTY);
+    @Nullable private Text customName;
     @Nullable private DyeColor color;
     private Identifier lootTableId;
     private long lootTableSeed;
@@ -44,12 +48,6 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
 
     public ClayPotBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.CLAY_POT_BLOCK_ENTITY, pos, state);
-    }
-
-    public void setLootTable(Identifier id, long seed) {
-        items.clear();
-        this.lootTableId = id;
-        this.lootTableSeed = seed;
     }
 
     public @Nullable DyeColor getColor() {
@@ -65,6 +63,10 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
 
+        if (nbt.contains(CUSTOM_NAME_TAG, NbtElement.STRING_TYPE)) {
+            customName = Text.Serializer.fromJson(nbt.getString(CUSTOM_NAME_TAG));
+        }
+
         if (nbt.contains(LOOT_TABLE_TAG, NbtElement.STRING_TYPE)) {
             lootTableId = new Identifier(nbt.getString(LOOT_TABLE_TAG));
         } else {
@@ -79,6 +81,10 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
     @Override
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
+
+        if (customName != null) {
+            nbt.putString(CUSTOM_NAME_TAG, Text.Serializer.toJson(customName));
+        }
 
         if (lootTableId != null) {
             nbt.putString(LOOT_TABLE_TAG, lootTableId.toString());
@@ -100,7 +106,7 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
         }
     }
 
-    public NbtCompound writeClientData(NbtCompound tag) {
+    public NbtCompound writeVisualData(NbtCompound tag) {
         writeShards(tag);
         if (color != null) {
             tag.putInt(COLOR_TAG, color.getId());
@@ -108,11 +114,28 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
         return tag;
     }
 
-    @Override
-    public void readFrom(ItemStack stack) {
-        super.readFrom(stack);
+    public ItemStack getSilkTouchedStack(ItemStack stack) {
+        NbtCompound nbt = new NbtCompound();
+        writeVisualData(nbt);
 
-        NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
+        if (customName != null) {
+            stack.setCustomName(customName);
+        }
+
+        if (lootTableId != null) {
+            nbt.putString(LOOT_TABLE_TAG, lootTableId.toString());
+        } else {
+            Inventories.writeNbt(nbt, items);
+        }
+
+        BlockItem.setBlockEntityNbt(stack, BlockEntities.CLAY_POT_BLOCK_ENTITY, nbt);
+        return stack;
+    }
+
+    @Override
+    public void readFrom(NbtCompound nbt) {
+        super.readFrom(nbt);
+
         if (nbt != null && nbt.contains(COLOR_TAG, NbtElement.INT_TYPE)) {
             color = DyeColor.byId(nbt.getInt(COLOR_TAG));
         } else {
@@ -123,7 +146,16 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         NbtCompound tag = new NbtCompound();
-        return writeClientData(tag);
+        return writeVisualData(tag);
+    }
+
+    @Override
+    public Text getName() {
+        return customName != null ? customName : this.getCachedState().getBlock().getName();
+    }
+
+    public void setCustomName(@Nullable Text customName) {
+        this.customName = customName;
     }
 
     @Override
@@ -180,9 +212,9 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
         }
     }
 
-    public void onBreak() {
+    public DefaultedList<ItemStack> getItems() {
         generateItems();
-        ItemScatterer.spawn(world, pos, this);
+        return items;
     }
 
     @Override

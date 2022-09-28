@@ -6,6 +6,7 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LandingBlock;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -16,6 +17,9 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
+import net.minecraft.predicate.NumberRange;
+import net.minecraft.predicate.item.EnchantmentPredicate;
+import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
@@ -24,12 +28,14 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.event.GameEvent;
@@ -104,7 +110,7 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
     @Override
     public NbtCompound writeClientData(NbtCompound nbt, BlockEntity entity) {
         if (entity instanceof ClayPotBlockEntity potEntity) {
-            potEntity.writeClientData(nbt);
+            potEntity.writeVisualData(nbt);
         }
 
         return nbt;
@@ -147,24 +153,48 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.isOf(newState.getBlock())) {
             world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY).ifPresent(entity -> {
-                entity.onBreak();
+                ItemScatterer.spawn(world, pos, entity);
                 world.updateComparators(pos, this);
             });
-
             super.onStateReplaced(state, world, pos, newState, moved);
         }
     }
 
     @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        final ItemPredicate predicate = ItemPredicate.Builder.create().enchantment(
+                new EnchantmentPredicate(Enchantments.SILK_TOUCH, NumberRange.IntRange.ANY)
+        ).build();
+
+        if (!world.isClient && !player.isCreative() && world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)) {
+            if (predicate.test(player.getMainHandStack())) {
+                world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY).ifPresent(entity -> {
+                    ItemStack stack = entity.getSilkTouchedStack(new ItemStack(this));
+                    ItemEntity itemEntity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+                    itemEntity.setToDefaultPickupDelay();
+                    world.spawnEntity(itemEntity);
+                    entity.clear();
+                });
+            }
+        }
+
+        super.onBreak(world, pos, state, player);
+    }
+
+    @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY).ifPresent(blockEntity -> blockEntity.readFrom(stack));
+        world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY).ifPresent(entity -> {
+            NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
+            if (nbt != null) entity.readNbt(nbt);
+            if (stack.hasCustomName()) entity.setCustomName(stack.getName());
+        });
     }
 
     @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
         ItemStack stack = super.getPickStack(world, pos, state);
         world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY).ifPresent(entity -> {
-            NbtCompound nbt = entity.writeClientData(new NbtCompound());
+            NbtCompound nbt = entity.writeVisualData(new NbtCompound());
             BlockItem.setBlockEntityNbt(stack, BlockEntities.CLAY_POT_BLOCK_ENTITY, nbt);
         });
         return stack;
