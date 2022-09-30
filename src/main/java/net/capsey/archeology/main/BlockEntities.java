@@ -10,6 +10,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.registry.Registry;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 public class BlockEntities {
 
     public static BlockEntityType<ExcavationBlockEntity> EXCAVATION_BLOCK_ENTITY;
@@ -19,7 +22,7 @@ public class BlockEntities {
     public static void onInitialize() {
         EXCAVATION_BLOCK_ENTITY = register("excavation_block_entity", ExcavationBlockEntity::new, Blocks.EXCAVATION_DIRT, Blocks.EXCAVATION_GRAVEL);
         RAW_CLAY_POT_BLOCK_ENTITY = register("raw_clay_pot_block_entity", RawClayPotBlockEntity::new, Blocks.RAW_CLAY_POT);
-        CLAY_POT_BLOCK_ENTITY = register("clay_pot_block_entity", ClayPotBlockEntity::new, Blocks.CLAY_POT);
+        CLAY_POT_BLOCK_ENTITY = register("clay_pot_block_entity", ClayPotBlockEntity::new, Stream.concat(Arrays.stream(Blocks.CLAY_POT_DYED), Stream.of(Blocks.CLAY_POT)).toArray(Block[]::new));
     }
 
     private static <T extends BlockEntity> BlockEntityType<T> register(String id, FabricBlockEntityTypeBuilder.Factory<? extends T> factory, Block... blocks) {

@@ -4,6 +4,7 @@ import net.capsey.archeology.items.ceramic_shard.CeramicShard;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -29,7 +30,7 @@ public abstract class ShardsContainer extends BlockEntity {
         super(type, pos, state);
     }
 
-    protected void replaceShards(Map<Side, CeramicShard> shards) {
+    public void setShards(Map<Side, CeramicShard> shards) {
         ceramicShards.clear();
         ceramicShards.putAll(shards);
     }
@@ -72,15 +73,6 @@ public abstract class ShardsContainer extends BlockEntity {
         return !ceramicShards.isEmpty();
     }
 
-    public void readFrom(ItemStack stack) {
-        ceramicShards.clear();
-
-        NbtCompound nbtCompound = stack.getSubNbt("BlockEntityTag");
-        if (nbtCompound != null) {
-            readShards(nbtCompound);
-        }
-    }
-
     public void readShards(NbtCompound tag) {
         ceramicShards.clear();
 
@@ -100,7 +92,7 @@ public abstract class ShardsContainer extends BlockEntity {
         }
     }
 
-    public void writeShards(NbtCompound tag) {
+    public NbtCompound writeShards(NbtCompound tag) {
         if (hasShards()) {
             NbtList nbtList = new NbtList();
 
@@ -117,6 +109,8 @@ public abstract class ShardsContainer extends BlockEntity {
 
             tag.put(SHARDS_TAG, nbtList);
         }
+
+        return tag;
     }
 
     @Override

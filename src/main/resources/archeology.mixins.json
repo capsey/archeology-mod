@@ -12,11 +12,10 @@
     "client.MinecraftClientAccessor",
     "entity.FallingBlockEntityMixin",
     "entity.ServerPlayerEntityMixin",
-    "item.BoneMealItemMixin",
-    "item.PickaxeItemMixin"
+    "item.BlockItemMixin",
+    "item.BoneMealItemMixin"
   ],
   "client": [
-    "client.BuiltinModelItemRendererAccessor",
     "client.BuiltinModelItemRendererMixin",
     "client.FallingBlockEntityRendererMixin",
     "client.HeldItemRendererMixin",

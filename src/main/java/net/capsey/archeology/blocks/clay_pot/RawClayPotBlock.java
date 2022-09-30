@@ -143,7 +143,7 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
             entity.clearShards();
 
             world.setBlockState(pos, newState, Block.NOTIFY_LISTENERS);
-            world.addBlockEntity(new ClayPotBlockEntity(pos, newState, shards, null));
+            world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY).ifPresent(x -> x.setShards(shards));
         });
     }
 
