@@ -12,6 +12,7 @@
     "client.MinecraftClientAccessor",
     "entity.FallingBlockEntityMixin",
     "entity.ServerPlayerEntityMixin",
+    "item.BlockItemMixin",
     "item.BoneMealItemMixin"
   ],
   "client": [

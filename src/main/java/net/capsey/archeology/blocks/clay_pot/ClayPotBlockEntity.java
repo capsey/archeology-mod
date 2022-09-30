@@ -2,7 +2,9 @@ package net.capsey.archeology.blocks.clay_pot;
 
 import net.capsey.archeology.main.BlockEntities;
 import net.capsey.archeology.items.ceramic_shard.CeramicShard;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
@@ -184,7 +186,9 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
 
     @Override
     public boolean canInsert(int slot, ItemStack stack, Direction dir) {
-        return true;
+        // To prevent infinite stacking of Shulker in Pot in Shulker in Pot in Shulker...
+        Block block = Block.getBlockFromItem(stack.getItem());
+        return !(block instanceof ClayPotBlock || block instanceof ShulkerBoxBlock);
     }
 
     @Override
