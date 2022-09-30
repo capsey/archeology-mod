@@ -2,6 +2,8 @@ package net.capsey.archeology.blocks.clay_pot;
 
 import net.capsey.archeology.main.BlockEntities;
 import net.capsey.archeology.blocks.FallingBlockWithEntity;
+import net.capsey.archeology.main.Blocks;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LandingBlock;
@@ -27,6 +29,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
@@ -47,8 +50,21 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
 
     public static final BlockSoundGroup SOUND_GROUP = new BlockSoundGroup(1.0F, 1.0F, SoundEvents.BLOCK_GLASS_BREAK, SoundEvents.BLOCK_STONE_STEP, SoundEvents.BLOCK_STONE_PLACE, SoundEvents.BLOCK_STONE_HIT, SoundEvents.BLOCK_STONE_FALL);
 
-    public ClayPotBlock(Settings settings) {
+    @Nullable private final DyeColor color;
+
+    public ClayPotBlock(@Nullable DyeColor color, Settings settings) {
         super(settings);
+        this.color = color;
+    }
+
+    public @Nullable DyeColor getColor() {
+        return color;
+    }
+
+    public static void setColor(@Nullable DyeColor color, World world, BlockPos pos, BlockState state) {
+        Block block = color == null ? Blocks.CLAY_POT : Blocks.CLAY_POT_DYED[color.getId()];
+        BlockState newState = block.getDefaultState().with(FACING, state.get(FACING));
+        world.setBlockState(pos, newState);
     }
 
     @Override
@@ -58,16 +74,16 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
         if (entity.isPresent()) {
             ItemStack stack = player.getStackInHand(hand);
 
-            if (entity.get().getColor() == null && stack.getItem() instanceof DyeItem dyeStack) {
+            if (color == null && stack.getItem() instanceof DyeItem dyeStack) {
                 player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
-                entity.get().setColor(dyeStack.getColor());
+                setColor(dyeStack.getColor(), world, pos, state);
 
                 if (!player.isCreative()) {
                     stack.decrement(1);
                 }
 
                 return ActionResult.success(world.isClient);
-            } else if (entity.get().getColor() != null && stack.isOf(Items.POTION) && PotionUtil.getPotion(stack) == Potions.WATER) {
+            } else if (color != null && stack.isOf(Items.POTION) && PotionUtil.getPotion(stack) == Potions.WATER) {
                 player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
                 world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.PLAYERS, 1.0f, 1.0f);
                 player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
@@ -82,7 +98,7 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
 
                 world.playSound(null, pos, SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
                 world.emitGameEvent(null, GameEvent.FLUID_PLACE, pos);
-                entity.get().setColor(null);
+                setColor(null, world, pos, state);
 
                 return ActionResult.success(world.isClient);
             }
@@ -110,7 +126,7 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
     @Override
     public NbtCompound writeClientData(NbtCompound nbt, BlockEntity entity) {
         if (entity instanceof ClayPotBlockEntity potEntity) {
-            potEntity.writeVisualData(nbt);
+            potEntity.writeShards(nbt);
         }
 
         return nbt;
@@ -169,7 +185,7 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
         if (!world.isClient && !player.isCreative() && world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)) {
             if (predicate.test(player.getMainHandStack())) {
                 world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY).ifPresent(entity -> {
-                    ItemStack stack = entity.getSilkTouchedStack(new ItemStack(this));
+                    ItemStack stack = entity.writeStackNbt(new ItemStack(this));
                     ItemEntity itemEntity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
                     itemEntity.setToDefaultPickupDelay();
                     world.spawnEntity(itemEntity);
@@ -184,7 +200,7 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY).ifPresent(entity -> {
-            NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
+            NbtCompound nbt = stack.getSubNbt(BlockItem.BLOCK_STATE_TAG_KEY);
             if (nbt != null) entity.readNbt(nbt);
             if (stack.hasCustomName()) entity.setCustomName(stack.getName());
         });
@@ -194,7 +210,8 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
         ItemStack stack = super.getPickStack(world, pos, state);
         world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY).ifPresent(entity -> {
-            NbtCompound nbt = entity.writeVisualData(new NbtCompound());
+            NbtCompound nbt = new NbtCompound();
+            entity.writeShards(nbt);
             BlockItem.setBlockEntityNbt(stack, BlockEntities.CLAY_POT_BLOCK_ENTITY, nbt);
         });
         return stack;

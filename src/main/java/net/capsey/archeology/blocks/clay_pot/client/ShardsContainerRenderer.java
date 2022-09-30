@@ -21,7 +21,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,18 +30,17 @@ public abstract class ShardsContainerRenderer<T extends ShardsContainer> impleme
     public static final Identifier SHARDS_ATLAS_TEXTURE = new Identifier("textures/atlas/shards.png");
     public static final SpriteIdentifier RAW_SHARD = new SpriteIdentifier(SHARDS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MOD_ID, "entity/shard"));
     public static final Map<Identifier, SpriteIdentifier> SHARD_SPRITE_IDS = new HashMap<>();
-    private static final float zOffset = 0.0001F;
 
-    private final ModelPart straight;
-    private final ModelPart[] corners = new ModelPart[2];
-    private final boolean raw;
+    protected final ModelPart straight;
+    protected final ModelPart[] corners = new ModelPart[2];
 
-    protected ShardsContainerRenderer(BlockEntityRendererFactory.Context ctx, boolean raw) {
+    protected static final float zOffset = 0.0001F;
+
+    protected ShardsContainerRenderer(BlockEntityRendererFactory.Context ctx) {
         ModelPart modelPart = ctx.getLayerModelPart(ArcheologyClientMod.CLAY_POT_SHARDS_MODEL_LAYER);
         straight = modelPart.getChild("straight");
         corners[0] = modelPart.getChild("corner-0");
         corners[1] = modelPart.getChild("corner-1");
-        this.raw = raw;
 
         Vec3f scale = new Vec3f(-2.0F - zOffset, -2.0F, zOffset);
         straight.scale(scale);
@@ -84,41 +82,21 @@ public abstract class ShardsContainerRenderer<T extends ShardsContainer> impleme
         }
     }
 
-    private void renderShard(CeramicShard shard, Side side, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        final Vec3f posRawScale = new Vec3f(-zOffset / 2, 0.0F, -zOffset / 2);
-        final Vec3f negRawScale = new Vec3f(zOffset / 2, 0.0F, zOffset / 2);
-
+    protected void renderShard(CeramicShard shard, Side side, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         SpriteIdentifier spriteIdentifier = SHARD_SPRITE_IDS.get(shard.shardId());
         VertexConsumer spriteConsumer = spriteIdentifier.getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
 
         if (side.straight) {
             straight.setAngles(0.0F, side.id * MathHelper.PI / 4, 0.0F);
             straight.render(matrices, spriteConsumer, light, overlay);
-
-            if (raw) {
-                spriteConsumer = RAW_SHARD.getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
-
-                straight.scale(posRawScale);
-                straight.render(matrices, spriteConsumer, light, overlay);
-                straight.scale(negRawScale);
-            }
         } else {
-            for (ModelPart corner : corners) {
-                corner.setAngles(0.0F, (side.id - 1) * MathHelper.PI / 4, 0.0F);
-                corner.render(matrices, spriteConsumer, light, overlay);
-            }
+            float yaw = (side.id - 1) * MathHelper.PI / 4;
 
-            if (raw) {
-                spriteConsumer = RAW_SHARD.getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
+            corners[0].setAngles(0.0F, yaw, 0.0F);
+            corners[0].render(matrices, spriteConsumer, light, overlay);
 
-                corners[0].scale(posRawScale);
-                corners[0].render(matrices, spriteConsumer, light, overlay);
-                corners[0].scale(negRawScale);
-
-                corners[1].scale(negRawScale);
-                corners[1].render(matrices, spriteConsumer, light, overlay);
-                corners[1].scale(posRawScale);
-            }
+            corners[1].setAngles(0.0F, yaw, 0.0F);
+            corners[1].render(matrices, spriteConsumer, light, overlay);
         }
     }
 

@@ -15,7 +15,6 @@
     "item.BoneMealItemMixin"
   ],
   "client": [
-    "client.BuiltinModelItemRendererAccessor",
     "client.BuiltinModelItemRendererMixin",
     "client.FallingBlockEntityRendererMixin",
     "client.HeldItemRendererMixin",

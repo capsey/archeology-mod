@@ -32,14 +32,14 @@ public abstract class FallingBlockEntityRendererMixin extends EntityRenderer<Fal
     public void render(FallingBlockEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo info) {
         BlockState blockState = entity.getBlockState();
 
-        if (blockState.isOf(Blocks.CLAY_POT)) {
+        if (blockState.isIn(Blocks.CLAY_POTS_TAG)) {
             World world = entity.getEntityWorld();
 
             if (blockState != world.getBlockState(entity.getBlockPos())) {
                 matrices.push();
                 matrices.translate(-0.5D, 0.0D, -0.5D);
 
-                renderClayPot.readClientData(((FallingBlockEntityMixinInterface) entity).getClientBlockEntityData());
+                renderClayPot.readShards(((FallingBlockEntityMixinInterface) entity).getClientBlockEntityData());
                 renderClayPot.setCachedState(entity.getBlockState());
                 MinecraftClient.getInstance().getBlockEntityRenderDispatcher().renderEntity(renderClayPot, matrices, vertexConsumers, light, OverlayTexture.DEFAULT_UV);
 

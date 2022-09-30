@@ -1,7 +1,7 @@
 package net.capsey.archeology.mixin.client;
 
-import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.blocks.clay_pot.client.ClayPotBlockEntityRenderer;
+import net.capsey.archeology.blocks.clay_pot.client.RawClayPotBlockEntityRenderer;
 import net.capsey.archeology.blocks.clay_pot.client.ShardsContainerRenderer;
 import net.capsey.archeology.items.ceramic_shard.CeramicShardRegistry;
 import net.minecraft.client.render.TexturedRenderLayers;
@@ -20,14 +20,12 @@ import java.util.function.Consumer;
 @Mixin(TexturedRenderLayers.class)
 public class TexturedRenderLayersMixin {
 
-
-
     @Inject(method = "addDefaultTextures(Ljava/util/function/Consumer;)V", at = @At("HEAD"))
     private static void addDefaultTextures(Consumer<SpriteIdentifier> adder, CallbackInfo ci) {
         // Adding Clay Pots model textures
         adder.accept(ClayPotBlockEntityRenderer.MODEL_TEXTURE);
-        Arrays.stream(ClayPotBlockEntityRenderer.MODEL_COLORED_TEXTURES).forEach(adder);
-        adder.accept(ClayPotBlockEntityRenderer.RAW_MODEL_TEXTURE);
+        Arrays.stream(ClayPotBlockEntityRenderer.MODEL_TEXTURE_DYED).forEach(adder);
+        adder.accept(RawClayPotBlockEntityRenderer.MODEL_TEXTURE);
 
         // Adding raw shard model texture
         adder.accept(ShardsContainerRenderer.RAW_SHARD);
