@@ -77,8 +77,7 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
     }
 
     public ItemStack writeStackNbt(ItemStack stack) {
-        NbtCompound nbt = new NbtCompound();
-        writeShards(nbt);
+        NbtCompound nbt = writeShards(new NbtCompound());
 
         if (customName != null) {
             stack.setCustomName(customName);
@@ -96,9 +95,7 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
 
     @Override
     public NbtCompound toInitialChunkDataNbt() {
-        NbtCompound tag = new NbtCompound();
-        writeShards(tag);
-        return tag;
+        return writeShards(new NbtCompound());
     }
 
     @Override
@@ -171,7 +168,7 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
 
     @Override
     public void clear() {
-        generateItems();
+        lootTableId = null;
         items.clear();
     }
 

@@ -64,7 +64,12 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
     public static void setColor(@Nullable DyeColor color, World world, BlockPos pos, BlockState state) {
         Block block = color == null ? Blocks.CLAY_POT : Blocks.CLAY_POT_DYED[color.getId()];
         BlockState newState = block.getDefaultState().with(FACING, state.get(FACING));
+        NbtCompound data = new NbtCompound();
+
+        world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY).ifPresent(x -> x.writeNbt(data));
+        world.removeBlockEntity(pos);
         world.setBlockState(pos, newState);
+        world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY).ifPresent(x -> x.readNbt(data));
     }
 
     @Override
@@ -182,16 +187,18 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
                 new EnchantmentPredicate(Enchantments.SILK_TOUCH, NumberRange.IntRange.ANY)
         ).build();
 
-        if (!world.isClient && !player.isCreative() && world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)) {
-            if (predicate.test(player.getMainHandStack())) {
-                world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY).ifPresent(entity -> {
-                    ItemStack stack = entity.writeStackNbt(new ItemStack(this));
-                    ItemEntity itemEntity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-                    itemEntity.setToDefaultPickupDelay();
-                    world.spawnEntity(itemEntity);
+        if (!world.isClient && world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)) {
+            world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY).ifPresent(entity -> {
+                if (player.isCreative() || predicate.test(player.getMainHandStack())) {
+                    if (!player.isCreative() || entity.hasShards() || !entity.isEmpty()) {
+                        ItemStack stack = entity.writeStackNbt(new ItemStack(this));
+                        ItemEntity itemEntity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+                        itemEntity.setToDefaultPickupDelay();
+                        world.spawnEntity(itemEntity);
+                    }
                     entity.clear();
-                });
-            }
+                }
+            });
         }
 
         super.onBreak(world, pos, state, player);
@@ -200,8 +207,6 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY).ifPresent(entity -> {
-            NbtCompound nbt = stack.getSubNbt(BlockItem.BLOCK_STATE_TAG_KEY);
-            if (nbt != null) entity.readNbt(nbt);
             if (stack.hasCustomName()) entity.setCustomName(stack.getName());
         });
     }
@@ -210,8 +215,7 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
         ItemStack stack = super.getPickStack(world, pos, state);
         world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY).ifPresent(entity -> {
-            NbtCompound nbt = new NbtCompound();
-            entity.writeShards(nbt);
+            NbtCompound nbt = entity.writeShards(new NbtCompound());
             BlockItem.setBlockEntityNbt(stack, BlockEntities.CLAY_POT_BLOCK_ENTITY, nbt);
         });
         return stack;

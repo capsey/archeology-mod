@@ -57,7 +57,7 @@ public abstract class BuiltinModelItemRendererMixin {
             return;
         }
 
-        blockEntity.readFrom(stack);
+        blockEntity.readShards(BlockItem.getBlockEntityNbt(stack));
         blockEntityRenderDispatcher.renderEntity(blockEntity, matrices, vertexConsumers, light, overlay);
         info.cancel();
     }

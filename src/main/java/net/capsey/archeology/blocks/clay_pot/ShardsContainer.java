@@ -73,15 +73,6 @@ public abstract class ShardsContainer extends BlockEntity {
         return !ceramicShards.isEmpty();
     }
 
-    public void readFrom(ItemStack stack) {
-        ceramicShards.clear();
-        NbtCompound nbt = stack.getSubNbt(BlockItem.BLOCK_STATE_TAG_KEY);
-
-        if (nbt != null) {
-            readShards(nbt);
-        }
-    }
-
     public void readShards(NbtCompound tag) {
         ceramicShards.clear();
 
@@ -101,7 +92,7 @@ public abstract class ShardsContainer extends BlockEntity {
         }
     }
 
-    public void writeShards(NbtCompound tag) {
+    public NbtCompound writeShards(NbtCompound tag) {
         if (hasShards()) {
             NbtList nbtList = new NbtList();
 
@@ -118,6 +109,8 @@ public abstract class ShardsContainer extends BlockEntity {
 
             tag.put(SHARDS_TAG, nbtList);
         }
+
+        return tag;
     }
 
     @Override
