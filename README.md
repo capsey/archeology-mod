@@ -7,7 +7,7 @@ Archeology Mod is a [Fabric](https://fabricmc.net/) mod for [Minecraft](https://
 [![CurseForge Versions Badge](https://cf.way2muchnoise.eu/versions/539957.svg "CurseForge Versions Badge")](https://www.curseforge.com/minecraft/mc-mods/archeology)
 
 [![Modrinth Downloads Badge](https://modrinth-utils.vercel.app/api/badge/downloads?id=LWE2KdIY "Modrinth Downloads Badge")](https://modrinth.com/mod/archeology)
-[![Modrinth Versions Badge](https://modrinth-utils.vercel.app/api/badge/versions?id=LWE2KdIY&logo=true "Modrinth Versions Badge")](https://modrinth.com/mod/archeology)
+[![Modrinth Versions Badge](https://modrinth-utils.vercel.app/api/badge/versions?id=LWE2KdIY&last=true "Modrinth Versions Badge")](https://modrinth.com/mod/archeology)
 
 ![Fancy screenie](https://user-images.githubusercontent.com/46106832/191838583-82b8afc4-5e5f-4369-96aa-b307a4f9d38a.png "Fancy screenie")
 
@@ -33,31 +33,33 @@ Copper Brush is a new tool, used for excavating special blocks for getting loot.
 ![Excavation Dirt (Emerald)](https://user-images.githubusercontent.com/46106832/191838488-1c611660-0709-46d0-a5ed-64732033511d.png "Excavation Dirt (Emerald)")
 
 ### Brushing Excavation Blocks
-New block type — Excavation Block! Currently, there are two excavation blocks in the mod: Excavation Dirt and Gravel, since this is two blocks that was shown to be able to be brushed by Mojang.
+New block type — Excavation Block! Currently, there are two excavation blocks in the mod: Excavation Dirt and Gravel, since these are two blocks that were shown to be brushable by Mojang.
 * They look similar to regular block (e.g., Dirt or Gravel), but have white stripes, and you can use a Copper Brush on them to start brushing layers off.
 * When fully brushed off, the block drops random loot (depending on excavation site you found it, and oxidation level of the brush)
 * While brushing, you should move your camera to stop the block from breaking. If you don't move enough, the block will break eventually, and you won't get anything. The more oxidized your brush is, the faster the block breaks, and therefore faster you need to move.
-	* Actually, Mojang showed this feature as completely opposite: if you move your screen too much, the block will break. However I changed it so that it's more challenging and exciting (you can tweak the difficulty in mod's config).
+	* Actually, Mojang showed this feature other way around: if you move your screen too much, the block will break. However I changed it so that it's more challenging and exciting (you can tweak the difficulty in mod's config).
 
 ### Ceramic Shards
-Ceramic Shards are items, that are dropped from brushing the Excavation Blocks. You can place them on the Raw Clay Pot, so that when hardened, this pot will remain placed shards and have pretty drawing on it.
+Ceramic Shards are items, that are dropped from brushing the Excavation Blocks. You can place them on the Raw Clay Pot, so that when hardened, this pot will retain placed shards and have pretty drawing on it.
 * Different shards have different drawings on them, and the drawing of the shard depends on the Excavation Site you found it.
 
 ### Raw Clay Pots
-This is block, that used to make (Hardened) Clay Pot. It is made of 5 [Clay Balls](https://minecraft.fandom.com/wiki/Clay_Ball). When broken, it drops 2-4 clay balls (and shards, if had). The fastest tool is shovel.
+This is a block that used to make (Hardened) Clay Pot. It is made of 5 [Clay Balls](https://minecraft.fandom.com/wiki/Clay_Ball). When broken, it drops 2-4 clay balls (or block itself if mined using [Silk Touch](https://minecraft.fandom.com/wiki/Silk_Touch) enchantment), and shards, if there were any. The fastest tool is shovel.
 * You can put up to 8 shards on one raw clay pot: 4 on the sides and 4 on the corners.
 * If you light up a fire or a campfire underneath it, it will harden after some time and become a Clay Pot.
 
 ![Hardening the Raw Clat Pot (1)](https://user-images.githubusercontent.com/46106832/191838419-c52d8aa4-f76d-4e08-be2e-f28645527d40.png "Hardening the Raw Clat Pot (1)")
 
 ### Clay Pots (AKA Hardened Clay Pots)
-This is a container block, that have 9 item slots (shards contained separately). The player cannot interact with this container in any way, and should rather use a hopper or a dropper to insert items. However, after inserting, there's no way to get these items back without breaking the pot. Think about it like a [Piggy Bank](https://en.wikipedia.org/wiki/Piggy_bank).
-* Clay Pots are [Gravity-Affected Blocks](https://minecraft.fandom.com/wiki/Falling_Block), and preserve inserted items after landing. This makes it sorta-movable container block.
-* If a Clay Pot don't find a place to land (like [sand landed on a torch](https://minecraft.fandom.com/wiki/Falling_Block#Behavior)), or despawn over time, it will break and pop all items in it, without block itself.
+This is a container block, that has 9 item slots (not counting shards). The player cannot insert items into it directly, but should rather use a hopper or a dropper to insert items. However, after inserting, there is no way to get these items back without breaking the pot. Think about it like a [Piggy Bank](https://en.wikipedia.org/wiki/Piggy_bank).
+* [Shulker Boxes](https://minecraft.fandom.com/wiki/Shulker_Box) or other Clay Pots cannot be inserted into a Clay Pot.
+* If you break the pot with [Silk Touch](https://minecraft.fandom.com/wiki/Silk_Touch) enchantment, you will get the Clay Pot with all contents. It could be thought of like early-game [Shulker Box](https://minecraft.fandom.com/wiki/Shulker_Box) with less space and no reusability.
+* Clay Pots are [Gravity-Affected Blocks](https://minecraft.fandom.com/wiki/Falling_Block), and preserve inserted items and shards after landing.
+	* If a Clay Pot doesn't find a place to land (like [sand landed on a torch](https://minecraft.fandom.com/wiki/Falling_Block#Behavior)), or despawns, it will break and pop all items in it.
 
 ![Hardening the Raw Clat Pot (2)](https://user-images.githubusercontent.com/46106832/191838346-1d584fe8-beaa-4dbd-a612-eb84387c3fd6.png "Hardening the Raw Clat Pot (2)")
 
-You can dye them by using [Dye](https://minecraft.fandom.com/wiki/Dye) on an uncolored Clay Pot, and you can remove dye using [Water Bottle](https://minecraft.fandom.com/wiki/Water_Bottle) on it.
+You can dye them by using [Dye](https://minecraft.fandom.com/wiki/Dye) on an uncolored Clay Pot, and you can remove dye using [Water Bottle](https://minecraft.fandom.com/wiki/Water_Bottle) on already dyed ones.
 
 ### Excavation Sites
 Excavation Sites are structures in where you can find Excavation Blocks. This is the only place where these blocks spawn naturally and where you can find them in Survival. You can also find a Clay Pots with loot in them here! These are all currently existing structures in the mod:
