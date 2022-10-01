@@ -10,4 +10,6 @@ public class ModConfig extends MidnightConfig {
     @Client @Entry public static float brushingBreakingSpeed = 3.0F;
     @Client @Entry public static float brushingRepairSpeed = 1.0F;
 
+    @Entry(min=0.0F, max=1.0F) public static float brushingLayerChance = 0.35F;
+
 }

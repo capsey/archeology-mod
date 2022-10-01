@@ -1,6 +1,5 @@
 package net.capsey.archeology.items;
 
-import net.capsey.archeology.items.ceramic_shard.CeramicShard;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

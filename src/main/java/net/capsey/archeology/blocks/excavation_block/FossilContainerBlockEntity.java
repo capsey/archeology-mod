@@ -27,7 +27,6 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
 
     private static final String LOOT_TABLE_TAG = "LootTable";
     private static final String LOOT_TAG = "Loot";
-    private static final float[] LUCK_POINTS = {0.0F, 1.0F, 2.0F, 3.0F};
     protected Identifier lootTableId;
     protected final ArrayList<ItemStack> loot = new ArrayList<>();
 
@@ -37,7 +36,7 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
     }
 
     private static float getLuckPoints(ItemStack stack) {
-        return LUCK_POINTS[CopperBrushItem.getOxidizationIndex(stack)];
+        return stack.getItem() instanceof CopperBrushItem brushItem ? brushItem.getLuckPoints() : 0;
     }
 
     @Override

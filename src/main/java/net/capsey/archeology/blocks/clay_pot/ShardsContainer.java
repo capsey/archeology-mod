@@ -1,11 +1,9 @@
 package net.capsey.archeology.blocks.clay_pot;
 
-import net.capsey.archeology.items.ceramic_shard.CeramicShard;
+import net.capsey.archeology.items.CeramicShard;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;

@@ -1,7 +1,6 @@
-package net.capsey.archeology.items.ceramic_shard;
+package net.capsey.archeology.items;
 
 import net.capsey.archeology.ArcheologyMod;
-import net.capsey.archeology.items.CeramicShardItem;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;

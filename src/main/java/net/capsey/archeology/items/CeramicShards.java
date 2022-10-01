@@ -1,4 +1,4 @@
-package net.capsey.archeology.items.ceramic_shard;
+package net.capsey.archeology.items;
 
 import net.capsey.archeology.ArcheologyMod;
 import net.minecraft.item.Item;

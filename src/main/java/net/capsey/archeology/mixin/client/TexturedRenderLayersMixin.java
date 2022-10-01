@@ -3,7 +3,7 @@ package net.capsey.archeology.mixin.client;
 import net.capsey.archeology.blocks.clay_pot.client.ClayPotBlockEntityRenderer;
 import net.capsey.archeology.blocks.clay_pot.client.RawClayPotBlockEntityRenderer;
 import net.capsey.archeology.blocks.clay_pot.client.ShardsContainerRenderer;
-import net.capsey.archeology.items.ceramic_shard.CeramicShardRegistry;
+import net.capsey.archeology.items.CeramicShardRegistry;
 import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
