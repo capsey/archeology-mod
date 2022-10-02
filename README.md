@@ -27,17 +27,17 @@ Some of the features that I added wasn't announced by Mojang and was made up by 
 
 ### Copper Brush (AKA Archeology Brush)
 Copper Brush is a new tool, used for excavating special blocks for getting loot. It is made using a [Copper Ingot](https://minecraft.fandom.com/wiki/Copper_Ingot) and a [Feather](https://minecraft.fandom.com/wiki/Feather).
-* Less durability left on a brush, more oxidized it gets, until it breaks.
-* More oxidized brush is, rarer loot you get (similar to [Luck of the Sea](https://minecraft.fandom.com/wiki/Luck_of_the_Sea) enchantment), but harder to control brushing.
+* More you use the brush, more oxidized it gets.
+* More oxidized brush is, rarer loot you get (similar to [Luck of the Sea](https://minecraft.fandom.com/wiki/Luck_of_the_Sea) enchantment), but harder it is to not break brushing block.
 
 ![Excavation Dirt (Emerald)](https://user-images.githubusercontent.com/46106832/191838488-1c611660-0709-46d0-a5ed-64732033511d.png "Excavation Dirt (Emerald)")
 
-### Brushing Excavation Blocks
-New block type — Excavation Block! Currently, there are two excavation blocks in the mod: Excavation Dirt and Gravel, since these are two blocks that were shown to be brushable by Mojang.
+### Excavation Blocks
+New block type — Excavation Block! Currently, there are four excavation blocks in the mod: Excavation Dirt, Gravel, Sand and Red Sand.
 * They look similar to regular block (e.g., Dirt or Gravel), but have white stripes, and you can use a Copper Brush on them to start brushing layers off.
 * When fully brushed off, the block drops random loot (depending on excavation site you found it, and oxidation level of the brush)
-* While brushing, you should move your camera to stop the block from breaking. If you don't move enough, the block will break eventually, and you won't get anything. The more oxidized your brush is, the faster the block breaks, and therefore faster you need to move.
-	* Actually, Mojang showed this feature other way around: if you move your screen too much, the block will break. However I changed it so that it's more challenging and exciting (you can tweak the difficulty in mod's config).
+* While brushing, you should move your mouse like you are brushing to stop the block from breaking. If you don't move the mouse enough, the block will eventually break, and you won't get anything. The more oxidized your brush is, the faster the block breaks, and therefore faster you need to move the mouse.
+	* Actually, Mojang showed this feature other way around: if you are not careful enough, the block will break. However, I changed it so that it's more challenging and exciting (you can tweak the difficulty in the mod's config).
 
 ### Ceramic Shards
 Ceramic Shards are items, that are dropped from brushing the Excavation Blocks. You can place them on the Raw Clay Pot, so that when hardened, this pot will retain placed shards and have pretty drawing on it.
