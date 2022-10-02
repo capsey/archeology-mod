@@ -4,10 +4,8 @@ import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.main.BlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ExperienceOrbEntity;
-import net.minecraft.loot.LootTables;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
@@ -16,7 +14,7 @@ import net.minecraft.world.GameRules;
 public class ExcavationBlockEntity extends FossilContainerBlockEntity {
 
     public ExcavationBlockEntity(BlockPos pos, BlockState state) {
-        super(BlockEntities.EXCAVATION_BLOCK_ENTITY, pos, state, LootTables.EMPTY);
+        super(BlockEntities.EXCAVATION_BLOCK_ENTITY, pos, state, null);
     }
     
     @Override

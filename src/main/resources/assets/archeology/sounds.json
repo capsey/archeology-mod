@@ -7,5 +7,15 @@
       "archeology:item/copper_brush/brushing3",
       "archeology:item/copper_brush/brushing4"
     ]
+  },
+  "block.excavation.shattering": {
+    "subtitle": "subtitles.archeology.block.excavation.shattering",
+    "sounds": [
+      {
+        "name": "minecraft:block.glass.break",
+        "type": "event",
+        "pitch": 0.8
+      }
+    ]
   }
 }

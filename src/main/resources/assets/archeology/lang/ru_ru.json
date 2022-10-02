@@ -66,5 +66,6 @@
   "item.archeology.temple_shard.desc": "Мистический символ",
   "itemGroup.archeology.shards": "Керамические осколки",
   "stat.archeology.excavated": "Успешно очищенных блоков",
-  "subtitles.archeology.item.copper_brush.brushing": "Блок раскапывается"
+  "subtitles.archeology.item.copper_brush.brushing": "Блок раскапывается",
+  "subtitles.archeology.block.excavation.shattering": "Предмет разбился"
 }

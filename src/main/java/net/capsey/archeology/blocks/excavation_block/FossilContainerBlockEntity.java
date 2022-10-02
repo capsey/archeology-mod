@@ -19,6 +19,9 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.GameRules;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,33 +30,33 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
 
     private static final String LOOT_TABLE_TAG = "LootTable";
     private static final String LOOT_TAG = "Loot";
-    protected Identifier lootTableId;
+    @Nullable protected Identifier lootTableId;
     protected final ArrayList<ItemStack> loot = new ArrayList<>();
 
-    protected FossilContainerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, Identifier lootTable) {
+    protected FossilContainerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, @Nullable Identifier lootTable) {
         super(type, pos, state);
         lootTableId = lootTable;
     }
 
-    private static float getLuckPoints(ItemStack stack) {
+    private static float getLuckPoints(@NotNull ItemStack stack) {
         return stack.getItem() instanceof CopperBrushItem brushItem ? brushItem.getLuckPoints() : 0;
     }
 
     @Override
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
+        loot.clear();
 
         if (tag.contains(LOOT_TABLE_TAG, NbtElement.STRING_TYPE)) {
             lootTableId = new Identifier(tag.getString(LOOT_TABLE_TAG));
         }
 
         if (tag.contains(LOOT_TAG)) {
-            loot.clear();
-            NbtList nbtList = tag.getList("Loot", 10);
+            NbtList itemsList = tag.getList(LOOT_TAG, NbtElement.COMPOUND_TYPE);
 
-            for (int i = 0; i < nbtList.size(); i++) {
-                NbtCompound nbtCompound = nbtList.getCompound(i);
-                loot.add(ItemStack.fromNbt(nbtCompound));
+            for (int i = 0; i < itemsList.size(); i++) {
+                NbtCompound stackTag = itemsList.getCompound(i);
+                loot.add(ItemStack.fromNbt(stackTag));
             }
         }
     }
@@ -61,7 +64,20 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
     @Override
     protected void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
-        tag.putString(LOOT_TABLE_TAG, lootTableId.toString());
+
+        if (lootTableId != null) {
+            tag.putString(LOOT_TABLE_TAG, lootTableId.toString());
+        }
+
+        if (hasLoot()) {
+            NbtList itemsList = new NbtList();
+
+            for (ItemStack stack : loot) {
+                itemsList.add(stack.writeNbt(new NbtCompound()));
+            }
+
+            tag.put(LOOT_TAG, itemsList);
+        }
     }
 
     @Override
@@ -71,20 +87,14 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
 
     @Override
     public NbtCompound toInitialChunkDataNbt() {
-        NbtCompound tag = createNbt();
+        NbtCompound tag = new NbtCompound();
+        NbtList itemsList = new NbtList();
 
-        if (!loot.isEmpty()) {
-            NbtList nbtList = new NbtList();
-
-            for (ItemStack stack : loot) {
-                NbtCompound nbtCompound = new NbtCompound();
-                stack.writeNbt(nbtCompound);
-                nbtList.add(nbtCompound);
-            }
-
-            tag.put("Loot", nbtList);
+        if (hasLoot()) {
+            itemsList.add(getDisplayLootItem().writeNbt(new NbtCompound()));
         }
 
+        tag.put(LOOT_TAG, itemsList);
         return tag;
     }
 
@@ -93,26 +103,33 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
      * Check {@link net.minecraft.world.World#isClient world.isClient} before calling!
      */
     public void generateLoot(PlayerEntity player, ItemStack stack) {
-        LootContext.Builder builder = (new LootContext.Builder((ServerWorld) world))
-                .parameter(LootContextParameters.TOOL, stack)
-                .parameter(LootContextParameters.THIS_ENTITY, player)
-                .parameter(LootContextParameters.BLOCK_ENTITY, this)
-                .random(world.getRandom()).luck(player.getLuck() + getLuckPoints(stack));
+        if (lootTableId != null) {
+            LootContext.Builder builder = (new LootContext.Builder((ServerWorld) world))
+                    .parameter(LootContextParameters.TOOL, stack)
+                    .parameter(LootContextParameters.THIS_ENTITY, player)
+                    .parameter(LootContextParameters.BLOCK_ENTITY, this)
+                    .random(world.getRandom()).luck(player.getLuck() + getLuckPoints(stack));
 
-        LootTable lootTable = world.getServer().getLootManager().getTable(lootTableId);
-        List<ItemStack> list = lootTable.generateLoot(builder.build(ArcheologyMod.EXCAVATION_LOOT_CONTEXT_TYPE));
+            LootTable lootTable = world.getServer().getLootManager().getTable(lootTableId);
+            List<ItemStack> list = lootTable.generateLoot(builder.build(ArcheologyMod.EXCAVATION_LOOT_CONTEXT_TYPE));
 
-        loot.addAll(list);
-        markDirty();
-    }
-
-    public void dropLoot(ServerPlayerEntity player) {
-        for (ItemStack stack : loot) {
-            ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+            lootTableId = null;
+            loot.addAll(list);
+            markDirty();
         }
     }
 
-    public boolean isLootGenerated() {
+    public void dropLoot(ServerPlayerEntity player) {
+        if (world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)) {
+            for (ItemStack stack : loot) {
+                ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+            }
+
+            loot.clear();
+        }
+    }
+
+    public boolean hasLoot() {
         return !loot.isEmpty();
     }
 

@@ -18,7 +18,7 @@ public class ExcavationBlockEntityRenderer implements BlockEntityRenderer<Excava
 
     @Override
     public void render(ExcavationBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        if (blockEntity.isLootGenerated()) {
+        if (blockEntity.hasLoot()) {
             matrices.push();
 
             matrices.translate(0.5, 0.4, 0.5);

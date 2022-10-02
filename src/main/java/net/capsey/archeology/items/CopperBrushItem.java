@@ -9,7 +9,6 @@ import net.capsey.archeology.entity.BrushingPlayerEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Oxidizable;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,7 +16,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -92,7 +90,7 @@ public class CopperBrushItem extends Item {
                 BlockState state = entity.getCachedState();
                 int i = state.get(ExcavationBlock.BRUSHING_LEVEL) + 1;
 
-                world.playSound(null, user.getBlockPos(), Sounds.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 0.5F, 1.0F);
+                world.playSound(null, user.getBlockPos(), Sounds.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1.0F, 1.5F);
 
                 // Chance to brush off layer
                 if (world.random.nextFloat() > ModConfig.brushingLayerChance) {
@@ -107,8 +105,6 @@ public class CopperBrushItem extends Item {
                 } else {
                     // Remove layer
                     world.setBlockState(entity.getPos(), state.with(ExcavationBlock.BRUSHING_LEVEL, i));
-                    BlockSoundGroup soundGroup = entity.getCachedState().getSoundGroup();
-                    world.playSound(null, entity.getPos(), soundGroup.getBreakSound(), SoundCategory.BLOCKS, (soundGroup.getVolume() + 1.0F) / 4.0F, soundGroup.getPitch() * 0.8F);
                 }
             }
         } else {
@@ -132,10 +128,9 @@ public class CopperBrushItem extends Item {
         int halfMaxDamage = stack.getMaxDamage() / 2;
         boolean bl = stack.getDamage() < halfMaxDamage;
 
-        stack.damage(1, user, p -> {
-            p.stopUsingItem();
-            p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
-        });
+        stack.damage(1, user, p ->
+            p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
+        );
 
         if (bl && stack.getDamage() >= halfMaxDamage) {
             ItemStack newStack;

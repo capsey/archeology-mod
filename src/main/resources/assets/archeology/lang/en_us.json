@@ -66,5 +66,6 @@
   "item.archeology.temple_shard.desc": "Mystical symbol",
   "itemGroup.archeology.shards": "Ceramic Shards",
   "stat.archeology.excavated": "Successfully Excavated Blocks",
-  "subtitles.archeology.item.copper_brush.brushing": "Block getting brushed"
+  "subtitles.archeology.item.copper_brush.brushing": "Block getting brushed",
+  "subtitles.archeology.block.excavation.shattering": "Item shattered"
 }
