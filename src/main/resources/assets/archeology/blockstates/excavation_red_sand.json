@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "brushing_level=0": [
+      { "model": "archeology:block/excavation_red_sand" },
+      { "model": "archeology:block/excavation_red_sand", "y": 90 },
+      { "model": "archeology:block/excavation_red_sand", "y": 180 },
+      { "model": "archeology:block/excavation_red_sand", "y": 270 }
+    ],
+    "brushing_level=1": [
+      { "model": "archeology:block/excavation_red_sand_1", "y": 180 },
+      { "model": "archeology:block/excavation_red_sand_1", "y": 270 },
+      { "model": "archeology:block/excavation_red_sand_1", "y": 90 },
+      { "model": "archeology:block/excavation_red_sand_1" }
+    ],
+    "brushing_level=2": [
+      { "model": "archeology:block/excavation_red_sand_2" },
+      { "model": "archeology:block/excavation_red_sand_2", "y": 90 },
+      { "model": "archeology:block/excavation_red_sand_2", "y": 180 },
+      { "model": "archeology:block/excavation_red_sand_2", "y": 270 }
+    ],
+    "brushing_level=3": [
+      { "model": "archeology:block/excavation_red_sand_3", "y": 180 },
+      { "model": "archeology:block/excavation_red_sand_3", "y": 270 },
+      { "model": "archeology:block/excavation_red_sand_3" },
+      { "model": "archeology:block/excavation_red_sand_3", "y": 90 }
+    ],
+    "brushing_level=4": [
+      { "model": "archeology:block/excavation_red_sand_4", "y": 90 },
+      { "model": "archeology:block/excavation_red_sand_4", "y": 180 },
+      { "model": "archeology:block/excavation_red_sand_4", "y": 270 },
+      { "model": "archeology:block/excavation_red_sand_4" }
+    ],
+    "brushing_level=5": [
+      { "model": "archeology:block/excavation_red_sand_5", "y": 270 },
+      { "model": "archeology:block/excavation_red_sand_5" },
+      { "model": "archeology:block/excavation_red_sand_5", "y": 90 },
+      { "model": "archeology:block/excavation_red_sand_5", "y": 180 }
+    ]
+  }
+}

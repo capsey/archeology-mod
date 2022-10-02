@@ -20,7 +20,7 @@ public class BlockEntities {
     public static BlockEntityType<ClayPotBlockEntity> CLAY_POT_BLOCK_ENTITY;
 
     public static void onInitialize() {
-        EXCAVATION_BLOCK_ENTITY = register("excavation_block_entity", ExcavationBlockEntity::new, Blocks.EXCAVATION_DIRT, Blocks.EXCAVATION_GRAVEL);
+        EXCAVATION_BLOCK_ENTITY = register("excavation_block_entity", ExcavationBlockEntity::new, Blocks.EXCAVATION_DIRT, Blocks.EXCAVATION_GRAVEL, Blocks.EXCAVATION_RED_SAND, Blocks.EXCAVATION_SAND);
         RAW_CLAY_POT_BLOCK_ENTITY = register("raw_clay_pot_block_entity", RawClayPotBlockEntity::new, Blocks.RAW_CLAY_POT);
         CLAY_POT_BLOCK_ENTITY = register("clay_pot_block_entity", ClayPotBlockEntity::new, Stream.concat(Arrays.stream(Blocks.CLAY_POT_DYED), Stream.of(Blocks.CLAY_POT)).toArray(Block[]::new));
     }

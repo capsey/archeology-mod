@@ -21,8 +21,10 @@ public class Items {
     public static Item WEATHERED_COPPER_BRUSH;
     public static Item OXIDIZED_COPPER_BRUSH;
 
-    public static Item EXCAVATION_GRAVEL;
     public static Item EXCAVATION_DIRT;
+    public static Item EXCAVATION_GRAVEL;
+    public static Item EXCAVATION_RED_SAND;
+    public static Item EXCAVATION_SAND;
 
     public static Item RAW_CLAY_POT;
     public static Item CLAY_POT;
@@ -36,6 +38,8 @@ public class Items {
 
         EXCAVATION_DIRT = register("excavation_dirt", new BlockItem(Blocks.EXCAVATION_DIRT, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
         EXCAVATION_GRAVEL = register("excavation_gravel", new BlockItem(Blocks.EXCAVATION_GRAVEL, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
+        EXCAVATION_RED_SAND = register("excavation_red_sand", new BlockItem(Blocks.EXCAVATION_RED_SAND, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
+        EXCAVATION_SAND = register("excavation_sand", new BlockItem(Blocks.EXCAVATION_SAND, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
 
         RAW_CLAY_POT = register("raw_clay_pot", new BlockItem(Blocks.RAW_CLAY_POT, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
         CLAY_POT = register("clay_pot", new BlockItem(Blocks.CLAY_POT, new FabricItemSettings().maxCount(1).group(ItemGroup.DECORATIONS)));
