@@ -2,6 +2,8 @@
   "replace": false,
   "values": [
     "archeology:excavation_dirt",
-    "archeology:excavation_gravel"
+    "archeology:excavation_gravel",
+    "archeology:excavation_red_sand",
+    "archeology:excavation_sand"
   ]
 }
