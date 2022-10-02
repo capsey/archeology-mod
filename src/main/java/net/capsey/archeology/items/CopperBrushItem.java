@@ -1,24 +1,24 @@
 package net.capsey.archeology.items;
 
 import net.capsey.archeology.ModConfig;
+import net.capsey.archeology.main.Items;
 import net.capsey.archeology.main.Sounds;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.capsey.archeology.entity.BrushingPlayerEntity;
-import net.capsey.archeology.mixin.client.MinecraftClientAccessor;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Oxidizable;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -27,18 +27,31 @@ import net.minecraft.world.World;
 
 public class CopperBrushItem extends Item {
 
-    private static final int[] BRUSH_TICKS = {8, 7, 6, 5};
+    private final int brushTicks;
+    private final float luckPoints;
 
-    public CopperBrushItem(Settings settings) {
+    public CopperBrushItem(Oxidizable.OxidationLevel oxidation, Settings settings) {
         super(settings);
+        this.brushTicks = switch (oxidation) {
+            case UNAFFECTED -> 8;
+            case EXPOSED -> 7;
+            case WEATHERED -> 6;
+            case OXIDIZED -> 5;
+        };
+        this.luckPoints = switch (oxidation) {
+            case UNAFFECTED -> 0.0F;
+            case EXPOSED -> 1.0F;
+            case WEATHERED -> 2.0F;
+            case OXIDIZED -> 3.0F;
+        };
     }
 
-    public static int getBrushTicks(ItemStack stack) {
-        return BRUSH_TICKS[getOxidizationIndex(stack)];
+    public int getBrushTicks() {
+        return brushTicks;
     }
 
-    public static int getOxidizationIndex(ItemStack item) {
-        return item.isDamaged() ? (4 * item.getDamage() / item.getMaxDamage()) % 4 : 0;
+    public float getLuckPoints() {
+        return luckPoints;
     }
 
     @Override
@@ -66,50 +79,74 @@ public class CopperBrushItem extends Item {
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         BrushingPlayerEntity player = (BrushingPlayerEntity) user;
         ExcavationBlockEntity entity = player.getBrushingEntity();
-        int brushTicks = CopperBrushItem.getBrushTicks(stack);
 
         if (!world.isClient) {
-
             if (entity == null) {
                 user.stopUsingItem();
                 return;
             }
 
-            if (remainingUseTicks % brushTicks == 0) {
+            if (remainingUseTicks % getBrushTicks() == 0) {
                 BlockState state = entity.getCachedState();
                 int i = state.get(ExcavationBlock.BRUSHING_LEVEL) + 1;
 
-                world.playSound(null, user.getBlockPos(), Sounds.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 0.5F, 1.0F);
+                world.playSound(null, user.getBlockPos(), Sounds.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1.0F, 1.5F);
 
-                if (world.random.nextFloat() > 0.25F) {
+                // Chance to brush off layer
+                if (world.random.nextFloat() > ModConfig.brushingLayerChance) {
                     return;
                 }
 
                 if (i > ExcavationBlock.MAX_BRUSHING_LEVELS) {
+                    // Successfully finish brushing
                     entity.dropLoot((ServerPlayerEntity) user);
                     user.stopUsingItem();
+                    oxidizeStack(user, stack);
                 } else {
-                    BlockSoundGroup soundGroup = entity.getCachedState().getSoundGroup();
+                    // Remove layer
                     world.setBlockState(entity.getPos(), state.with(ExcavationBlock.BRUSHING_LEVEL, i));
-                    world.playSound(null, entity.getPos(), soundGroup.getBreakSound(), SoundCategory.BLOCKS, (soundGroup.getVolume() + 1.0F) / 4.0F, soundGroup.getPitch() * 0.8F);
                 }
             }
         } else {
+            // Check if still looking at correct block
             MinecraftClient client = MinecraftClient.getInstance();
 
-            if (entity != null && !entity.isRemoved()) {
-                if (client.crosshairTarget instanceof BlockHitResult target && entity == world.getBlockEntity(target.getBlockPos())) {
-                    if (((BrushingPlayerEntity.Client) player).tick()) {
-                        if (remainingUseTicks % brushTicks == 0) {
-                            addBrushingParticles(client.particleManager, target.getBlockPos());
-                        }
+            if (entity != null && !entity.isRemoved() && client.crosshairTarget instanceof BlockHitResult target) {
+                BlockPos pos = target.getBlockPos();
 
-                        return;
-                    }
+                if (entity == world.getBlockEntity(pos) && ((BrushingPlayerEntity.Client) player).tick()) {
+                    client.particleManager.addBlockBreakingParticles(pos, Direction.UP);
+                    return;
                 }
             }
 
             client.interactionManager.stopUsingItem((PlayerEntity) user);
+        }
+    }
+
+    private static void oxidizeStack(LivingEntity user, ItemStack stack) {
+        int halfMaxDamage = stack.getMaxDamage() / 2;
+        boolean bl = stack.getDamage() < halfMaxDamage;
+
+        stack.damage(1, user, p ->
+            p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
+        );
+
+        if (bl && stack.getDamage() >= halfMaxDamage) {
+            ItemStack newStack;
+
+            if (stack.isOf(Items.COPPER_BRUSH)) {
+                newStack = new ItemStack(Items.EXPOSED_COPPER_BRUSH);
+            } else if (stack.isOf(Items.EXPOSED_COPPER_BRUSH)) {
+                newStack = new ItemStack(Items.WEATHERED_COPPER_BRUSH);
+            } else if (stack.isOf(Items.WEATHERED_COPPER_BRUSH)) {
+                newStack = new ItemStack(Items.OXIDIZED_COPPER_BRUSH);
+            } else {
+                return;
+            }
+
+            newStack.setNbt(stack.getNbt());
+            user.setStackInHand(user.getActiveHand(), newStack);
         }
     }
 
@@ -132,14 +169,7 @@ public class CopperBrushItem extends Item {
 
     @Override
     public boolean canRepair(ItemStack stack, ItemStack ingredient) {
-        return ingredient.isOf(Items.COPPER_INGOT);
-    }
-
-    // Particles
-    public static void addBrushingParticles(ParticleManager particleManager, BlockPos pos) {
-        for (int i = 0; i < 10; i++) {
-            particleManager.addBlockBreakingParticles(pos, Direction.UP);
-        }
+        return ingredient.isOf(net.minecraft.item.Items.COPPER_INGOT);
     }
 
 }

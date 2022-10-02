@@ -1,7 +1,6 @@
 package net.capsey.archeology.blocks.clay_pot;
 
 import net.capsey.archeology.main.BlockEntities;
-import net.capsey.archeology.items.ceramic_shard.CeramicShard;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShulkerBoxBlock;
@@ -27,7 +26,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
 import java.util.stream.IntStream;
 
 public class ClayPotBlockEntity extends ShardsContainer implements SidedInventory, Nameable {

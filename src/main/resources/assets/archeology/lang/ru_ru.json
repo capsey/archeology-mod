@@ -35,6 +35,9 @@
   "block.archeology.excavation_gravel": "Раскопки гравия",
   "block.archeology.raw_clay_pot": "Сырой глиняный горшок",
   "item.archeology.copper_brush": "Медная щетка",
+  "item.archeology.exposed_copper_brush": "Потемневшая медная щетка",
+  "item.archeology.weathered_copper_brush": "Состаренная медная щетка",
+  "item.archeology.oxidized_copper_brush": "Окисленная медная щетка",
   "item.archeology.axe_shard": "Керамический осколок",
   "item.archeology.axe_shard.desc": "Железный топор",
   "item.archeology.creeper_shard": "Керамический осколок",
@@ -63,5 +66,6 @@
   "item.archeology.temple_shard.desc": "Мистический символ",
   "itemGroup.archeology.shards": "Керамические осколки",
   "stat.archeology.excavated": "Успешно очищенных блоков",
-  "subtitles.archeology.item.copper_brush.brushing": "Блок раскапывается"
+  "subtitles.archeology.item.copper_brush.brushing": "Блок раскапывается",
+  "subtitles.archeology.block.excavation.shattering": "Предмет разбился"
 }

@@ -3,7 +3,7 @@ package net.capsey.archeology.blocks.clay_pot.client;
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.blocks.clay_pot.RawClayPotBlockEntity;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer;
-import net.capsey.archeology.items.ceramic_shard.CeramicShard;
+import net.capsey.archeology.items.CeramicShard;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.RenderLayer;

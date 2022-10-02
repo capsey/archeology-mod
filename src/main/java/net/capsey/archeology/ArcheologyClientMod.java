@@ -28,9 +28,6 @@ public class ArcheologyClientMod implements ClientModInitializer {
         BlockEntityRendererRegistry.register(BlockEntities.EXCAVATION_BLOCK_ENTITY, ExcavationBlockEntityRenderer::new);
         BlockEntityRendererRegistry.register(BlockEntities.CLAY_POT_BLOCK_ENTITY, ClayPotBlockEntityRenderer::new);
         BlockEntityRendererRegistry.register(BlockEntities.RAW_CLAY_POT_BLOCK_ENTITY, RawClayPotBlockEntityRenderer::new);
-
-        // Model Predicate for Copper Brush to change texture (oxidization)
-        ModelPredicateProviderRegistry.register(Items.COPPER_BRUSH, new Identifier("damage"), (itemStack, clientWorld, livingEntity, i) -> (float) itemStack.getDamage() / itemStack.getMaxDamage());
     }
 
 }

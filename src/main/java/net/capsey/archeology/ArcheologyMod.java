@@ -2,7 +2,7 @@ package net.capsey.archeology;
 
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.capsey.archeology.advancement.ExcavatedCriterion;
-import net.capsey.archeology.items.ceramic_shard.CeramicShards;
+import net.capsey.archeology.items.CeramicShards;
 import net.capsey.archeology.main.*;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.advancement.criterion.Criteria;

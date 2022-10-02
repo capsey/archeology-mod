@@ -1,4 +1,4 @@
-package net.capsey.archeology.items.ceramic_shard;
+package net.capsey.archeology.items;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -7,9 +7,11 @@ import org.jetbrains.annotations.Nullable;
 
 public record CeramicShard(Identifier shardId) {
 
+    public static final String SHARD_ID_TAG = "ShardId";
+
     @Nullable
     public static CeramicShard fromNbt(NbtCompound nbt) {
-        String id = nbt.getString("ShardId");
+        String id = nbt.getString(SHARD_ID_TAG);
         if (Identifier.isValid(id)) {
             return CeramicShardRegistry.getShard(new Identifier(id));
         } else {
@@ -22,7 +24,7 @@ public record CeramicShard(Identifier shardId) {
     }
 
     public void writeNbt(NbtCompound nbt) {
-        nbt.putString("ShardId", shardId.toString());
+        nbt.putString(SHARD_ID_TAG, shardId.toString());
     }
 
 }

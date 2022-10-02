@@ -3,6 +3,7 @@ package net.capsey.archeology.main;
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.items.CopperBrushItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.block.Oxidizable;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -16,6 +17,10 @@ import java.util.Comparator;
 public class Items {
 
     public static Item COPPER_BRUSH;
+    public static Item EXPOSED_COPPER_BRUSH;
+    public static Item WEATHERED_COPPER_BRUSH;
+    public static Item OXIDIZED_COPPER_BRUSH;
+
     public static Item EXCAVATION_GRAVEL;
     public static Item EXCAVATION_DIRT;
 
@@ -24,7 +29,10 @@ public class Items {
     public static Item[] CLAY_POT_DYED;
 
     public static void onInitialize() {
-        COPPER_BRUSH = register("copper_brush", new CopperBrushItem(new Item.Settings().maxDamage(64).group(ItemGroup.TOOLS)));
+        COPPER_BRUSH = register("copper_brush", new CopperBrushItem(Oxidizable.OxidationLevel.UNAFFECTED, new Item.Settings().maxDamage(64).group(ItemGroup.TOOLS)));
+        EXPOSED_COPPER_BRUSH = register("exposed_copper_brush", new CopperBrushItem(Oxidizable.OxidationLevel.EXPOSED, new Item.Settings().maxDamage(64).group(ItemGroup.TOOLS)));
+        WEATHERED_COPPER_BRUSH = register("weathered_copper_brush", new CopperBrushItem(Oxidizable.OxidationLevel.WEATHERED, new Item.Settings().maxDamage(64).group(ItemGroup.TOOLS)));
+        OXIDIZED_COPPER_BRUSH = register("oxidized_copper_brush", new CopperBrushItem(Oxidizable.OxidationLevel.OXIDIZED, new Item.Settings().maxDamage(64).group(ItemGroup.TOOLS)));
 
         EXCAVATION_DIRT = register("excavation_dirt", new BlockItem(Blocks.EXCAVATION_DIRT, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
         EXCAVATION_GRAVEL = register("excavation_gravel", new BlockItem(Blocks.EXCAVATION_GRAVEL, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
