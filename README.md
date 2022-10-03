@@ -1,13 +1,15 @@
 # Archeology Mod
-Archeology Mod is a [Fabric](https://fabricmc.net/) mod for [Minecraft](https://www.minecraft.net/), that adds Archeology System! My goal was to make it as Vanilla-like as I possibly could, to try to imagine how Mojang will implement it (and maybe even give them inspiration).
 
-**If you found a bug, or have a suggestion, advice, please create a [GitHub Issue](https://github.com/capsey/archeology-mod/issues).**
+Archeology Mod is a [Fabric](https://fabricmc.net/) mod for [Minecraft](https://www.minecraft.net/), that adds Archeology System! My goal was to make it as Vanilla-like as I possibly could, to try to imagine how Mojang will implement it (and maybe even give them inspiration).
 
 [![CurseForge Downloads Badge](https://cf.way2muchnoise.eu/full_539957_downloads.svg "CurseForge Downloads Badge")](https://www.curseforge.com/minecraft/mc-mods/archeology)
 [![CurseForge Versions Badge](https://cf.way2muchnoise.eu/versions/539957.svg "CurseForge Versions Badge")](https://www.curseforge.com/minecraft/mc-mods/archeology)
-
 [![Modrinth Downloads Badge](https://modrinth-utils.vercel.app/api/badge/downloads?id=LWE2KdIY "Modrinth Downloads Badge")](https://modrinth.com/mod/archeology)
 [![Modrinth Versions Badge](https://modrinth-utils.vercel.app/api/badge/versions?id=LWE2KdIY&last=true "Modrinth Versions Badge")](https://modrinth.com/mod/archeology)
+
+[![Discord Server Badge](https://img.shields.io/discord/1024347538532339794?label=discord%20server&logo=discord&logoColor=%23FFFFFF "Discord Server Badge")](https://discord.gg/RmSUYprbQs)
+
+**If you found a bug, or have a suggestion, advice, please create a [GitHub Issue](https://github.com/capsey/archeology-mod/issues).**
 
 ![Fancy screenie](https://user-images.githubusercontent.com/46106832/191838583-82b8afc4-5e5f-4369-96aa-b307a4f9d38a.png "Fancy screenie")
 
