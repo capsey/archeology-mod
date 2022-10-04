@@ -1,13 +1,10 @@
 # Archeology Mod
 
+[![Community on Discord](https://raw.githubusercontent.com/capsey/archeology-mod/main/badge-discord.png "Community on Discord")](https://discord.gg/RmSUYprbQs)
+[![Download on Modrinth](https://raw.githubusercontent.com/capsey/archeology-mod/main/badge-modrinth.png "Download on Modrinth")](https://modrinth.com/mod/archeology)
+[![Download on CurseForge](https://raw.githubusercontent.com/capsey/archeology-mod/main/badge-curseforge.png "Download on CurseForge")](https://www.curseforge.com/minecraft/mc-mods/archeology)
+
 Archeology Mod is a [Fabric](https://fabricmc.net/) mod for [Minecraft](https://www.minecraft.net/), that adds Archeology System! My goal was to make it as Vanilla-like as I possibly could, to try to imagine how Mojang will implement it (and maybe even give them inspiration).
-
-[![CurseForge Downloads Badge](https://cf.way2muchnoise.eu/full_539957_downloads.svg "CurseForge Downloads Badge")](https://www.curseforge.com/minecraft/mc-mods/archeology)
-[![CurseForge Versions Badge](https://cf.way2muchnoise.eu/versions/539957.svg "CurseForge Versions Badge")](https://www.curseforge.com/minecraft/mc-mods/archeology)
-[![Modrinth Downloads Badge](https://modrinth-utils.vercel.app/api/badge/downloads?id=LWE2KdIY "Modrinth Downloads Badge")](https://modrinth.com/mod/archeology)
-[![Modrinth Versions Badge](https://modrinth-utils.vercel.app/api/badge/versions?id=LWE2KdIY&last=true "Modrinth Versions Badge")](https://modrinth.com/mod/archeology)
-
-[![Discord Server Badge](https://img.shields.io/discord/1024347538532339794?label=discord%20server&logo=discord&logoColor=%23FFFFFF "Discord Server Badge")](https://discord.gg/RmSUYprbQs)
 
 **If you found a bug, or have a suggestion, advice, please create a [GitHub Issue](https://github.com/capsey/archeology-mod/issues).**
 
@@ -39,7 +36,7 @@ New block type — Excavation Block! Currently, there are four excavation blocks
 * They look similar to regular block (e.g., Dirt or Gravel), but have white stripes, and you can use a Copper Brush on them to start brushing layers off.
 * When fully brushed off, the block drops random loot (depending on excavation site you found it, and oxidation level of the brush)
 * While brushing, you should move your mouse like you are brushing to stop the block from breaking. If you don't move the mouse enough, the block will eventually break, and you won't get anything. The more oxidized your brush is, the faster the block breaks, and therefore faster you need to move the mouse.
-	* Actually, Mojang showed this feature other way around: if you are not careful enough, the block will break. However, I changed it so that it's more challenging and exciting (you can tweak the difficulty in the mod's config).
+    * Actually, Mojang showed this feature other way around: if you are not careful enough, the block will break. However, I changed it so that it's more challenging and exciting (you can tweak the difficulty in the mod's config).
 
 ### Ceramic Shards
 Ceramic Shards are items, that are dropped from brushing the Excavation Blocks. You can place them on the Raw Clay Pot, so that when hardened, this pot will retain placed shards and have pretty drawing on it.
@@ -57,7 +54,7 @@ This is a container block, that has 9 item slots (not counting shards). The play
 * [Shulker Boxes](https://minecraft.fandom.com/wiki/Shulker_Box) or other Clay Pots cannot be inserted into a Clay Pot.
 * If you break the pot with [Silk Touch](https://minecraft.fandom.com/wiki/Silk_Touch) enchantment, you will get the Clay Pot with all contents. It could be thought of like early-game [Shulker Box](https://minecraft.fandom.com/wiki/Shulker_Box) with less space and no reusability.
 * Clay Pots are [Gravity-Affected Blocks](https://minecraft.fandom.com/wiki/Falling_Block), and preserve inserted items and shards after landing.
-	* If a Clay Pot doesn't find a place to land (like [sand landed on a torch](https://minecraft.fandom.com/wiki/Falling_Block#Behavior)), or despawns, it will break and pop all items in it.
+    * If a Clay Pot doesn't find a place to land (like [sand landed on a torch](https://minecraft.fandom.com/wiki/Falling_Block#Behavior)), or despawns, it will break and pop all items in it.
 
 ![Hardening the Raw Clat Pot (2)](https://user-images.githubusercontent.com/46106832/191838346-1d584fe8-beaa-4dbd-a612-eb84387c3fd6.png "Hardening the Raw Clat Pot (2)")
 
