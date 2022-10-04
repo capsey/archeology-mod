@@ -77,50 +77,51 @@ public class CopperBrushItem extends Item {
 
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        BrushingPlayerEntity player = (BrushingPlayerEntity) user;
-        ExcavationBlockEntity entity = player.getBrushingEntity();
+        if (user instanceof BrushingPlayerEntity player) {
+            ExcavationBlockEntity entity = player.getBrushingEntity();
 
-        if (!world.isClient) {
-            if (entity == null) {
-                user.stopUsingItem();
-                return;
-            }
-
-            if (remainingUseTicks % getBrushTicks() == 0) {
-                BlockState state = entity.getCachedState();
-                int i = state.get(ExcavationBlock.BRUSHING_LEVEL) + 1;
-
-                world.playSound(null, user.getBlockPos(), Sounds.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1.0F, 1.5F);
-
-                // Chance to brush off layer
-                if (world.random.nextFloat() > ModConfig.brushingLayerChance) {
-                    return;
-                }
-
-                if (i > ExcavationBlock.MAX_BRUSHING_LEVELS) {
-                    // Successfully finish brushing
-                    entity.dropLoot((ServerPlayerEntity) user);
+            if (!world.isClient) {
+                if (entity == null) {
                     user.stopUsingItem();
-                    oxidizeStack(user, stack);
-                } else {
-                    // Remove layer
-                    world.setBlockState(entity.getPos(), state.with(ExcavationBlock.BRUSHING_LEVEL, i));
-                }
-            }
-        } else {
-            // Check if still looking at correct block
-            MinecraftClient client = MinecraftClient.getInstance();
-
-            if (entity != null && !entity.isRemoved() && client.crosshairTarget instanceof BlockHitResult target) {
-                BlockPos pos = target.getBlockPos();
-
-                if (entity == world.getBlockEntity(pos) && ((BrushingPlayerEntity.Client) player).tick()) {
-                    client.particleManager.addBlockBreakingParticles(pos, Direction.UP);
                     return;
                 }
-            }
 
-            client.interactionManager.stopUsingItem((PlayerEntity) user);
+                if (remainingUseTicks % getBrushTicks() == 0) {
+                    BlockState state = entity.getCachedState();
+                    int i = state.get(ExcavationBlock.BRUSHING_LEVEL) + 1;
+
+                    world.playSound(null, user.getBlockPos(), Sounds.BRUSHING_SOUND_EVENT, SoundCategory.PLAYERS, 1.0F, 1.5F);
+
+                    // Chance to brush off layer
+                    if (world.random.nextFloat() > ModConfig.brushingLayerChance) {
+                        return;
+                    }
+
+                    if (i > ExcavationBlock.MAX_BRUSHING_LEVELS) {
+                        // Successfully finish brushing
+                        entity.dropLoot((ServerPlayerEntity) user);
+                        user.stopUsingItem();
+                        oxidizeStack(user, stack);
+                    } else {
+                        // Remove layer
+                        world.setBlockState(entity.getPos(), state.with(ExcavationBlock.BRUSHING_LEVEL, i));
+                    }
+                }
+            } else {
+                // Check if still looking at correct block
+                MinecraftClient client = MinecraftClient.getInstance();
+
+                if (entity != null && !entity.isRemoved() && client.crosshairTarget instanceof BlockHitResult target) {
+                    BlockPos pos = target.getBlockPos();
+
+                    if (entity == world.getBlockEntity(pos) && ((BrushingPlayerEntity.Client) player).tick()) {
+                        client.particleManager.addBlockBreakingParticles(pos, Direction.UP);
+                        return;
+                    }
+                }
+
+                client.interactionManager.stopUsingItem((PlayerEntity) user);
+            }
         }
     }
 
