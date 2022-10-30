@@ -1,18 +1,11 @@
 package net.capsey.archeology.blocks.clay_pot.client;
 
-import net.capsey.archeology.ArcheologyClientMod;
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.blocks.clay_pot.ClayPotBlockEntity;
-import net.capsey.archeology.blocks.clay_pot.ShardsContainer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.*;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory.Context;
 import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 

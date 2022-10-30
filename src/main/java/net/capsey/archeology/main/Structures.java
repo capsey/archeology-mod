@@ -2,8 +2,6 @@ package net.capsey.archeology.main;
 
 import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.structures.ExcavationSite;
-import net.minecraft.block.Block;
-import net.minecraft.tag.StructureTags;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;

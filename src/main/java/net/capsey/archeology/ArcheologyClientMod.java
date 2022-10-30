@@ -5,11 +5,9 @@ import net.capsey.archeology.blocks.clay_pot.client.RawClayPotBlockEntityRendere
 import net.capsey.archeology.blocks.clay_pot.client.ShardsContainerRenderer;
 import net.capsey.archeology.blocks.excavation_block.client.ExcavationBlockEntityRenderer;
 import net.capsey.archeology.main.BlockEntities;
-import net.capsey.archeology.main.Items;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
-import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
 

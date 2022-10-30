@@ -6,8 +6,6 @@ import net.capsey.archeology.entity.BrushingPlayerEntity;
 import net.capsey.archeology.main.Sounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.stat.Stats;

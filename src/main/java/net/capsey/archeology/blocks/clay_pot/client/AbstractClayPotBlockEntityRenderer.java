@@ -11,11 +11,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
-
-import java.util.Arrays;
-import java.util.Comparator;
 
 @Environment(EnvType.CLIENT)
 public abstract class AbstractClayPotBlockEntityRenderer<T extends ShardsContainer> extends ShardsContainerRenderer<T> {

@@ -47,16 +47,14 @@ This is a block that used to make (Hardened) Clay Pot. It is made of 5 [Clay Bal
 * You can put up to 8 shards on one raw clay pot: 4 on the sides and 4 on the corners.
 * If you light up a fire or a campfire underneath it, it will harden after some time and become a Clay Pot.
 
-![Hardening the Raw Clat Pot (1)](https://user-images.githubusercontent.com/46106832/191838419-c52d8aa4-f76d-4e08-be2e-f28645527d40.png "Hardening the Raw Clat Pot (1)")
+![Hardening the Raw Clay Pot (1)](https://user-images.githubusercontent.com/46106832/191838419-c52d8aa4-f76d-4e08-be2e-f28645527d40.png "Hardening the Raw Clay Pot (1)")
 
 ### Clay Pots (AKA Hardened Clay Pots)
 This is a container block, that has 9 item slots (not counting shards). The player cannot insert items into it directly, but should rather use a hopper or a dropper to insert items. However, after inserting, there is no way to get these items back without breaking the pot. Think about it like a [Piggy Bank](https://en.wikipedia.org/wiki/Piggy_bank).
 * [Shulker Boxes](https://minecraft.fandom.com/wiki/Shulker_Box) or other Clay Pots cannot be inserted into a Clay Pot.
 * If you break the pot with [Silk Touch](https://minecraft.fandom.com/wiki/Silk_Touch) enchantment, you will get the Clay Pot with all contents. It could be thought of like early-game [Shulker Box](https://minecraft.fandom.com/wiki/Shulker_Box) with less space and no reusability.
-* Clay Pots are [Gravity-Affected Blocks](https://minecraft.fandom.com/wiki/Falling_Block), and preserve inserted items and shards after landing.
-    * If a Clay Pot doesn't find a place to land (like [sand landed on a torch](https://minecraft.fandom.com/wiki/Falling_Block#Behavior)), or despawns, it will break and pop all items in it.
 
-![Hardening the Raw Clat Pot (2)](https://user-images.githubusercontent.com/46106832/191838346-1d584fe8-beaa-4dbd-a612-eb84387c3fd6.png "Hardening the Raw Clat Pot (2)")
+![Hardening the Raw Clay Pot (2)](https://user-images.githubusercontent.com/46106832/191838346-1d584fe8-beaa-4dbd-a612-eb84387c3fd6.png "Hardening the Raw Clay Pot (2)")
 
 You can dye them by using [Dye](https://minecraft.fandom.com/wiki/Dye) on an uncolored Clay Pot, and you can remove dye using [Water Bottle](https://minecraft.fandom.com/wiki/Water_Bottle) on already dyed ones.
 
@@ -65,7 +63,7 @@ Excavation Sites are structures in where you can find Excavation Blocks. This is
 1. Excavation Site Plains
 2. Excavation Site Snow
 3. Excavation Site Mangrove
-4. Excavation SIte Desert
+4. Excavation Site Desert
 
 ![Excavation Site Plains](https://user-images.githubusercontent.com/46106832/191838192-69d867ae-a32b-4ff9-88f5-9b29e5f8afe4.png "Excavation Site Plains")
 
