@@ -60,8 +60,7 @@ jobs:
           file_path: build/libs/${{ steps.findjar.outputs.jarname }}
 
           version: ${{ github.event.release.tag_name }}
-          loaders: fabric,forge
-          featured: true
+          loaders: fabric
 
           release_type: release
           game_versions: 1.19,1.19.1,1.19.2
