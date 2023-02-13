@@ -16,14 +16,14 @@
     "hidden": false
   },
   "criteria": {
-    "excavated": {
-      "trigger": "archeology:excavated",
+    "excavation_success": {
+      "trigger": "archeology:excavation_success",
       "conditions": {}
     }
   },
   "requirements": [
     [
-      "excavated"
+      "excavation_success"
     ]
   ]
 }

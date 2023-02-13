@@ -1,7 +1,7 @@
 package net.capsey.archeology;
 
 import eu.midnightdust.lib.config.MidnightConfig;
-import net.capsey.archeology.advancement.ExcavatedCriterion;
+import net.capsey.archeology.advancement.ExcavationCriterion;
 import net.capsey.archeology.items.CeramicShards;
 import net.capsey.archeology.main.*;
 import net.fabricmc.api.ModInitializer;
@@ -33,7 +33,8 @@ public class ArcheologyMod implements ModInitializer {
     public static final Identifier EXCAVATED = new Identifier(MOD_ID, "excavated");
 
     // Advancements
-    public static final ExcavatedCriterion EXCAVATED_CRITERION = new ExcavatedCriterion();
+    public static final ExcavationCriterion EXCAVATION_SUCCESS_CRITERION = new ExcavationCriterion("excavation_success");
+    public static final ExcavationCriterion EXCAVATION_FAILURE_CRITERION = new ExcavationCriterion("excavation_failure");
 
     @Override
     public void onInitialize() {
@@ -52,7 +53,8 @@ public class ArcheologyMod implements ModInitializer {
         // Registering other stuff
         Registry.register(Registry.CUSTOM_STAT, "excavated", EXCAVATED);
         Stats.CUSTOM.getOrCreateStat(EXCAVATED, StatFormatter.DEFAULT);
-        Criteria.register(EXCAVATED_CRITERION);
+        Criteria.register(EXCAVATION_SUCCESS_CRITERION);
+        Criteria.register(EXCAVATION_FAILURE_CRITERION);
     }
 
     private static LootContextType createLootContextType(Consumer<LootContextType.Builder> type) {

@@ -11,18 +11,22 @@ import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-public class ExcavatedCriterion extends AbstractCriterion<ExcavatedCriterion.Conditions> {
+public class ExcavationCriterion extends AbstractCriterion<ExcavationCriterion.Conditions> {
 
-    private static final Identifier ID = new Identifier(ArcheologyMod.MOD_ID, "excavated");
+    private final Identifier id;
+
+    public ExcavationCriterion(String id) {
+        this.id = new Identifier(ArcheologyMod.MOD_ID, id);
+    }
 
     @Override
     protected Conditions conditionsFromJson(JsonObject obj, EntityPredicate.Extended playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
-        return new ExcavatedCriterion.Conditions(playerPredicate);
+        return new ExcavationCriterion.Conditions(id, playerPredicate);
     }
 
     @Override
     public Identifier getId() {
-        return ID;
+        return id;
     }
 
     public void trigger(ServerPlayerEntity player, BlockState state) {
@@ -31,8 +35,8 @@ public class ExcavatedCriterion extends AbstractCriterion<ExcavatedCriterion.Con
 
     public static class Conditions extends AbstractCriterionConditions {
 
-        public Conditions(EntityPredicate.Extended entity) {
-            super(ExcavatedCriterion.ID, entity);
+        public Conditions(Identifier id, EntityPredicate.Extended entity) {
+            super(id, entity);
         }
 
         public boolean test(BlockState state) {

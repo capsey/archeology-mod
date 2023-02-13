@@ -29,6 +29,6 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
         }
 
         player.incrementStat(ArcheologyMod.EXCAVATED);
-        ArcheologyMod.EXCAVATED_CRITERION.trigger(player, getCachedState());
+        ArcheologyMod.EXCAVATION_SUCCESS_CRITERION.trigger(player, getCachedState());
     }
 }

@@ -1,0 +1,29 @@
+{
+  "parent": "archeology:archeology/excavation",
+  "display": {
+    "icon": {
+      "item": "archeology:weathered_copper_brush"
+    },
+    "title": {
+      "translate": "advancements.archeology.excavation_shatter.title"
+    },
+    "description": {
+      "translate": "advancements.archeology.excavation_shatter.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "excavation_failure": {
+      "trigger": "archeology:excavation_failure",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "excavation_failure"
+    ]
+  ]
+}

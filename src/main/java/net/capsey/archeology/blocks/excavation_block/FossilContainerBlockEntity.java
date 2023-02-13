@@ -30,12 +30,19 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
 
     private static final String LOOT_TABLE_TAG = "LootTable";
     private static final String LOOT_TAG = "Loot";
+
     @Nullable protected Identifier lootTableId;
     protected final ArrayList<ItemStack> loot = new ArrayList<>();
+
+    private boolean dropped = false;
 
     protected FossilContainerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, @Nullable Identifier lootTable) {
         super(type, pos, state);
         lootTableId = lootTable;
+    }
+
+    public boolean hasDropped() {
+        return dropped;
     }
 
     private static float getLuckPoints(@NotNull ItemStack stack) {
@@ -127,6 +134,8 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
 
             loot.clear();
         }
+
+        dropped = true;
     }
 
     public boolean hasLoot() {

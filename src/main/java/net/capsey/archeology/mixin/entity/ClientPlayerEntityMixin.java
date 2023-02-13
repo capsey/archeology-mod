@@ -1,5 +1,6 @@
 package net.capsey.archeology.mixin.entity;
 
+import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.ModConfig;
 import net.capsey.archeology.main.BlockEntities;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;

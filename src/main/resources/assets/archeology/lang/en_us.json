@@ -5,6 +5,8 @@
   "advancements.archeology.find_excavation_site.description": "Find an Excavation Site",
   "advancements.archeology.excavation.title": "Novice Archeologist",
   "advancements.archeology.excavation.description": "Use Copper Brush to excavate loot from odd dirt blocks",
+  "advancements.archeology.excavation_shatter.title": "Whoops, my hand slipped!",
+  "advancements.archeology.excavation_shatter.description": "Shatter a block while brushing it (you can adjust difficulty in config)",
   "advancements.archeology.root.title": "Archeology",
   "advancements.archeology.root.description": "Archeology and Excavation",
   "archeology.midnightconfig.title": "Archeology Mod Config",

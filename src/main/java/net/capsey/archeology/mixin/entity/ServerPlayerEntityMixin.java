@@ -1,5 +1,6 @@
 package net.capsey.archeology.mixin.entity;
 
+import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.main.BlockEntities;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.capsey.archeology.entity.BrushingPlayerEntity;
@@ -58,11 +59,15 @@ public class ServerPlayerEntityMixin implements BrushingPlayerEntity, BrushingPl
     @Override
     public void onStopBrushing() {
         ExcavationBlockEntity entity = brushingEntity.get();
-        PlayerEntity player = (PlayerEntity)(Object) this;
+        ServerPlayerEntity player = (ServerPlayerEntity)(Object) this;
 
         if (entity != null && !entity.isRemoved()) {
             if (entity.hasLoot()) {
                 player.world.playSound(null, entity.getPos(), Sounds.SHATTERING_SOUND_EVENT, SoundCategory.BLOCKS, 0.5F, 1.0F);
+            }
+
+            if (!entity.hasDropped()) {
+                ArcheologyMod.EXCAVATION_FAILURE_CRITERION.trigger(player, entity.getCachedState());
             }
 
             player.world.breakBlock(entity.getPos(), true, player);
