@@ -1,6 +1,5 @@
 package net.capsey.archeology.mixin.entity;
 
-import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.ModConfig;
 import net.capsey.archeology.main.BlockEntities;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
@@ -19,6 +18,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.lang.ref.WeakReference;
+import java.util.Arrays;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Mixin(ClientPlayerEntity.class)
 public class ClientPlayerEntityMixin implements BrushingPlayerEntity, BrushingPlayerEntity.Client {
@@ -26,7 +28,8 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity, BrushingPl
     private WeakReference<ExcavationBlockEntity> brushingEntity = new WeakReference<>(null);
     @Nullable private BlockPos breakingPos;
     private float breakingProgress;
-    private float facingDelta;
+    private final float[] facingDeltas = new float[5];
+    private int facingIndex = 0;
 
     @Override
     public void startBrushing(BlockPos pos) {
@@ -46,9 +49,12 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity, BrushingPl
     @Inject(method = "tick()V", at = @At("TAIL"))
     public void tick(CallbackInfo info) {
         PlayerEntity player = (PlayerEntity) (Object) this;
+
         Vec3d lookDir = Vec3d.fromPolar(player.getPitch(), player.getHeadYaw());
         Vec3d prevLookDir = Vec3d.fromPolar(player.prevPitch, player.prevHeadYaw);
-        facingDelta = (float) prevLookDir.distanceTo(lookDir);
+
+        facingDeltas[facingIndex] = (float) prevLookDir.distanceTo(lookDir);
+        facingIndex = (facingIndex + 1) % facingDeltas.length;
     }
 
     @Inject(method = "clearActiveItem()V", at = @At("HEAD"))
@@ -72,15 +78,19 @@ public class ClientPlayerEntityMixin implements BrushingPlayerEntity, BrushingPl
 
     @Override
     public boolean tick() {
-        float delta = ModConfig.brushingLowerThreshold - facingDelta;
-        delta *= delta < 0 ? ModConfig.brushingRepairSpeed : ModConfig.brushingBreakingSpeed;
+        float facingDelta = 0;
 
-        breakingProgress = Math.max(breakingProgress + delta, 0);
-        int i = Math.round(breakingProgress * 10) - 2;
+        for (float delta : facingDeltas) {
+            facingDelta += delta;
+        }
+
+        breakingProgress += ModConfig.getBrushingDelta(facingDelta / facingDeltas.length);
 
         if (breakingProgress > 1.0F || breakingPos == null) {
             return false;
         }
+
+        int i = Math.round(breakingProgress * 10) - 2;
 
         PlayerEntity player = (PlayerEntity) (Object) this;
         player.world.setBlockBreakingInfo(player.getId(), breakingPos, i);
