@@ -16,11 +16,11 @@
     "item.BoneMealItemMixin"
   ],
   "client": [
+    "client.BakedModelManagerMixin",
     "client.BuiltinModelItemRendererMixin",
     "client.FallingBlockEntityRendererMixin",
     "client.HeldItemRendererMixin",
     "client.PlayerEntityRendererMixin",
-    "client.TexturedRenderLayersMixin",
     "entity.ClientPlayerEntityMixin"
   ],
   "injectors": {

@@ -30,10 +30,9 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
 
     private static final String LOOT_TABLE_TAG = "LootTable";
     private static final String LOOT_TAG = "Loot";
-
-    @Nullable protected Identifier lootTableId;
     protected final ArrayList<ItemStack> loot = new ArrayList<>();
-
+    @Nullable
+    protected Identifier lootTableId;
     private boolean dropped = false;
 
     protected FossilContainerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, @Nullable Identifier lootTable) {
@@ -41,12 +40,12 @@ public abstract class FossilContainerBlockEntity extends BlockEntity {
         lootTableId = lootTable;
     }
 
-    public boolean hasDropped() {
-        return dropped;
-    }
-
     private static float getLuckPoints(@NotNull ItemStack stack) {
         return stack.getItem() instanceof CopperBrushItem brushItem ? brushItem.getLuckPoints() : 0;
+    }
+
+    public boolean hasDropped() {
+        return dropped;
     }
 
     @Override

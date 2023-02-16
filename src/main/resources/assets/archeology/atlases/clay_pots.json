@@ -1,0 +1,13 @@
+{
+  "sources": [
+    {
+      "type": "single",
+      "resource": "archeology:entity/raw_clay_pot"
+    },
+    {
+      "type": "directory",
+      "source": "entity/clay_pot",
+      "prefix": "entity/clay_pot/"
+    }
+  ]
+}

@@ -5,7 +5,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
-public record CeramicShard(Identifier shardId) {
+public record CeramicShard(Identifier id, Identifier textureId) {
 
     public static final String SHARD_ID_TAG = "ShardId";
 
@@ -20,11 +20,11 @@ public record CeramicShard(Identifier shardId) {
     }
 
     public ItemStack getStack() {
-        return new ItemStack(CeramicShardRegistry.getShardItem(shardId));
+        return new ItemStack(CeramicShardRegistry.getShardItem(id));
     }
 
     public void writeNbt(NbtCompound nbt) {
-        nbt.putString(SHARD_ID_TAG, shardId.toString());
+        nbt.putString(SHARD_ID_TAG, id.toString());
     }
 
 }

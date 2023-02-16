@@ -1,11 +1,11 @@
 package net.capsey.archeology.items;
 
 import net.capsey.archeology.ModConfig;
-import net.capsey.archeology.main.Items;
-import net.capsey.archeology.main.Sounds;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlock;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.capsey.archeology.entity.BrushingPlayerEntity;
+import net.capsey.archeology.main.Items;
+import net.capsey.archeology.main.Sounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Oxidizable;
 import net.minecraft.client.MinecraftClient;
@@ -44,6 +44,32 @@ public class CopperBrushItem extends Item {
             case WEATHERED -> 2.0F;
             case OXIDIZED -> 3.0F;
         };
+    }
+
+    private static void oxidizeStack(LivingEntity user, ItemStack stack) {
+        int halfMaxDamage = stack.getMaxDamage() / 2;
+        boolean bl = stack.getDamage() < halfMaxDamage;
+
+        stack.damage(1, user, p ->
+                p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
+        );
+
+        if (bl && stack.getDamage() >= halfMaxDamage) {
+            ItemStack newStack;
+
+            if (stack.isOf(Items.COPPER_BRUSH)) {
+                newStack = new ItemStack(Items.EXPOSED_COPPER_BRUSH);
+            } else if (stack.isOf(Items.EXPOSED_COPPER_BRUSH)) {
+                newStack = new ItemStack(Items.WEATHERED_COPPER_BRUSH);
+            } else if (stack.isOf(Items.WEATHERED_COPPER_BRUSH)) {
+                newStack = new ItemStack(Items.OXIDIZED_COPPER_BRUSH);
+            } else {
+                return;
+            }
+
+            newStack.setNbt(stack.getNbt());
+            user.setStackInHand(user.getActiveHand(), newStack);
+        }
     }
 
     public int getBrushTicks() {
@@ -122,32 +148,6 @@ public class CopperBrushItem extends Item {
 
                 client.interactionManager.stopUsingItem((PlayerEntity) user);
             }
-        }
-    }
-
-    private static void oxidizeStack(LivingEntity user, ItemStack stack) {
-        int halfMaxDamage = stack.getMaxDamage() / 2;
-        boolean bl = stack.getDamage() < halfMaxDamage;
-
-        stack.damage(1, user, p ->
-            p.sendEquipmentBreakStatus(user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND)
-        );
-
-        if (bl && stack.getDamage() >= halfMaxDamage) {
-            ItemStack newStack;
-
-            if (stack.isOf(Items.COPPER_BRUSH)) {
-                newStack = new ItemStack(Items.EXPOSED_COPPER_BRUSH);
-            } else if (stack.isOf(Items.EXPOSED_COPPER_BRUSH)) {
-                newStack = new ItemStack(Items.WEATHERED_COPPER_BRUSH);
-            } else if (stack.isOf(Items.WEATHERED_COPPER_BRUSH)) {
-                newStack = new ItemStack(Items.OXIDIZED_COPPER_BRUSH);
-            } else {
-                return;
-            }
-
-            newStack.setNbt(stack.getNbt());
-            user.setStackInHand(user.getActiveHand(), newStack);
         }
     }
 

@@ -35,7 +35,7 @@ public interface FallingBlockWithEntity {
 
     default void tryScheduleTick(WorldAccess world, BlockPos pos, Block block) {
         if (canFallThrough(world, pos)) {
-            world.createAndScheduleBlockTick(pos, block, FALL_DELAY);
+            world.scheduleBlockTick(pos, block, FALL_DELAY);
         }
     }
 

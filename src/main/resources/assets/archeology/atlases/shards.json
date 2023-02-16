@@ -1,0 +1,13 @@
+{
+  "sources": [
+    {
+      "type": "single",
+      "resource": "archeology:entity/empty_shard"
+    },
+    {
+      "type": "directory",
+      "source": "entity/shard",
+      "prefix": "entity/shard/"
+    }
+  ]
+}

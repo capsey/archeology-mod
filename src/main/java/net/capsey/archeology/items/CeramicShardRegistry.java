@@ -1,25 +1,19 @@
 package net.capsey.archeology.items;
 
 import net.capsey.archeology.ArcheologyMod;
-import net.capsey.archeology.ModConfig;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
-import net.minecraft.util.registry.Registry;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class CeramicShardRegistry {
-
-    public static final ItemGroup SHARDS_ITEM_GROUP = !ModConfig.removeShardsItemGroup ? FabricItemGroupBuilder.build(
-            new Identifier(ArcheologyMod.MOD_ID, "shards"),
-            () -> new ItemStack(CeramicShards.ENDER_DRAGON)
-    ) : ItemGroup.MISC;
 
     private static final Map<Identifier, CeramicShard> SHARDS = new HashMap<>();
     private static final Map<Identifier, Item> ITEMS = new HashMap<>();
@@ -34,26 +28,29 @@ public class CeramicShardRegistry {
      * <p>
      * Items are added to shards items tab in order of registering!
      *
-     * @param itemId  Identifier of shard item
-     * @param shardId Identifier of shard texture for rendering on a Clay Pot (e.g. "archeology:ender_dragon")
+     * @param id        Identifier of the shard (e.g. "archeology:ender_dragon")
+     * @param itemId    Identifier of the shard item (e.g. "archeology:ender_dragon_shard")
+     * @param textureId Identifier of the shard texture on a texture atlas (e.g. "archeology:entity/shard/ender_dragon")
      * @return Returns registered {@link Item} object of the shard
      */
-    public static Item registerShard(Identifier itemId, Identifier shardId, Rarity rarity) {
+    public static Item registerShard(Identifier id, Identifier itemId, Identifier textureId, Rarity rarity) {
         if (SHARDS.containsKey(itemId)) {
             throw new IllegalArgumentException(itemId + " is already a registered shard!");
         }
 
-        CeramicShard shard = new CeramicShard(shardId);
-        Item shardItem = new CeramicShardItem(shard, new Item.Settings().maxCount(16).rarity(rarity).group(SHARDS_ITEM_GROUP));
-        Registry.register(Registry.ITEM, itemId, shardItem);
+        ArcheologyMod.LOGGER.info("Registering ceramic shard: {}", id);
 
-        SHARDS.put(shardId, shard);
-        ITEMS.put(shardId, shardItem);
+        CeramicShard shard = new CeramicShard(id, textureId);
+        Item shardItem = new CeramicShardItem(shard, new Item.Settings().maxCount(16).rarity(rarity));
+        Registry.register(Registries.ITEM, itemId, shardItem);
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(content -> {
+            content.add(new ItemStack(shardItem));
+        });
+
+        SHARDS.put(id, shard);
+        ITEMS.put(id, shardItem);
         return shardItem;
-    }
-
-    public static Set<Identifier> getShardIds() {
-        return SHARDS.keySet();
     }
 
     public static CeramicShard getShard(Identifier id) {

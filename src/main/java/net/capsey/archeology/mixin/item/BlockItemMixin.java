@@ -22,7 +22,7 @@ public class BlockItemMixin {
     @Final
     @Shadow
     private Block block;
-    
+
     @Inject(at = @At("HEAD"), method = "onItemEntityDestroyed(Lnet/minecraft/entity/ItemEntity;)V")
     public void onItemEntityDestroyed(ItemEntity entity, CallbackInfo ci) {
         if (this.block instanceof ClayPotBlock) {

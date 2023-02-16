@@ -1,10 +1,10 @@
 package net.capsey.archeology.blocks.clay_pot;
 
+import net.capsey.archeology.blocks.clay_pot.ShardsContainer.Side;
+import net.capsey.archeology.items.CeramicShard;
+import net.capsey.archeology.items.CeramicShardItem;
 import net.capsey.archeology.main.BlockEntities;
 import net.capsey.archeology.main.Blocks;
-import net.capsey.archeology.blocks.clay_pot.ShardsContainer.Side;
-import net.capsey.archeology.items.CeramicShardItem;
-import net.capsey.archeology.items.CeramicShard;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -12,10 +12,10 @@ import net.minecraft.block.CampfireBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
-import net.minecraft.tag.BlockTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
@@ -102,14 +102,14 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         if (canHarden(state, world.getBlockState(pos.down())) && !world.isClient && !world.getBlockTickScheduler().isQueued(pos, this)) {
-            world.createAndScheduleBlockTick(pos, this, 10);
+            world.scheduleBlockTick(pos, this, 10);
         }
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (direction == Direction.DOWN && canHarden(state, neighborState) && !world.isClient() && !world.getBlockTickScheduler().isQueued(pos, this)) {
-            world.createAndScheduleBlockTick(pos, this, 10);
+            world.scheduleBlockTick(pos, this, 10);
         }
 
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
@@ -129,7 +129,7 @@ public class RawClayPotBlock extends AbstractClayPotBlock implements BlockEntity
                 }
             }
 
-            world.createAndScheduleBlockTick(pos, this, 10);
+            world.scheduleBlockTick(pos, this, 10);
         }
     }
 

@@ -55,8 +55,9 @@ public class CeramicShards {
 
     public static Item register(String id, boolean rare) {
         return CeramicShardRegistry.registerShard(
-                new Identifier(ArcheologyMod.MOD_ID, id + "_shard"),
                 new Identifier(ArcheologyMod.MOD_ID, id),
+                new Identifier(ArcheologyMod.MOD_ID, id + "_shard"),
+                new Identifier(ArcheologyMod.MOD_ID, "entity/shard/" + id),
                 rare ? Rarity.RARE : Rarity.UNCOMMON
         );
     }
