@@ -16,7 +16,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 import java.security.InvalidParameterException;
-import java.util.*;
+import java.util.EnumMap;
+import java.util.Map;
 
 public abstract class ShardsContainer extends BlockEntity {
 
@@ -28,13 +29,13 @@ public abstract class ShardsContainer extends BlockEntity {
         super(type, pos, state);
     }
 
+    public Map<Side, CeramicShard> getShards() {
+        return ceramicShards.clone();
+    }
+
     public void setShards(Map<Side, CeramicShard> shards) {
         ceramicShards.clear();
         ceramicShards.putAll(shards);
-    }
-
-    public Map<Side, CeramicShard> getShards() {
-        return ceramicShards.clone();
     }
 
     public CeramicShard getShard(Side direction) {

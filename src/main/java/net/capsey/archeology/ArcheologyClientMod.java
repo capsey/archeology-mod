@@ -2,8 +2,8 @@ package net.capsey.archeology;
 
 import net.capsey.archeology.blocks.clay_pot.client.ClayPotBlockEntityRenderer;
 import net.capsey.archeology.blocks.clay_pot.client.RawClayPotBlockEntityRenderer;
-import net.capsey.archeology.items.client.ShardsContainerRenderer;
 import net.capsey.archeology.blocks.excavation_block.client.ExcavationBlockEntityRenderer;
+import net.capsey.archeology.items.client.ShardsContainerRenderer;
 import net.capsey.archeology.main.BlockEntities;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;

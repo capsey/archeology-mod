@@ -30,11 +30,9 @@ public abstract class ShardsContainerRenderer<T extends ShardsContainer> impleme
     public static final Identifier ATLAS_TEXTURE_ID = new Identifier(ArcheologyMod.MOD_ID, "textures/atlas/shards.png");
     public static final SpriteIdentifier EMPTY_SHARD_SPRITE_ID = spriteId("entity/empty_shard");
     public static final Map<Identifier, SpriteIdentifier> SHARD_SPRITE_IDS = new HashMap<>();
-
+    protected static final float zOffset = 0.0001F;
     protected final ModelPart straight;
     protected final ModelPart[] corners = new ModelPart[2];
-
-    protected static final float zOffset = 0.0001F;
 
     protected ShardsContainerRenderer(BlockEntityRendererFactory.Context ctx) {
         ModelPart modelPart = ctx.getLayerModelPart(ArcheologyClientMod.CLAY_POT_SHARDS_MODEL_LAYER);
@@ -62,6 +60,14 @@ public abstract class ShardsContainerRenderer<T extends ShardsContainer> impleme
         modelPartData.addChild("corner-1", corner1Builder, ModelTransform.pivot(8.0F, 5.0F, 8.0F));
 
         return TexturedModelData.of(modelData, 32, 10);
+    }
+
+    private static SpriteIdentifier spriteId(String id) {
+        return spriteId(new Identifier(ArcheologyMod.MOD_ID, id));
+    }
+
+    private static SpriteIdentifier spriteId(Identifier id) {
+        return new SpriteIdentifier(ATLAS_TEXTURE_ID, id);
     }
 
     @Override
@@ -98,14 +104,6 @@ public abstract class ShardsContainerRenderer<T extends ShardsContainer> impleme
             corners[1].setAngles(0.0F, yaw, 0.0F);
             corners[1].render(matrices, spriteConsumer, light, overlay);
         }
-    }
-
-    private static SpriteIdentifier spriteId(String id) {
-        return spriteId(new Identifier(ArcheologyMod.MOD_ID, id));
-    }
-
-    private static SpriteIdentifier spriteId(Identifier id) {
-        return new SpriteIdentifier(ATLAS_TEXTURE_ID, id);
     }
 
 }

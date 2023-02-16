@@ -1,9 +1,9 @@
 package net.capsey.archeology.mixin.entity;
 
 import net.capsey.archeology.ArcheologyMod;
-import net.capsey.archeology.main.BlockEntities;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.capsey.archeology.entity.BrushingPlayerEntity;
+import net.capsey.archeology.main.BlockEntities;
 import net.capsey.archeology.main.Sounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,12 +30,12 @@ public class ServerPlayerEntityMixin implements BrushingPlayerEntity, BrushingPl
 
     @Override
     public void startBrushing(BlockPos pos) {
-        World world = ((Entity)(Object) this).world;
+        World world = ((Entity) (Object) this).world;
         ExcavationBlockEntity entity = world.getBlockEntity(pos, BlockEntities.EXCAVATION_BLOCK_ENTITY).orElse(null);
         brushingEntity = new WeakReference<>(entity);
 
         if (entity != null) {
-            PlayerEntity player = (PlayerEntity)(Object) this;
+            PlayerEntity player = (PlayerEntity) (Object) this;
             entity.generateLoot(player, player.getActiveItem());
         }
     }
@@ -59,7 +59,7 @@ public class ServerPlayerEntityMixin implements BrushingPlayerEntity, BrushingPl
     @Override
     public void onStopBrushing() {
         ExcavationBlockEntity entity = brushingEntity.get();
-        ServerPlayerEntity player = (ServerPlayerEntity)(Object) this;
+        ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
 
         if (entity != null && !entity.isRemoved()) {
             if (entity.hasLoot()) {

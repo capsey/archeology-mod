@@ -1,10 +1,8 @@
 package net.capsey.archeology.items;
 
 import net.capsey.archeology.ArcheologyMod;
-import net.capsey.archeology.ModConfig;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
@@ -14,7 +12,6 @@ import net.minecraft.util.Rarity;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class CeramicShardRegistry {
 
@@ -34,7 +31,7 @@ public class CeramicShardRegistry {
      * @param id        Identifier of the shard (e.g. "archeology:ender_dragon")
      * @param itemId    Identifier of the shard item (e.g. "archeology:ender_dragon_shard")
      * @param textureId Identifier of the shard texture on a texture atlas (e.g. "archeology:entity/shard/ender_dragon")
-     * @return          Returns registered {@link Item} object of the shard
+     * @return Returns registered {@link Item} object of the shard
      */
     public static Item registerShard(Identifier id, Identifier itemId, Identifier textureId, Rarity rarity) {
         if (SHARDS.containsKey(itemId)) {

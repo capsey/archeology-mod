@@ -49,6 +49,10 @@ public abstract class AbstractClayPotBlockEntityRenderer<T extends ShardsContain
         return TexturedModelData.of(modelData, 104, 40);
     }
 
+    protected static SpriteIdentifier spriteId(String id) {
+        return new SpriteIdentifier(ATLAS_TEXTURE_ID, new Identifier(ArcheologyMod.MOD_ID, id));
+    }
+
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         VertexConsumer consumer = getSpriteId(entity).getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
@@ -61,9 +65,5 @@ public abstract class AbstractClayPotBlockEntityRenderer<T extends ShardsContain
     }
 
     protected abstract SpriteIdentifier getSpriteId(T entity);
-
-    protected static SpriteIdentifier spriteId(String id) {
-        return new SpriteIdentifier(ATLAS_TEXTURE_ID, new Identifier(ArcheologyMod.MOD_ID, id));
-    }
 
 }

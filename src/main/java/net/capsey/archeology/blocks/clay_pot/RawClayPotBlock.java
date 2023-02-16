@@ -1,10 +1,10 @@
 package net.capsey.archeology.blocks.clay_pot;
 
+import net.capsey.archeology.blocks.clay_pot.ShardsContainer.Side;
+import net.capsey.archeology.items.CeramicShard;
+import net.capsey.archeology.items.CeramicShardItem;
 import net.capsey.archeology.main.BlockEntities;
 import net.capsey.archeology.main.Blocks;
-import net.capsey.archeology.blocks.clay_pot.ShardsContainer.Side;
-import net.capsey.archeology.items.CeramicShardItem;
-import net.capsey.archeology.items.CeramicShard;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;

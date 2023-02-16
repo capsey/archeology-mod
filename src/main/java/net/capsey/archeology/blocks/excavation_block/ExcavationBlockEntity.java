@@ -16,7 +16,7 @@ public class ExcavationBlockEntity extends FossilContainerBlockEntity {
     public ExcavationBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.EXCAVATION_BLOCK_ENTITY, pos, state, null);
     }
-    
+
     @Override
     public void dropLoot(ServerPlayerEntity player) {
         super.dropLoot(player);

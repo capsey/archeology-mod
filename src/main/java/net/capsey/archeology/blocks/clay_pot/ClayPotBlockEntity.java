@@ -34,7 +34,8 @@ public class ClayPotBlockEntity extends ShardsContainer implements SidedInventor
     private static final String LOOT_TABLE_TAG = "LootTable";
     private static final int[] AVAILABLE_SLOTS = IntStream.range(0, 9).toArray();
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(9, ItemStack.EMPTY);
-    @Nullable private Text customName;
+    @Nullable
+    private Text customName;
     private Identifier lootTableId;
     private long lootTableSeed;
 

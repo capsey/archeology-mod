@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 public interface BrushingPlayerEntity {
 
     void startBrushing(BlockPos pos);
+
     @Nullable ExcavationBlockEntity getBrushingEntity();
 
     interface Server {

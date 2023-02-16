@@ -42,15 +42,12 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
 
     public static final BlockSoundGroup SOUND_GROUP = new BlockSoundGroup(1.0F, 1.0F, SoundEvents.BLOCK_GLASS_BREAK, SoundEvents.BLOCK_STONE_STEP, SoundEvents.BLOCK_STONE_PLACE, SoundEvents.BLOCK_STONE_HIT, SoundEvents.BLOCK_STONE_FALL);
 
-    @Nullable private final DyeColor color;
+    @Nullable
+    private final DyeColor color;
 
     public ClayPotBlock(@Nullable DyeColor color, Settings settings) {
         super(settings);
         this.color = color;
-    }
-
-    public @Nullable DyeColor getColor() {
-        return color;
     }
 
     public static void setColor(@Nullable DyeColor color, World world, BlockPos pos, BlockState state) {
@@ -62,6 +59,10 @@ public class ClayPotBlock extends AbstractClayPotBlock implements BlockEntityPro
         world.removeBlockEntity(pos);
         world.setBlockState(pos, newState);
         world.getBlockEntity(pos, BlockEntities.CLAY_POT_BLOCK_ENTITY).ifPresent(x -> x.readNbt(data));
+    }
+
+    public @Nullable DyeColor getColor() {
+        return color;
     }
 
     @Override

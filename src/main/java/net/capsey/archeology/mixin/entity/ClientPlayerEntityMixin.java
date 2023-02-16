@@ -1,10 +1,10 @@
 package net.capsey.archeology.mixin.entity;
 
 import net.capsey.archeology.ModConfig;
-import net.capsey.archeology.main.BlockEntities;
 import net.capsey.archeology.blocks.excavation_block.ExcavationBlockEntity;
 import net.capsey.archeology.entity.BrushingPlayerEntity;
 import net.capsey.archeology.items.CopperBrushItem;
+import net.capsey.archeology.main.BlockEntities;
 import net.capsey.archeology.mixin.client.MinecraftClientAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -18,17 +18,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.lang.ref.WeakReference;
-import java.util.Arrays;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 @Mixin(ClientPlayerEntity.class)
 public class ClientPlayerEntityMixin implements BrushingPlayerEntity, BrushingPlayerEntity.Client {
 
-    private WeakReference<ExcavationBlockEntity> brushingEntity = new WeakReference<>(null);
-    @Nullable private BlockPos breakingPos;
-    private float breakingProgress;
     private final float[] facingDeltas = new float[5];
+    private WeakReference<ExcavationBlockEntity> brushingEntity = new WeakReference<>(null);
+    @Nullable
+    private BlockPos breakingPos;
+    private float breakingProgress;
     private int facingIndex = 0;
 
     @Override

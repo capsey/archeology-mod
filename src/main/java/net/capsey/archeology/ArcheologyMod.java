@@ -37,6 +37,12 @@ public class ArcheologyMod implements ModInitializer {
     public static final ExcavationCriterion EXCAVATION_SUCCESS_CRITERION = new ExcavationCriterion("excavation_success");
     public static final ExcavationCriterion EXCAVATION_FAILURE_CRITERION = new ExcavationCriterion("excavation_failure");
 
+    private static LootContextType createLootContextType(Consumer<LootContextType.Builder> type) {
+        LootContextType.Builder builder = new LootContextType.Builder();
+        type.accept(builder);
+        return builder.build();
+    }
+
     @Override
     public void onInitialize() {
         // Initializing Config
@@ -56,12 +62,6 @@ public class ArcheologyMod implements ModInitializer {
 
         Criteria.register(EXCAVATION_SUCCESS_CRITERION);
         Criteria.register(EXCAVATION_FAILURE_CRITERION);
-    }
-
-    private static LootContextType createLootContextType(Consumer<LootContextType.Builder> type) {
-        LootContextType.Builder builder = new LootContextType.Builder();
-        type.accept(builder);
-        return builder.build();
     }
 
 }
