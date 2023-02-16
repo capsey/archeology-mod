@@ -8,10 +8,11 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextType;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.stat.StatFormatter;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,7 +40,6 @@ public class ArcheologyMod implements ModInitializer {
     @Override
     public void onInitialize() {
         // Initializing Config
-        // TODO: Separate configs for server and client
         MidnightConfig.init(MOD_ID, ModConfig.class);
 
         // Registering all stuff
@@ -51,8 +51,9 @@ public class ArcheologyMod implements ModInitializer {
         CeramicShards.registerDefaultShards();
 
         // Registering other stuff
-        Registry.register(Registry.CUSTOM_STAT, "excavated", EXCAVATED);
+        Registry.register(Registries.CUSTOM_STAT, "excavated", EXCAVATED);
         Stats.CUSTOM.getOrCreateStat(EXCAVATED, StatFormatter.DEFAULT);
+
         Criteria.register(EXCAVATION_SUCCESS_CRITERION);
         Criteria.register(EXCAVATION_FAILURE_CRITERION);
     }

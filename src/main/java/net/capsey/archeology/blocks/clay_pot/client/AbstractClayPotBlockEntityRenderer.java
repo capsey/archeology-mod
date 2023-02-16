@@ -1,7 +1,9 @@
 package net.capsey.archeology.blocks.clay_pot.client;
 
 import net.capsey.archeology.ArcheologyClientMod;
+import net.capsey.archeology.ArcheologyMod;
 import net.capsey.archeology.blocks.clay_pot.ShardsContainer;
+import net.capsey.archeology.items.client.ShardsContainerRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.*;
@@ -16,7 +18,7 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public abstract class AbstractClayPotBlockEntityRenderer<T extends ShardsContainer> extends ShardsContainerRenderer<T> {
 
-    public static final Identifier CLAY_POTS_ATLAS_TEXTURE = new Identifier("textures/atlas/shards.png");
+    public static final Identifier ATLAS_TEXTURE_ID = new Identifier(ArcheologyMod.MOD_ID, "textures/atlas/clay_pots.png");
 
     private final ModelPart base;
     private final ModelPart neck;
@@ -49,7 +51,7 @@ public abstract class AbstractClayPotBlockEntityRenderer<T extends ShardsContain
 
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        VertexConsumer consumer = getTextureId(entity).getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
+        VertexConsumer consumer = getSpriteId(entity).getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
 
         base.render(matrices, consumer, light, overlay);
         neck.render(matrices, consumer, light, overlay);
@@ -58,6 +60,10 @@ public abstract class AbstractClayPotBlockEntityRenderer<T extends ShardsContain
         super.render(entity, tickDelta, matrices, vertexConsumers, light, overlay);
     }
 
-    protected abstract SpriteIdentifier getTextureId(T entity);
+    protected abstract SpriteIdentifier getSpriteId(T entity);
+
+    protected static SpriteIdentifier spriteId(String id) {
+        return new SpriteIdentifier(ATLAS_TEXTURE_ID, new Identifier(ArcheologyMod.MOD_ID, id));
+    }
 
 }

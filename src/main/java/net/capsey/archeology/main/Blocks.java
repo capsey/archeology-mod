@@ -8,19 +8,21 @@ import net.capsey.archeology.blocks.excavation_block.FallingExcavationBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.FallingBlock;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.Arrays;
 
 public class Blocks {
 
     // Block Tags
-    public static final TagKey<Block> EXCAVATION_BLOCKS_TAG = TagKey.of(Registry.BLOCK_KEY, new Identifier(ArcheologyMod.MOD_ID, "excavation_blocks"));
-    public static final TagKey<Block> CLAY_POTS_TAG = TagKey.of(Registry.BLOCK_KEY, new Identifier(ArcheologyMod.MOD_ID, "clay_pots"));
-    public static final TagKey<Block> CLAY_POT_PLANTABLE_TAG = TagKey.of(Registry.BLOCK_KEY, new Identifier(ArcheologyMod.MOD_ID, "clay_pot_plantable"));
+    public static final TagKey<Block> EXCAVATION_BLOCKS_TAG = TagKey.of(RegistryKeys.BLOCK, new Identifier(ArcheologyMod.MOD_ID, "excavation_blocks"));
+    public static final TagKey<Block> CLAY_POTS_TAG = TagKey.of(RegistryKeys.BLOCK, new Identifier(ArcheologyMod.MOD_ID, "clay_pots"));
+    public static final TagKey<Block> CLAY_POT_PLANTABLE_TAG = TagKey.of(RegistryKeys.BLOCK, new Identifier(ArcheologyMod.MOD_ID, "clay_pot_plantable"));
 
     // Blocks
     public static Block EXCAVATION_DIRT;
@@ -45,7 +47,7 @@ public class Blocks {
     }
 
     private static Block register(String id, Block block) {
-        return Registry.register(Registry.BLOCK, new Identifier(ArcheologyMod.MOD_ID, id), block);
+        return Registry.register(Registries.BLOCK, new Identifier(ArcheologyMod.MOD_ID, id), block);
     }
 
 }

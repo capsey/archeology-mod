@@ -11,7 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,8 +22,8 @@ public abstract class HeldItemRendererMixin {
 
     private static void applyBrushingTransformations(AbstractClientPlayerEntity player, float tickDelta, CopperBrushItem item, MatrixStack matrices) {
         // Aligning item to the center
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-60.0F));
-        matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(-45.0F));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-60.0F));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-45.0F));
         matrices.translate(-0.3D, 0.3D, -1.0D);
 
         // Calculating periodic motion
@@ -32,7 +32,7 @@ public abstract class HeldItemRendererMixin {
         float angleCoefficient = MathHelper.sin(ExcavationBlock.MAX_BRUSHING_LEVELS * progress * MathHelper.PI);
 
         // Applying calculated angle along upward axis
-        matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(40.0F * angleCoefficient));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(40.0F * angleCoefficient));
         matrices.translate(-0.2D, 0.2D, 0.0D);
     }
 
