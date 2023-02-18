@@ -46,7 +46,7 @@ jobs:
           file_path: build/libs/${{ steps.findjar.outputs.jarname }}
 
           release_type: release
-          game_versions: Minecraft 1.19.3,Java 17,Fabric
+          game_versions: Minecraft 1.19.3:1.19.3,Java 17,Fabric
           changelog: ${{ github.event.release.body }}
           relations: fabric-api:requiredDependency,modmenu:optionalDependency
 
@@ -60,6 +60,7 @@ jobs:
           file_path: build/libs/${{ steps.findjar.outputs.jarname }}
 
           version: ${{ github.event.release.tag_name }}
+          featured: false
           loaders: fabric
 
           release_type: release
