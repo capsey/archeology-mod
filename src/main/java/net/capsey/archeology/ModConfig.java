@@ -7,12 +7,12 @@ public class ModConfig extends MidnightConfig {
 
     // Brushing
     @Comment public static Comment brushingSection;
-    @Client @Entry public static boolean releaseUseKeyAfterBrushing = false;
     @Entry(min=0.0F, max=1.0F) public static float brushingLayerChance = 0.35F;
-
     @Client @Entry(min=0.0F, max=1.0F) public static float brushingLowerThreshold = 0.02F;
     @Client @Entry(min=0.0F) public static float brushingBreakingSpeed = 3.0F;
+
     @Client @Entry public static boolean enableMojangBrushingStyle = false;
+    @Client @Entry public static boolean releaseUseKeyAfterBrushing = false;
 
     public static float getBrushingDelta(float mouseMovement) {
         mouseMovement -= brushingLowerThreshold * (!enableMojangBrushingStyle ? 1.0F : 0.1F);
