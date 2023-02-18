@@ -16,7 +16,7 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public abstract class AbstractClayPotBlockEntityRenderer<T extends ShardsContainer> extends ShardsContainerRenderer<T> {
 
-    public static final Identifier CLAY_POTS_ATLAS_TEXTURE = new Identifier("textures/atlas/shards.png");
+    public static final Identifier CLAY_POTS_ATLAS_TEXTURE = new Identifier("textures/atlas/clay_pots.png");
 
     private final ModelPart base;
     private final ModelPart neck;

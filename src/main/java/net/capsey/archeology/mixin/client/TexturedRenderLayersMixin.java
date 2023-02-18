@@ -28,7 +28,7 @@ public class TexturedRenderLayersMixin {
         adder.accept(RawClayPotBlockEntityRenderer.MODEL_TEXTURE);
 
         // Adding raw shard model texture
-        adder.accept(ShardsContainerRenderer.RAW_SHARD);
+        adder.accept(ShardsContainerRenderer.EMPTY_SHARD_SPRITE_ID);
 
         // Making SpriteIds map for all shards
         Map<Identifier, SpriteIdentifier> shardIds = new HashMap<>();

@@ -15,10 +15,10 @@ import java.util.Comparator;
 @Environment(EnvType.CLIENT)
 public class ClayPotBlockEntityRenderer extends AbstractClayPotBlockEntityRenderer<ClayPotBlockEntity> {
 
-    public static final SpriteIdentifier MODEL_TEXTURE = new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MOD_ID, "entity/clay_pot"));
+    public static final SpriteIdentifier MODEL_TEXTURE = new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MOD_ID, "entity/clay_pot/clay_pot"));
     public static final SpriteIdentifier[] MODEL_TEXTURE_DYED = Arrays.stream(DyeColor.values())
             .sorted(Comparator.comparingInt(DyeColor::getId))
-            .map(x -> new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MOD_ID, "entity/clay_pot_" + x.getName())))
+            .map(x -> new SpriteIdentifier(CLAY_POTS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MOD_ID, "entity/clay_pot/clay_pot_" + x.getName())))
             .toArray(SpriteIdentifier[]::new);
 
     public ClayPotBlockEntityRenderer(Context ctx) {

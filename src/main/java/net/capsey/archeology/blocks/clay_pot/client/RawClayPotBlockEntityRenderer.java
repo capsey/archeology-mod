@@ -38,13 +38,13 @@ public class RawClayPotBlockEntityRenderer extends AbstractClayPotBlockEntityRen
         final Vec3f negRawScale = new Vec3f(zOffset / 2, 0.0F, zOffset / 2);
 
         if (side.straight) {
-            spriteConsumer = RAW_SHARD.getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
+            spriteConsumer = EMPTY_SHARD_SPRITE_ID.getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
 
             straight.scale(posRawScale);
             straight.render(matrices, spriteConsumer, light, overlay);
             straight.scale(negRawScale);
         } else {
-            spriteConsumer = RAW_SHARD.getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
+            spriteConsumer = EMPTY_SHARD_SPRITE_ID.getVertexConsumer(vertexConsumers, RenderLayer::getEntityTranslucentCull);
 
             corners[0].scale(posRawScale);
             corners[0].render(matrices, spriteConsumer, light, overlay);

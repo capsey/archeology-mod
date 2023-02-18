@@ -28,7 +28,7 @@ import java.util.Map;
 public abstract class ShardsContainerRenderer<T extends ShardsContainer> implements BlockEntityRenderer<T> {
 
     public static final Identifier SHARDS_ATLAS_TEXTURE = new Identifier("textures/atlas/shards.png");
-    public static final SpriteIdentifier RAW_SHARD = new SpriteIdentifier(SHARDS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MOD_ID, "entity/shard"));
+    public static final SpriteIdentifier EMPTY_SHARD_SPRITE_ID = new SpriteIdentifier(SHARDS_ATLAS_TEXTURE, new Identifier(ArcheologyMod.MOD_ID, "entity/empty_shard"));
     public static final Map<Identifier, SpriteIdentifier> SHARD_SPRITE_IDS = new HashMap<>();
 
     protected final ModelPart straight;
