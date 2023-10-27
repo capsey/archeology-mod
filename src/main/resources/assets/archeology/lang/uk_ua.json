@@ -17,7 +17,7 @@
   "archeology.midnightconfig.brushingLowerThreshold.tooltip": "Чим вище, тим важче",
   "archeology.midnightconfig.brushingBreakingSpeed": "Швидкість руйнування блоку",
   "archeology.midnightconfig.brushingBreakingSpeed.tooltip": "Чим вище, тим важче",
-  "archeology.midnightconfig.enableMojangBrushingStyle": "Інвернувати чистку (Майнкрафт лайв 2020)",
+  "archeology.midnightconfig.enableMojangBrushingStyle": "Інвернувати чистку (Minecraft Live 2020)",
   "archeology.midnightconfig.enableMojangBrushingStyle.tooltip": "Якщо увімкнено, гравець повинен тримати мишу нерухомо замість того, щоб постійно рухати нею",
   "archeology.midnightconfig.releaseUseKeyAfterBrushing": "Автоматично відпускати клавішу після очистки",
   "archeology.midnightconfig.displayingSection": "§nВідображення",
